@@ -26,19 +26,22 @@ export async function POST(request) {
     if (!userDocSnap.exists()) {
       return NextResponse.json({
         success: false,
-        error: 'User profile not found'
+        error: 'User profile not found. Please contact support.'
       }, { status: 404 });
     }
 
     const userData = userDocSnap.data();
 
-    // Check if user is active
-    if (!userData.active) {
+    // Check if user account exists and is active
+    if (userData.active === false) {
       return NextResponse.json({
         success: false,
         error: 'Your account has been deactivated. Please contact support.'
       }, { status: 403 });
     }
+
+    // Get access token
+    const token = await userCredential.user.getIdToken();
 
     // Return successful login response
     return NextResponse.json({
@@ -49,13 +52,13 @@ export async function POST(request) {
         email: userData.email,
         name: userData.name,
         role: userData.role,
-        department: userData.department,
-        ward_id: userData.ward_id,
-        zone: userData.zone,
-        phone: userData.phone,
-        active: userData.active,
+        department: userData.department || null,
+        ward_id: userData.ward_id || null,
+        zone: userData.zone || null,
+        phone: userData.phone || null,
+        active: userData.active !== false,
       },
-      token: userCredential.user.accessToken
+      token: token
     }, { status: 200 });
   } catch (error) {
     console.error('Login error:', error);
@@ -64,7 +67,7 @@ export async function POST(request) {
     if (error.code === 'auth/user-not-found') {
       return NextResponse.json({
         success: false,
-        error: 'Email not found. Please check and try again.'
+        error: 'No account found with this email. Please check and try again.'
       }, { status: 401 });
     }
 
@@ -78,8 +81,29 @@ export async function POST(request) {
     if (error.code === 'auth/invalid-email') {
       return NextResponse.json({
         success: false,
-        error: 'Invalid email format'
+        error: 'Invalid email format. Please check your email address.'
       }, { status: 400 });
+    }
+
+    if (error.code === 'auth/invalid-credential') {
+      return NextResponse.json({
+        success: false,
+        error: 'Invalid email or password. Please check your credentials.'
+      }, { status: 401 });
+    }
+
+    if (error.code === 'auth/too-many-requests') {
+      return NextResponse.json({
+        success: false,
+        error: 'Too many failed login attempts. Please try again later.'
+      }, { status: 429 });
+    }
+
+    if (error.code === 'auth/network-request-failed') {
+      return NextResponse.json({
+        success: false,
+        error: 'Network error. Please check your connection and try again.'
+      }, { status: 503 });
     }
 
     return NextResponse.json({

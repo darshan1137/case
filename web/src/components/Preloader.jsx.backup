@@ -1,0 +1,438 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const Preloader = ({ onComplete }) => {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [show, setShow] = useState(true);
+
+  const steps = [
+    { 
+      word: 'CAPTURE', 
+      icon: (
+        <svg className="w-20 h-20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <motion.path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" 
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.8 }}
+          />
+          <motion.circle cx="12" cy="13" r="4" 
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+          />
+        </svg>
+      ),
+      description: 'Capture civic issues instantly',
+      color: 'from-orange-500 to-orange-600'
+    },
+    { 
+      word: 'ASSESS', 
+      icon: (
+        <svg className="w-24 h-24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <motion.circle
+            cx="30"
+            cy="70"
+            r="8"
+            fill="currentColor"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2 }}
+          />
+          <motion.circle
+            cx="50"
+            cy="45"
+            r="8"
+            fill="currentColor"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.4 }}
+          />
+          <motion.circle
+            cx="70"
+            cy="30"
+            r="8"
+            fill="currentColor"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.6 }}
+          />
+          <motion.path
+            d="M 30 70 L 50 45 L 70 30"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ delay: 0.8, duration: 0.6 }}
+          />
+        </svg>
+      ),
+      description: 'AI-powered priority analysis'
+    },
+    { 
+      word: 'SERVE', 
+      icon: (
+        <svg className="w-24 h-24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <motion.rect
+            x="20"
+            y="50"
+            width="20"
+            height="35"
+            fill="currentColor"
+            opacity="0.6"
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{ delay: 0.2 }}
+            style={{ transformOrigin: 'bottom' }}
+          />
+          <motion.rect
+            x="45"
+            y="35"
+            width="20"
+            height="50"
+            fill="currentColor"
+            opacity="0.8"
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{ delay: 0.4 }}
+            style={{ transformOrigin: 'bottom' }}
+          />
+          <motion.rect
+            x="70"
+            y="20"
+            width="20"
+            height="65"
+            fill="currentColor"
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{ delay: 0.6 }}
+            style={{ transformOrigin: 'bottom' }}
+          />
+          <motion.path
+            d="M 50 10 L 55 15 L 50 20 L 45 15 Z"
+            fill="currentColor"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1 }}
+          />
+        </svg>
+      ),
+      description: 'Swift municipal response'
+    },
+    { 
+      word: 'EVOLVE', 
+      icon: (
+        <svg className="w-24 h-24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <motion.path
+            d="M 20 80 Q 35 60, 50 50 T 80 20"
+            stroke="currentColor"
+            strokeWidth="3"
+            fill="none"
+            strokeLinecap="round"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 1 }}
+          />
+          <motion.circle
+            cx="80"
+            cy="20"
+            r="6"
+            fill="currentColor"
+            initial={{ scale: 0 }}
+            animate={{ scale: [0, 1.5, 1] }}
+            transition={{ delay: 1, duration: 0.5 }}
+          />
+          <motion.path
+            d="M 75 12 L 80 20 L 72 18"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2 }}
+          />
+        </svg>
+      ),
+      description: 'Continuous improvement cycle'
+    }
+  ];
+
+  useEffect(() => {
+    const timers = [];
+    
+    // Step through each word faster (0-2s, 500ms each)
+    steps.forEach((_, index) => {
+      timers.push(setTimeout(() => setCurrentStep(index + 1), index * 500));
+    });
+
+    // Transition to brand (2-2.8s)
+    timers.push(setTimeout(() => setCurrentStep(5), 2000));
+
+    // Logo reveal (2.8-3.5s)
+    timers.push(setTimeout(() => setCurrentStep(6), 2800));
+
+    // Credit frame (3.5-4s)
+    timers.push(setTimeout(() => setCurrentStep(7), 3500));
+
+    // Complete (4s total)
+    timers.push(setTimeout(() => {
+      setShow(false);
+      setTimeout(() => onComplete?.(), 300);
+    }, 4000));
+
+    return () => timers.forEach(timer => clearTimeout(timer));
+  }, [onComplete, steps]);
+
+  if (!show) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 overflow-hidden">
+      {/* Background with subtle India-inspired gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900">
+        {/* Animated grid pattern */}
+        <motion.div 
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '50px 50px'
+          }}
+          animate={{
+            backgroundPosition: ['0px 0px', '50px 50px']
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: 'linear'
+          }}
+        />
+        
+        {/* Tricolor gradient overlay (subtle) */}
+        <motion.div
+          className="absolute inset-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: currentStep >= 5 ? 0.15 : 0 }}
+          transition={{ duration: 1 }}
+          style={{
+            background: 'linear-gradient(to bottom, rgba(255,153,51,0.3) 0%, rgba(255,255,255,0.3) 50%, rgba(19,136,8,0.3) 100%)'
+          }}
+        />
+      </div>
+
+      <div className="relative h-full flex items-center justify-center">
+        <AnimatePresence mode="wait">
+          {/* Steps 1-4: Individual Words */}
+          {currentStep > 0 && currentStep <= 4 && (
+            <motion.div
+              key={`step-${currentStep}`}
+              initial={{ opacity: 0, scale: 0.8, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 1.1, y: -20 }}
+              transition={{ 
+                type: "spring",
+                stiffness: 300,
+                damping: 25
+              }}
+              className="text-center"
+            >
+              <motion.div
+                className="text-white mb-6"
+                animate={{ 
+                  filter: ['brightness(1)', 'brightness(1.5)', 'brightness(1)']
+                }}
+                transition={{ duration: 1, repeat: Infinity }}
+              >
+                {steps[currentStep - 1].icon}
+              </motion.div>
+              <motion.h2
+                className="text-6xl md:text-8xl font-bold text-white tracking-wider mb-4"
+                initial={{ letterSpacing: '0.5em', opacity: 0 }}
+                animate={{ letterSpacing: '0.2em', opacity: 1 }}
+                transition={{ duration: 0.6 }}
+              >
+                {steps[currentStep - 1].word}
+              </motion.h2>
+              <motion.p
+                className="text-slate-300 text-lg"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                {steps[currentStep - 1].description}
+              </motion.p>
+            </motion.div>
+          )}
+
+          {/* Step 5: Words Converge to CASE */}
+          {currentStep === 5 && (
+            <motion.div
+              key="converge"
+              className="text-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <div className="relative w-full h-32">
+                {['CAPTURE', 'ASSESS', 'SERVE', 'EVOLVE'].map((word, idx) => (
+                  <motion.div
+                    key={word}
+                    className="absolute left-1/2 top-1/2 text-4xl font-bold text-white"
+                    initial={{
+                      x: ['-200%', '200%', '200%', '-200%'][idx],
+                      y: ['-200%', '-200%', '200%', '200%'][idx],
+                      opacity: 0.7
+                    }}
+                    animate={{
+                      x: '-50%',
+                      y: '-50%',
+                      opacity: 0,
+                      scale: 0.5
+                    }}
+                    transition={{ duration: 0.8 }}
+                  >
+                    {word}
+                  </motion.div>
+                ))}
+                
+                <motion.h1
+                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-8xl md:text-9xl font-black text-white"
+                  initial={{ scale: 0, opacity: 0, rotate: -10 }}
+                  animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                  transition={{ 
+                    type: "spring",
+                    stiffness: 200,
+                    damping: 20,
+                    delay: 0.3
+                  }}
+                >
+                  <motion.span
+                    animate={{
+                      textShadow: [
+                        '0 0 20px rgba(255,255,255,0.5)',
+                        '0 0 40px rgba(255,255,255,0.8)',
+                        '0 0 20px rgba(255,255,255,0.5)'
+                      ]
+                    }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  >
+                    CASE
+                  </motion.span>
+                </motion.h1>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Step 6: Logo Reveal */}
+          {currentStep === 6 && (
+            <motion.div
+              key="logo"
+              className="text-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+                className="mb-8"
+              >
+                <h1 className="text-9xl font-black text-white mb-6">
+                  CASE
+                </h1>
+                <motion.div
+                  className="text-slate-300 text-xl tracking-widest space-x-3"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <span>Capture</span>
+                  <span className="text-slate-500">•</span>
+                  <span>Assess</span>
+                  <span className="text-slate-500">•</span>
+                  <span>Serve</span>
+                  <span className="text-slate-500">•</span>
+                  <span>Evolve</span>
+                </motion.div>
+              </motion.div>
+              
+              <motion.div
+                className="flex items-center justify-center gap-3 text-amber-400 text-sm font-medium"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+              >
+                <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="12" cy="12" r="10" opacity="0.2"/>
+                  <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/>
+                  <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                  <path d="M12 7 L12 9 M12 15 L12 17 M7 12 L9 12 M15 12 L17 12" stroke="currentColor" strokeWidth="1.5"/>
+                </svg>
+                <span className="tracking-wider">Built in Bharat</span>
+              </motion.div>
+            </motion.div>
+          )}
+
+          {/* Step 7: Credit Frame */}
+          {currentStep === 7 && (
+            <motion.div
+              key="credit"
+              className="text-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <motion.div
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                className="mb-8"
+              >
+                <h1 className="text-9xl font-black text-white mb-6">
+                  CASE
+                </h1>
+                <div className="text-slate-300 text-xl tracking-widest space-x-3 mb-8">
+                  <span>Capture</span>
+                  <span className="text-slate-500">•</span>
+                  <span>Assess</span>
+                  <span className="text-slate-500">•</span>
+                  <span>Serve</span>
+                  <span className="text-slate-500">•</span>
+                  <span>Evolve</span>
+                </div>
+                
+                <div className="flex items-center justify-center gap-3 text-amber-400 text-sm font-medium mb-12">
+                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="12" cy="12" r="10" opacity="0.2"/>
+                    <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/>
+                    <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                    <path d="M12 7 L12 9 M12 15 L12 17 M7 12 L9 12 M15 12 L17 12" stroke="currentColor" strokeWidth="1.5"/>
+                  </svg>
+                  <span className="tracking-wider">Built in Bharat</span>
+                </div>
+              </motion.div>
+
+              <motion.div
+                className="border-t border-slate-700 pt-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <p className="text-slate-400 text-base tracking-wide">
+                  Designed & Developed by
+                </p>
+                <p className="text-white text-2xl font-semibold mt-2 tracking-wide">
+                  Coding Gurus
+                </p>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+};
+
+export default Preloader;
