@@ -162,12 +162,12 @@ export default function ScreenReader() {
   return (
     <>
       {/* Screen Reader Controls */}
-      <div className="fixed top-20 right-6 z-50 bg-white rounded-lg shadow-lg border border-gray-200 p-3">
-        <div className="flex flex-col gap-2">
+      <div className="fixed bottom-6 left-6 z-50 bg-white rounded-lg shadow-lg border border-gray-200 p-2">
+        <div className="flex flex-col gap-1">
           {/* Toggle Button */}
           <button
             onClick={toggleScreenReader}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+            className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-colors text-sm ${
               isEnabled
                 ? 'bg-green-600 hover:bg-green-700 text-white'
                 : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
@@ -175,22 +175,22 @@ export default function ScreenReader() {
             aria-label={isEnabled ? 'Disable screen reader' : 'Enable screen reader'}
             title={isEnabled ? 'Disable screen reader' : 'Enable screen reader'}
           >
-            <span className="text-xl" aria-hidden="true">
+            <span className="text-lg" aria-hidden="true">
               {isEnabled ? '🔊' : '🔇'}
             </span>
-            <span className="text-sm font-medium">
+            <span className="text-xs font-medium">
               {isEnabled ? 'ON' : 'OFF'}
             </span>
           </button>
 
           {/* Controls (shown when enabled) */}
           {isEnabled && (
-            <div className="flex flex-col gap-2 pt-2 border-t border-gray-200">
+            <div className="flex flex-col gap-1 pt-1 border-t border-gray-200">
               {/* Stop Button */}
               {isSpeaking && (
                 <button
                   onClick={stopSpeaking}
-                  className="flex items-center gap-2 px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm"
+                  className="flex items-center gap-1 px-2 py-1 bg-red-500 hover:bg-red-600 text-white rounded-lg text-xs"
                   aria-label="Stop speaking"
                 >
                   <span aria-hidden="true">⏹️</span>
@@ -201,7 +201,7 @@ export default function ScreenReader() {
               {/* Read Page Button */}
               <button
                 onClick={readEntirePage}
-                className="flex items-center gap-2 px-3 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg text-sm"
+                className="flex items-center gap-1 px-2 py-1 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg text-xs"
                 aria-label="Read entire page"
                 title="Read entire page (Ctrl+Shift+R)"
               >
@@ -210,8 +210,8 @@ export default function ScreenReader() {
               </button>
 
               {/* Speed Control */}
-              <div className="flex flex-col gap-1">
-                <label className="text-xs text-gray-600 font-medium">
+              <div className="flex flex-col gap-0.5">
+                <label className="text-xs text-gray-600 font-medium leading-none">
                   Speed: {speechRate.toFixed(1)}x
                 </label>
                 <input
@@ -221,14 +221,14 @@ export default function ScreenReader() {
                   step="0.1"
                   value={speechRate}
                   onChange={(e) => setSpeechRate(parseFloat(e.target.value))}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                   aria-label="Speech rate control"
                 />
               </div>
 
               {/* Volume Control */}
-              <div className="flex flex-col gap-1">
-                <label className="text-xs text-gray-600 font-medium">
+              <div className="flex flex-col gap-0.5">
+                <label className="text-xs text-gray-600 font-medium leading-none">
                   Volume: {Math.round(volume * 100)}%
                 </label>
                 <input
@@ -238,16 +238,16 @@ export default function ScreenReader() {
                   step="0.1"
                   value={volume}
                   onChange={(e) => setVolume(parseFloat(e.target.value))}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                   aria-label="Volume control"
                 />
               </div>
 
               {/* Help Text */}
-              <div className="text-xs text-gray-500 pt-2 border-t border-gray-200">
-                <p className="font-medium mb-1">Keyboard Shortcuts:</p>
-                <p>Ctrl+Shift+S: Stop</p>
-                <p>Ctrl+Shift+R: Read Page</p>
+              <div className="text-xs text-gray-500 pt-1 border-t border-gray-200">
+                <p className="font-medium mb-0.5 text-xxs">Shortcuts:</p>
+                <p className="text-xxs">Ctrl+Shift+S: Stop</p>
+                <p className="text-xxs">Ctrl+Shift+R: Read</p>
               </div>
             </div>
           )}
