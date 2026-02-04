@@ -88,12 +88,12 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               <Link href="/auth/login">
-                <Button variant="outline" className="hover:border-orange-500 hover:text-orange-500 transition-all">
+                <Button variant="outline" className="hover:border-indigo-600 hover:text-indigo-600 transition-all">
                   Login
                 </Button>
               </Link>
               <Link href="/auth/register">
-                <Button className="bg-gradient-to-r from-orange-500 to-green-600 hover:from-orange-600 hover:to-green-700 shadow-md">
+                <Button className="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 shadow-md">
                   Register
                 </Button>
               </Link>
