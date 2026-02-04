@@ -185,7 +185,7 @@ export default function NewReportPage() {
       console.log('Final ticket data to send:', ticketData);
       
       // Send to backend API for validation
-      const response = await fetch('http://0.0.0.0:8005/api/tickets/validate-image-only', {
+      const response = await fetch('http://127.0.0.1:8005/api/tickets/validate-image-only', {
         method: 'POST',
         body: ticketData,
         headers: {

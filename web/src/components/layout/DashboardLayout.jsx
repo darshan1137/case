@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -96,24 +97,6 @@ export function DashboardLayout({ children, navigation, title }) {
         )}
       </AnimatePresence>
 
-<<<<<<< HEAD
-      <div className="flex h-[calc(100vh-4rem)]">
-        {/* Sidebar */}
-        <aside className="w-64 bg-white shadow-sm border-r border-gray-200 overflow-y-auto">
-          <nav className="p-4 space-y-1">
-            {navigation.map((item) => {
-              const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={cn(
-                    'flex items-center space-x-3 px-4 py-3 rounded-xl transition-all group',
-                    isActive
-                      ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold shadow-md'
-                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                  )}
-=======
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30">
         {/* Top Navigation Bar */}
         <nav className="bg-white/95 backdrop-blur-xl shadow-sm border-b border-slate-200/60 sticky top-0 z-40">
@@ -124,15 +107,18 @@ export function DashboardLayout({ children, navigation, title }) {
                 <button
                   onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
                   className="lg:hidden p-2 rounded-lg text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
->>>>>>> 72a9660238795a489db78d0048283d5ce8a74257
                 >
                   {mobileSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                 </button>
 
                 <Link href="/" className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                    <span className="text-white text-lg font-bold">C</span>
-                  </div>
+                  <Image
+                    src="/logo.svg"
+                    alt="CASE Logo"
+                    width={40}
+                    height={40}
+                    className="w-10 h-10"
+                  />
                   <div className="hidden sm:block">
                     <span className="font-bold text-slate-900 text-lg">CASE</span>
                     <span className="text-xs text-slate-500 block -mt-0.5">Platform</span>
@@ -175,12 +161,6 @@ export function DashboardLayout({ children, navigation, title }) {
           </div>
         </nav>
 
-<<<<<<< HEAD
-        {/* Main Content */}
-        <main className="flex-1 p-6 overflow-y-auto">
-          {children}
-        </main>
-=======
         <div className="flex max-w-full">
           {/* Sidebar - Desktop */}
           <aside className="hidden lg:block w-64 bg-white/80 backdrop-blur-sm min-h-[calc(100vh-4rem)] border-r border-slate-200/60 shadow-sm">
@@ -290,7 +270,6 @@ export function DashboardLayout({ children, navigation, title }) {
             </div>
           </main>
         </div>
->>>>>>> 72a9660238795a489db78d0048283d5ce8a74257
       </div>
     </>
   );
