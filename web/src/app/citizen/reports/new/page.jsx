@@ -11,6 +11,8 @@ const navigation = [
   { name: 'New Report', href: '/citizen/reports/new', icon: '📝' },
   { name: 'My Reports', href: '/citizen/reports', icon: '📋' },
   { name: 'Track Status', href: '/citizen/track', icon: '🔍' },
+  { name: 'Infrastructure Map', href: '/map', icon: '🗺️' },
+  { name: 'Route Optimizer', href: '/route', icon: '🛣️' },
   { name: 'Profile', href: '/citizen/profile', icon: '👤' },
 ];
 
@@ -163,22 +165,13 @@ export default function NewReportPage() {
         throw new Error('Please upload at least one image of the issue');
       }
 
-      // Upload all images to Cloudinary
-      const imageUrls = [];
-      for (const file of imageFiles) {
-        const url = await uploadToCloudinary(file);
-        imageUrls.push(url);
-      }
-
-      console.log('Cloudinary image URLs:', imageUrls);
-
-      // Prepare data for backend with Cloudinary URLs
+      // Prepare data for backend
       const ticketData = new FormData();
       
-      // Add the Cloudinary URLs
-      imageUrls.forEach((url, index) => {
-        ticketData.append(`image_url_${index}`, url);
-      });
+      // Add the file directly for validation
+      if (imageFiles.length > 0) {
+        ticketData.append('file', imageFiles[0]);
+      }
       
       // Also send the count of images
       ticketData.append('image_count', imageUrls.length);

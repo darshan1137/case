@@ -1,13 +1,59 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
+import { DashboardLayout } from '@/components/layout';
 import dynamic from 'next/dynamic';
 import 'leaflet/dist/leaflet.css';
 import styles from './map.module.css';
 
+// Get navigation based on role
+const getNavigation = (role) => {
+  const baseNav = {
+    citizen: [
+      { name: 'Dashboard', href: '/citizen/dashboard', icon: '📊' },
+      { name: 'New Report', href: '/citizen/reports/new', icon: '📝' },
+      { name: 'My Reports', href: '/citizen/reports', icon: '📋' },
+      { name: 'Track Status', href: '/citizen/track', icon: '🔍' },
+      { name: 'Infrastructure Map', href: '/map', icon: '🗺️' },
+      { name: 'Route Optimizer', href: '/route', icon: '🛣️' },
+      { name: 'Profile', href: '/citizen/profile', icon: '👤' },
+    ],
+    contractor: [
+      { name: 'Dashboard', href: '/contractor/dashboard', icon: '📊' },
+      { name: 'Assigned Jobs', href: '/contractor/jobs', icon: '📋' },
+      { name: 'Active Jobs', href: '/contractor/jobs/active', icon: '🔨' },
+      { name: 'Completed', href: '/contractor/jobs/completed', icon: '✅' },
+      { name: 'Infrastructure Map', href: '/map', icon: '🗺️' },
+      { name: 'Route Optimizer', href: '/route', icon: '🛣️' },
+      { name: 'Performance', href: '/contractor/performance', icon: '📈' },
+      { name: 'Profile', href: '/contractor/profile', icon: '👤' },
+    ],
+    class_a: [
+      { name: 'Dashboard', href: '/admin/dashboard', icon: '📊' },
+      { name: 'Reports', href: '/admin/reports', icon: '📋' },
+      { name: 'Work Orders', href: '/admin/work-orders', icon: '🔧' },
+      { name: 'Users', href: '/admin/users', icon: '👥' },
+      { name: 'Contractors', href: '/admin/contractors', icon: '👷' },
+      { name: 'Departments', href: '/admin/departments', icon: '🏛️' },
+      { name: 'Infrastructure Map', href: '/map', icon: '🌍' },
+      { name: 'Route Optimizer', href: '/route', icon: '🛣️' },
+      { name: 'Assets', href: '/admin/assets', icon: '🏗️' },
+      { name: 'Analytics', href: '/admin/analytics', icon: '📈' },
+      { name: 'SLA Config', href: '/admin/sla', icon: '⏱️' },
+      { name: 'Audit Logs', href: '/admin/audit', icon: '📝' },
+      { name: 'Settings', href: '/admin/settings', icon: '⚙️' },
+    ],
+  };
+  return baseNav[role] || [];
+};
+
 let L;
 
 const MumbaiMapContent = () => {
+  const router = useRouter();
+  const { userData, loading: authLoading } = useAuth();
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersRef = useRef({});
@@ -358,80 +404,94 @@ const MumbaiMapContent = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1>🗺️ Mumbai Infrastructure Map</h1>
-        <p>Interactive map of Mumbai with infrastructure assets and services</p>
-      </div>
-
-      <div className={styles.controls}>
-        <button onClick={() => toggleAllLayers(true)} className={styles.btn}>
-          Show All
-        </button>
-        <button onClick={() => toggleAllLayers(false)} className={styles.btn}>
-          Hide All
-        </button>
-      </div>
-
-      <div className={styles.content}>
-        <div className={styles.sidebar}>
-          <h3>Legend</h3>
-          <div className={styles.legend}>
-            {Object.entries(dataLayers).map(([key, config]) => {
-              // Extract emoji from label
-              const emojiMatch = config.label.match(/^([^\s]*)/);
-              const emoji = emojiMatch ? emojiMatch[1] : '📍';
-              const labelText = config.label.replace(/^[^\s]*\s*/, '');
-              
-              return (
-                <label key={key} className={styles.legendItem}>
-                  <input
-                    type="checkbox"
-                    checked={visibleLayers[key]}
-                    onChange={() => toggleLayer(key)}
-                  />
-                  <span
-                    className={styles.iconBox}
-                    style={{
-                      backgroundColor: config.color,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '20px',
-                      fontWeight: 'bold',
-                      borderRadius: '4px',
-                      opacity: visibleLayers[key] ? 1 : 0.5
-                    }}
-                  >
-                    {emoji}
-                  </span>
-                  <span style={{ marginLeft: '8px', flex: 1, opacity: visibleLayers[key] ? 1 : 0.6 }}>{labelText}</span>
-                  {loadingLayers[key] && <span className={styles.loading}>⏳</span>}
-                </label>
-              );
-            })}
-          </div>
-
-          <div className={styles.info}>
-            <h4>About</h4>
-            <p>This map displays various infrastructure assets across Mumbai including hospitals, schools, police stations, water facilities, BMC services, and highways.</p>
-            <p><strong>Data Source:</strong> OpenStreetMap (Overpass API)</p>
-            <p><strong>Last Updated:</strong> {new Date().toLocaleDateString()}</p>
-            <p><strong>Markers/Layer:</strong> Up to 500</p>
-          </div>
+    <div className={styles.content}>
+      <div className={styles.sidebar}>
+        <h3>Legend</h3>
+        <div className={styles.legend}>
+          {Object.entries(dataLayers).map(([key, config]) => {
+            const emojiMatch = config.label.match(/^([^\s]*)/);
+            const emoji = emojiMatch ? emojiMatch[1] : '📍';
+            const labelText = config.label.replace(/^[^\s]*\s*/, '');
+            
+            return (
+              <label key={key} className={styles.legendItem}>
+                <input
+                  type="checkbox"
+                  checked={visibleLayers[key]}
+                  onChange={() => toggleLayer(key)}
+                />
+                <span
+                  className={styles.iconBox}
+                  style={{
+                    backgroundColor: config.color,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '20px',
+                    fontWeight: 'bold',
+                    borderRadius: '4px',
+                    opacity: visibleLayers[key] ? 1 : 0.5
+                  }}
+                >
+                  {emoji}
+                </span>
+                <span style={{ marginLeft: '8px', flex: 1, opacity: visibleLayers[key] ? 1 : 0.6 }}>{labelText}</span>
+                {loadingLayers[key] && <span className={styles.loading}>⏳</span>}
+              </label>
+            );
+          })}
         </div>
 
-        <div className={styles.mapContainer}>
-          {loading && <div className={styles.loader}>Loading map data...</div>}
-          <div ref={mapRef} className={styles.map}></div>
+        <div className={styles.info}>
+          <h4>About</h4>
+          <p>This map displays various infrastructure assets across Mumbai including hospitals, schools, police stations, water facilities, BMC services, and highways.</p>
+          <p><strong>Data Source:</strong> OpenStreetMap (Overpass API)</p>
+          <p><strong>Last Updated:</strong> {new Date().toLocaleDateString()}</p>
+          <p><strong>Markers/Layer:</strong> Up to 500</p>
         </div>
+      </div>
+
+      <div className={styles.mapContainer}>
+        {loading && <div className={styles.loader}>Loading map data...</div>}
+        <div ref={mapRef} className={styles.map}></div>
       </div>
     </div>
   );
 };
 
+const MapPage = () => {
+  const router = useRouter();
+  const { userData, loading: authLoading } = useAuth();
+
+  useEffect(() => {
+    if (!authLoading && !userData) {
+      router.push('/auth/login');
+    }
+  }, [userData, authLoading, router]);
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (!userData) {
+    return null;
+  }
+
+  const navigation = getNavigation(userData.role);
+
+  return (
+    <DashboardLayout navigation={navigation} title="Infrastructure Map">
+      <MumbaiMapContent />
+    </DashboardLayout>
+  );
+};
+
 // Export with dynamic import to avoid SSR issues with Leaflet
-export default dynamic(() => Promise.resolve(MumbaiMapContent), {
+export default dynamic(() => Promise.resolve(MapPage), {
   ssr: false,
   loading: () => <div style={{ padding: '20px', textAlign: 'center' }}>Loading map...</div>
 });

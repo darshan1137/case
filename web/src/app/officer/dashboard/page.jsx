@@ -30,6 +30,8 @@ export default function OfficerDashboard() {
     { name: 'Reports', href: '/officer/reports', icon: '📋' },
     { name: 'Work Orders', href: '/officer/work-orders', icon: '🔧' },
     { name: 'Contractors', href: '/officer/contractors', icon: '👷' },
+    { name: 'Infrastructure Map', href: '/map', icon: '🗺️' },
+    { name: 'Route Optimizer', href: '/route', icon: '🛣️' },
     { name: 'Assets', href: '/officer/assets', icon: '🏗️' },
     { name: 'Analytics', href: '/officer/analytics', icon: '📈' },
     ...(isClassB || isClassA ? [

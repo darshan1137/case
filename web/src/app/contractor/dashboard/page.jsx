@@ -14,7 +14,8 @@ const navigation = [
   { name: 'Assigned Jobs', href: '/contractor/jobs', icon: '📋' },
   { name: 'Active Jobs', href: '/contractor/jobs/active', icon: '🔨' },
   { name: 'Completed', href: '/contractor/jobs/completed', icon: '✅' },
-  { name: 'Route Map', href: '/contractor/map', icon: '🗺️' },
+  { name: 'Infrastructure Map', href: '/map', icon: '🗺️' },
+  { name: 'Route Optimizer', href: '/route', icon: '🛣️' },
   { name: 'Performance', href: '/contractor/performance', icon: '📈' },
   { name: 'Profile', href: '/contractor/profile', icon: '👤' },
 ];

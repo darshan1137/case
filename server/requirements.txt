@@ -1,9 +1,11 @@
 fastapi
 uvicorn
+gunicorn
 pydantic
 python-dotenv
 groq
 firebase-admin
 Pillow
 shapely
-httpx
+python-multipart
+
