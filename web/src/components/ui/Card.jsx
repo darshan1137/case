@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 function Card({ className, children, ...props }) {
   return (
     <div
-      className={cn('rounded-lg border border-gray-200 bg-white shadow-sm', className)}
+      className={cn('rounded-xl border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow duration-200', className)}
       {...props}
     >
       {children}
@@ -24,7 +24,7 @@ function CardHeader({ className, children, ...props }) {
 function CardTitle({ className, children, ...props }) {
   return (
     <h3
-      className={cn('text-lg font-semibold leading-none tracking-tight', className)}
+      className={cn('text-lg font-bold leading-none tracking-tight text-slate-900', className)}
       {...props}
     >
       {children}
@@ -34,7 +34,7 @@ function CardTitle({ className, children, ...props }) {
 
 function CardDescription({ className, children, ...props }) {
   return (
-    <p className={cn('text-sm text-gray-500', className)} {...props}>
+    <p className={cn('text-sm text-slate-600', className)} {...props}>
       {children}
     </p>
   );

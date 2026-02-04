@@ -13,8 +13,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Municipal Corporation - City Infrastructure Management",
-  description: "Smart city infrastructure management system for reporting and resolving civic issues",
+  title: "CASE Platform - Civic Action & Service Excellence",
+  description: "Modern civic infrastructure management platform. Capture, Assess, Serve, and Evolve city services with real-time reporting and resolution.",
+  keywords: "civic issues, municipal corporation, city infrastructure, smart city, CASE platform, Built in Bharat",
+  icons: {
+    icon: [
+      { url: '/logo.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: 'any' }
+    ],
+    apple: '/logo.svg',
+  },
 };
 
 export default function RootLayout({ children }) {
