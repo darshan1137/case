@@ -27,107 +27,78 @@ const languages = [
 export default function GoogleTranslate() {
   const [currentLang, setCurrentLang] = useState('en');
   const [isLoaded, setIsLoaded] = useState(false);
-
   useEffect(() => {
-    // Add Google Translate script
-    const addScript = () => {
-      if (document.getElementById('google-translate-script')) return;
-
-      const script = document.createElement('script');
-      script.id = 'google-translate-script';
-      script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-      script.async = true;
-      document.body.appendChild(script);
-    };
-
-    // Initialize Google Translate
+    // Define the global initializer used by Google's script
     window.googleTranslateElementInit = () => {
-      new window.google.translate.TranslateElement(
-        {
-          pageLanguage: 'en',
-          includedLanguages: languages.map(l => l.code).join(','),
-          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
-          autoDisplay: false,
-        },
-        'google_translate_element'
-      );
+      if (!window.google || !window.google.translate) return;
+      try {
+        new window.google.translate.TranslateElement(
+          {
+            pageLanguage: 'en',
+            includedLanguages: languages.map((l) => l.code).join(','),
+            layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false,
+          },
+          'google_translate_element'
+        );
+      } catch (e) {
+        // ignore if initialization fails
+      }
+
       setIsLoaded(true);
-      
-      // Hide the default Google Translate widget
+
       setTimeout(() => {
         const translateElement = document.getElementById('google_translate_element');
-        if (translateElement) {
-          translateElement.style.display = 'none';
-        }
-        
-        // Hide the Google Translate banner
+        if (translateElement) translateElement.style.display = 'none';
         const gtBanner = document.querySelector('.goog-te-banner-frame');
-        if (gtBanner) {
-          gtBanner.style.display = 'none';
-        }
-        
-        // Restore body top position
+        if (gtBanner) gtBanner.style.display = 'none';
         document.body.style.top = '0';
         document.body.style.position = 'static';
       }, 100);
     };
 
-    // Script is loaded globally from layout; no local script injection here.
-    // Component will rely on `googleTranslateElementInit` defined in `layout.jsx`.
-    return () => {
-      // Hide Google Translate banner and elements once loaded
-      const style = document.createElement('style');
-      style.innerHTML = `
-        .goog-te-banner-frame,
-        .goog-te-balloon-frame,
-        .goog-te-ftab-frame {
-          display: none !important;
-        }
-        body {
-          top: 0 !important;
-          position: static !important;
-        }
-        #google_translate_element {
-          display: none !important;
-        }
-        .skiptranslate {
-          display: none !important;
-        }
-        body > .skiptranslate {
-          display: none !important;
-        }
-      `;
-      document.head.appendChild(style);
-
-      const onLoaded = () => {
-        setIsLoaded(true);
-
-        // Hide the default widget and banner
-        setTimeout(() => {
-          const translateElement = document.getElementById('google_translate_element');
-          if (translateElement) translateElement.style.display = 'none';
-          const gtBanner = document.querySelector('.goog-te-banner-frame');
-          if (gtBanner) (gtBanner).style.display = 'none';
-          document.body.style.top = '0';
-          document.body.style.position = 'static';
-        }, 100);
-      };
-
-      window.addEventListener('googleTranslateLoaded', onLoaded);
-
-      // If google is already loaded, trigger immediately
-      if (window.google && window.google.translate) {
-        onLoaded();
+    // Add hiding styles to head
+    const style = document.createElement('style');
+    style.innerHTML = `
+      .goog-te-banner-frame,
+      .goog-te-balloon-frame,
+      .goog-te-ftab-frame {
+        display: none !important;
       }
-
-      return () => {
-        document.head.removeChild(style);
-        window.removeEventListener('googleTranslateLoaded', onLoaded);
-      };
+      body {
+        top: 0 !important;
+        position: static !important;
+      }
+      #google_translate_element {
+        display: none !important;
+      }
+      .skiptranslate {
+        display: none !important;
+      }
+      body > .skiptranslate {
+        display: none !important;
+      }
+    `;
     document.head.appendChild(style);
 
+    const onLoaded = () => {
+      setIsLoaded(true);
+      setTimeout(() => {
+        const translateElement = document.getElementById('google_translate_element');
+        if (translateElement) translateElement.style.display = 'none';
+        const gtBanner = document.querySelector('.goog-te-banner-frame');
+        if (gtBanner) gtBanner.style.display = 'none';
+        document.body.style.top = '0';
+        document.body.style.position = 'static';
+      }, 100);
+    };
+
+    window.addEventListener('googleTranslateLoaded', onLoaded);
+    if (window.google && window.google.translate) onLoaded();
+
     return () => {
-      document.head.removeChild(style);
+      if (style.parentNode) style.parentNode.removeChild(style);
+      window.removeEventListener('googleTranslateLoaded', onLoaded);
     };
   }, []);
 
