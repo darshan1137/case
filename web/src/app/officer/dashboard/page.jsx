@@ -15,6 +15,7 @@ import { getWardName } from '@/lib/constants/wards';
 export default function OfficerDashboard() {
   const router = useRouter();
   const { userData, loading: authLoading } = useAuth();
+  const [tickets, setTickets] = useState([]);
   const [reports, setReports] = useState([]);
   const [workOrders, setWorkOrders] = useState([]);
   const [reportStats, setReportStats] = useState({});
@@ -27,6 +28,7 @@ export default function OfficerDashboard() {
 
   const navigation = [
     { name: 'Dashboard', href: '/officer/dashboard', icon: '📊' },
+    { name: 'Tickets', href: '/officer/tickets', icon: '🎫' },
     { name: 'Reports', href: '/officer/reports', icon: '📋' },
     { name: 'Work Orders', href: '/officer/work-orders', icon: '🔧' },
     { name: 'Contractors', href: '/officer/contractors', icon: '👷' },
@@ -42,19 +44,41 @@ export default function OfficerDashboard() {
   ];
 
   useEffect(() => {
-    if (!authLoading) {
-      if (!userData?.role == "officer") {
-        router.push('/auth/login');
-        return;
-      }
-      loadData();
+    if (authLoading) {
+      return; // Still loading auth, don't redirect yet
     }
-  }, [userData, authLoading]);
+
+    // Auth finished loading - now check if user exists and has proper role
+    if (!userData?.role || !userData.role.includes('class_')) {
+      router.push('/auth/login');
+      return;
+    }
+
+    // User is authenticated with proper officer role
+    loadData();
+  }, [userData, authLoading, router]);
 
   const loadData = async () => {
     setLoading(true);
     try {
-      // Load based on officer level
+      // Load tickets based on role
+      const userId = userData.id || userData.uid;
+      const params = new URLSearchParams({
+        userId: userId,
+        role: userData.role
+      });
+
+      if ((isClassB || isClassC) && userData.ward_id) {
+        params.append('ward', userData.ward_id);
+      }
+
+      const ticketsResponse = await fetch(`/api/tickets?${params.toString()}`);
+      if (ticketsResponse.ok) {
+        const ticketsData = await ticketsResponse.json();
+        setTickets(ticketsData.tickets || []);
+      }
+
+      // Load legacy reports and work orders
       let reportsResult, workOrdersResult, statsResult, woStatsResult;
 
       if (isClassA) {
@@ -80,10 +104,10 @@ export default function OfficerDashboard() {
         woStatsResult = await workOrderService.getWorkOrderStats(userData.ward_id);
       }
 
-      if (reportsResult.success) setReports(reportsResult.reports);
-      if (workOrdersResult.success) setWorkOrders(workOrdersResult.work_orders);
-      if (statsResult.success) setReportStats(statsResult.stats);
-      if (woStatsResult.success) setWoStats(woStatsResult.stats);
+      if (reportsResult?.success) setReports(reportsResult.reports);
+      if (workOrdersResult?.success) setWorkOrders(workOrdersResult.work_orders);
+      if (statsResult?.success) setReportStats(statsResult.stats);
+      if (woStatsResult?.success) setWoStats(woStatsResult.stats);
     } catch (error) {
       console.error('Error loading dashboard data:', error);
     } finally {
@@ -218,6 +242,51 @@ export default function OfficerDashboard() {
             </CardContent>
           </Card>
         )}
+
+        {/* Recent Tickets */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Recent Tickets</CardTitle>
+            <Link href="/officer/reports">
+              <Button variant="outline" size="sm">View All</Button>
+            </Link>
+          </CardHeader>
+          <CardContent>
+            {tickets.length === 0 ? (
+              <div className="text-center py-8">
+                <span className="text-4xl">🎫</span>
+                <p className="text-gray-500 mt-2">No tickets</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {tickets.slice(0, 5).map((ticket) => (
+                  <div
+                    key={ticket.id}
+                    className="border rounded-lg p-3 hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-gray-900 text-sm">{ticket.title}</h4>
+                        <p className="text-xs text-gray-600 mt-1 line-clamp-2">{ticket.description}</p>
+                      </div>
+                      <Badge variant={
+                        ticket.severity_level === 'dangerous' ? 'danger' :
+                        ticket.severity_level === 'high' ? 'warning' :
+                        'info'
+                      } className="ml-2 flex-shrink-0">
+                        {ticket.severity_level}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-gray-600">
+                      <span>{ticket.issue_type}</span>
+                      <span>{new Date(ticket.created_at).toLocaleDateString()}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Recent Reports */}

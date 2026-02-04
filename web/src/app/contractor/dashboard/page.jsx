@@ -28,15 +28,19 @@ export default function ContractorDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!authLoading && userData?.role !== 'contractor') {
+    if (authLoading) {
+      return; // Still loading auth, don't redirect yet
+    }
+
+    // Auth finished loading - now check if user has correct role
+    if (userData?.role !== 'contractor') {
       router.push('/auth/login');
       return;
     }
 
-    if (userData) {
-      loadData();
-    }
-  }, [userData, authLoading]);
+    // User is authenticated with correct role
+    loadData();
+  }, [userData, authLoading, router]);
 
   const loadData = async () => {
     setLoading(true);

@@ -8,6 +8,7 @@ import { DashboardLayout } from '@/components/layout';
 import { Card, CardHeader, CardTitle, CardContent, Button, Badge } from '@/components/ui';
 import { reportService } from '@/lib/reportService';
 import { REPORT_STATUS, CATEGORIES_LIST } from '@/lib/constants/sla';
+import Image from 'next/image';
 
 const navigation = [
   { name: 'Dashboard', href: '/citizen/dashboard', icon: '📊' },
@@ -22,6 +23,7 @@ const navigation = [
 export default function CitizenDashboard() {
   const router = useRouter();
   const { userData, loading: authLoading } = useAuth();
+  const [tickets, setTickets] = useState([]);
   const [reports, setReports] = useState([]);
   const [stats, setStats] = useState({});
   const [loading, setLoading] = useState(true);
@@ -31,13 +33,15 @@ export default function CitizenDashboard() {
       return; // Still loading auth
     }
 
-    // Check if user data exists and has correct role
+    // Only proceed if auth is done loading
     if (!userData) {
+      // Auth finished loading and no user
       router.push('/auth/login');
       return;
     }
 
     if (userData.role !== 'citizen') {
+      // Wrong role
       router.push('/auth/login');
       return;
     }
@@ -49,13 +53,23 @@ export default function CitizenDashboard() {
   const loadData = async () => {
     setLoading(true);
     try {
-      // Load user's recent reports
+      // Load user's tickets (from new ticket creation)
+      const userId = userData.id || userData.uid;
+      const ticketsResponse = await fetch(
+        `/api/tickets?userId=${userId}&role=citizen&filterType=my`
+      );
+      if (ticketsResponse.ok) {
+        const ticketsData = await ticketsResponse.json();
+        setTickets(ticketsData.tickets || []);
+      }
+
+      // Load user's recent reports (legacy reports)
       const reportsResult = await reportService.getReportsByUser(userData.uid, { limitCount: 5 });
       if (reportsResult.success) {
         setReports(reportsResult.reports);
       }
 
-      // Calculate stats from reports
+      // Calculate stats
       const allReportsResult = await reportService.getReportsByUser(userData.uid, { limitCount: 100 });
       if (allReportsResult.success) {
         const statusCounts = {};
@@ -183,6 +197,92 @@ export default function CitizenDashboard() {
                 </Link>
               ))}
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Recent Tickets */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Your Recent Tickets</CardTitle>
+            <Link href="/citizen/reports">
+              <Button variant="outline" size="sm">View All</Button>
+            </Link>
+          </CardHeader>
+          <CardContent>
+            {tickets.length === 0 ? (
+              <div className="text-center py-8">
+                <span className="text-4xl">🎫</span>
+                <p className="text-gray-500 mt-2">No tickets yet. Create your first report!</p>
+                <Link href="/citizen/reports/new">
+                  <Button className="mt-4">Create Your First Ticket</Button>
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {tickets.slice(0, 5).map((ticket) => (
+                  <div
+                    key={ticket.id}
+                    className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-gray-900">{ticket.title}</h3>
+                        <p className="text-sm text-gray-600 mt-1">{ticket.description}</p>
+                      </div>
+                      <Badge className="ml-4">
+                        {ticket.severity_level}
+                      </Badge>
+                    </div>
+
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex gap-2 text-sm text-gray-600">
+                        <span className="flex items-center gap-1">
+                          🏷️ {ticket.issue_type}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          🏢 {ticket.department}
+                        </span>
+                      </div>
+                      <span className="text-xs text-gray-500">
+                        {new Date(ticket.created_at).toLocaleDateString()}
+                      </span>
+                    </div>
+
+                    {/* Image Preview */}
+                    {ticket.images && ticket.images.length > 0 && (
+                      <div className="mb-3 flex gap-2 overflow-x-auto">
+                        {ticket.images.map((imageUrl, idx) => (
+                          <div
+                            key={idx}
+                            className="relative w-20 h-20 flex-shrink-0 rounded overflow-hidden"
+                          >
+                            <img
+                              src={imageUrl}
+                              alt={`Ticket image ${idx + 1}`}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between">
+                      <div className="text-sm">
+                        <span className="text-gray-600">ID: </span>
+                        <span className="font-mono text-gray-900">{ticket.ticket_id}</span>
+                      </div>
+                      <Badge variant={
+                        ticket.status === 'submitted' ? 'warning' :
+                        ticket.status === 'resolved' ? 'success' :
+                        'secondary'
+                      }>
+                        {ticket.status}
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
 
