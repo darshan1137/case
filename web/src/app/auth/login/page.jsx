@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { authService } from '@/lib/auth';
-import { userService } from '@/lib/userService';
+import Image from 'next/image';
 import { Button, Input, Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Alert, AlertDescription } from '@/components/ui';
 
 export default function LoginPage() {
@@ -28,34 +27,38 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // Sign in with Firebase Auth
-      const authResult = await authService.signIn(formData.email, formData.password);
-      
-      if (!authResult.success) {
-        setError(authResult.error);
+      // Call the login API
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        setError(data.error || 'Login failed');
         setLoading(false);
         return;
       }
 
-      // Get user data to determine role
-      const userResult = await userService.getUserById(authResult.user.uid);
-      
-      if (!userResult.success) {
-        setError('Unable to fetch user profile');
-        setLoading(false);
-        return;
+      // Store auth token if provided
+      if (data.token) {
+        localStorage.setItem('authToken', data.token);
       }
 
-      // Check if user is active
-      if (!userResult.user.active) {
-        setError('Your account has been deactivated. Please contact support.');
-        await authService.signOut();
-        setLoading(false);
-        return;
+      // Store user data
+      if (data.user) {
+        localStorage.setItem('userData', JSON.stringify(data.user));
       }
 
       // Redirect based on role
-      const role = userResult.user.role;
+      const role = data.user?.role;
       switch (role) {
         case 'citizen':
           router.push('/citizen/dashboard');
@@ -63,12 +66,8 @@ export default function LoginPage() {
         case 'contractor':
           router.push('/contractor/dashboard');
           break;
-        case 'class_c':
-        case 'class_b':
+        case 'officer':
           router.push('/officer/dashboard');
-          break;
-        case 'class_a':
-          router.push('/admin/dashboard');
           break;
         default:
           router.push('/');
@@ -85,8 +84,14 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-blue-600 flex items-center justify-center">
-            <span className="text-2xl text-white">🏛️</span>
+          <div className="mx-auto mb-4 h-16 w-16 relative">
+            <Image
+              src="/logo.svg"
+              alt="Municipal Corporation Logo"
+              width={64}
+              height={64}
+              className="w-full h-full object-contain"
+            />
           </div>
           <CardTitle className="text-2xl">Welcome Back</CardTitle>
           <CardDescription>
@@ -150,7 +155,7 @@ export default function LoginPage() {
             </Button>
             
             <div className="text-sm text-center text-gray-600">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link href="/auth/register" className="text-blue-600 hover:underline font-medium">
                 Register here
               </Link>

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { userService } from '@/lib/userService';
 import { Button, Input, Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Alert, AlertDescription } from '@/components/ui';
 
@@ -39,6 +40,12 @@ export default function CitizenRegisterPage() {
     }
     if (formData.phone.length < 10) {
       setError('Please enter a valid phone number');
+      return false;
+    }
+    // Validate phone format
+    const phoneRegex = /^\+91[0-9]{10}$/;
+    if (!phoneRegex.test(formData.phone)) {
+      setError('Phone must be in format +91XXXXXXXXXX');
       return false;
     }
     if (formData.password.length < 6) {
@@ -92,8 +99,14 @@ export default function CitizenRegisterPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-8">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-green-600 flex items-center justify-center">
-            <span className="text-2xl text-white">👤</span>
+          <div className="mx-auto mb-4 h-16 w-16 relative">
+            <Image
+              src="/logo.svg"
+              alt="Municipal Corporation Logo"
+              width={64}
+              height={64}
+              className="w-full h-full object-contain"
+            />
           </div>
           <CardTitle className="text-2xl">Citizen Registration</CardTitle>
           <CardDescription>
@@ -148,7 +161,8 @@ export default function CitizenRegisterPage() {
                 id="phone"
                 name="phone"
                 type="tel"
-                placeholder="Enter your phone number"
+                placeholder="+91XXXXXXXXXX"
+                pattern="\+91[0-9]{10}"
                 value={formData.phone}
                 onChange={handleChange}
                 required

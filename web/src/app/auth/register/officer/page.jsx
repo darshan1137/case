@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { userService } from '@/lib/userService';
 import { DEPARTMENTS_LIST } from '@/lib/constants/departments';
 import { WARDS_LIST } from '@/lib/constants/wards';
@@ -16,9 +17,10 @@ export default function OfficerRegisterPage() {
     phone: '',
     password: '',
     confirmPassword: '',
-    role: '',
+    class: '',
     department: '',
     ward_id: '',
+    zone: '',
     employeeId: '',
   });
   const [error, setError] = useState('');
@@ -43,17 +45,23 @@ export default function OfficerRegisterPage() {
       setError('Phone number is required');
       return false;
     }
-    if (!formData.role) {
-      setError('Please select your role');
+    if (!formData.class) {
+      setError('Please select your class');
       return false;
     }
     if (!formData.department) {
       setError('Please select your department');
       return false;
     }
-    if (formData.role === 'class_c' && !formData.ward_id) {
-      setError('Class C officers must select a ward');
-      return false;
+    if (formData.class === 'class_c') {
+      if (!formData.ward_id) {
+        setError('Class C officers must select a ward');
+        return false;
+      }
+      if (!formData.zone) {
+        setError('Zone is required for Class C officers');
+        return false;
+      }
     }
     if (!formData.employeeId.trim()) {
       setError('Employee ID is required');
@@ -86,12 +94,13 @@ export default function OfficerRegisterPage() {
         password: formData.password,
         name: formData.name,
         phone: formData.phone,
-        role: formData.role,
+        class: formData.class,
+        role: 'officer',
         department: formData.department,
         ward_id: formData.ward_id || null,
-        zone: selectedWard?.zone || null,
+        zone: formData.zone || selectedWard?.zone || null,
         employee_id: formData.employeeId,
-        verified: false, // Needs verification by Class A officer
+        verified: false,
       });
 
       if (!result.success) {
@@ -114,8 +123,14 @@ export default function OfficerRegisterPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-8">
       <Card className="w-full max-w-lg">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-purple-600 flex items-center justify-center">
-            <span className="text-2xl text-white">👔</span>
+          <div className="mx-auto mb-4 h-16 w-16 relative">
+            <Image
+              src="/logo.svg"
+              alt="Municipal Corporation Logo"
+              width={64}
+              height={64}
+              className="w-full h-full object-contain"
+            />
           </div>
           <CardTitle className="text-2xl">Officer Registration</CardTitle>
           <CardDescription>
@@ -188,7 +203,8 @@ export default function OfficerRegisterPage() {
                 id="phone"
                 name="phone"
                 type="tel"
-                placeholder="Enter your phone number"
+                placeholder="+91XXXXXXXXXX"
+                pattern="\+91[0-9]{10}"
                 value={formData.phone}
                 onChange={handleChange}
                 required
@@ -198,13 +214,13 @@ export default function OfficerRegisterPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label htmlFor="role" className="text-sm font-medium text-gray-700">
+                <label htmlFor="class" className="text-sm font-medium text-gray-700">
                   Officer Level
                 </label>
                 <Select
-                  id="role"
-                  name="role"
-                  value={formData.role}
+                  id="class"
+                  name="class"
+                  value={formData.class}
                   onChange={handleChange}
                   required
                   disabled={loading}
@@ -238,27 +254,45 @@ export default function OfficerRegisterPage() {
               </div>
             </div>
 
-            {formData.role === 'class_c' && (
-              <div className="space-y-2">
-                <label htmlFor="ward_id" className="text-sm font-medium text-gray-700">
-                  Assigned Ward
-                </label>
-                <Select
-                  id="ward_id"
-                  name="ward_id"
-                  value={formData.ward_id}
-                  onChange={handleChange}
-                  required
-                  disabled={loading}
-                >
-                  <option value="">Select Ward</option>
-                  {WARDS_LIST.map(ward => (
-                    <option key={ward.id} value={ward.id}>
-                      {ward.name}
-                    </option>
-                  ))}
-                </Select>
-              </div>
+            {formData.class === 'class_c' && (
+              <>
+                <div className="space-y-2">
+                  <label htmlFor="ward_id" className="text-sm font-medium text-gray-700">
+                    Assigned Ward
+                  </label>
+                  <Select
+                    id="ward_id"
+                    name="ward_id"
+                    value={formData.ward_id}
+                    onChange={handleChange}
+                    required
+                    disabled={loading}
+                  >
+                    <option value="">Select Ward</option>
+                    {WARDS_LIST.map(ward => (
+                      <option key={ward.id} value={ward.id}>
+                        {ward.name}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="zone" className="text-sm font-medium text-gray-700">
+                    Zone
+                  </label>
+                  <Input
+                    id="zone"
+                    name="zone"
+                    type="text"
+                    placeholder="e.g., WEST, EAST, CENTRAL"
+                    value={formData.zone}
+                    onChange={handleChange}
+                    required
+                    disabled={loading}
+                  />
+                </div>
+              </>
             )}
 
             <div className="grid grid-cols-2 gap-4">
