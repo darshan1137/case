@@ -21,6 +21,8 @@ export default function OfficerProfilePage() {
 
   const navigation = [
     { name: 'Dashboard', href: '/officer/dashboard', icon: '📊' },
+    { name: 'Tickets', href: '/officer/tickets', icon: '🎫' },
+
     { name: 'Reports', href: '/officer/reports', icon: '📋' },
     { name: 'Work Orders', href: '/officer/work-orders', icon: '🔧' },
     { name: 'Contractors', href: '/officer/contractors', icon: '👷' },

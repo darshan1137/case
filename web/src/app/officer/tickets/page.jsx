@@ -2,21 +2,40 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { DashboardLayout } from '@/components/layout';
 import { Card, CardHeader, CardTitle, CardContent, Button, Badge } from '@/components/ui';
 
-const navigation = [
-  { name: 'Dashboard', href: '/officer/dashboard', icon: '📊' },
-  { name: 'Reports', href: '/officer/reports', icon: '📋' },
-  { name: 'Work Orders', href: '/officer/work-orders', icon: '🔧' },
-  { name: 'Profile', href: '/officer/profile', icon: '👤' },
-];
 
 export default function OfficerTicketsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { userData, loading: authLoading } = useAuth();
+
+  const isClassA = userData?.officer_class === 'class_a';
+  const isClassB = userData?.officer_class === 'class_b';
+  const isClassC = userData?.officer_class === 'class_c';
+
+
+
+   const navigation = [
+    { name: 'Dashboard', href: '/officer/dashboard', icon: '📊' },
+    { name: 'Reports', href: '/officer/reports', icon: '📋' },
+    { name: 'Tickets', href: '/officer/tickets', icon: '🎫' },
+    { name: 'Work Orders', href: '/officer/work-orders', icon: '🔧' },
+    { name: 'Contractors', href: '/officer/contractors', icon: '👷' },
+    ...(isClassA ? [
+      { name: '➕ Add Contractor', href: '/officer/contractors/add', icon: '➕' },
+    ] : []),
+    { name: 'Assets', href: '/officer/assets', icon: '🏗️' },
+    { name: 'Analytics', href: '/officer/analytics', icon: '📈' },
+    ...(isClassB || isClassA ? [
+      { name: 'Team', href: '/officer/team', icon: '👥' },
+      { name: 'Budgets', href: '/officer/budgets', icon: '💰' },
+    ] : []),
+    { name: 'Profile', href: '/officer/profile', icon: '👤' },
+  ];
   
   const [tickets, setTickets] = useState([]);
   const [assignedTickets, setAssignedTickets] = useState([]);
@@ -25,12 +44,9 @@ export default function OfficerTicketsPage() {
   const [statusFilter, setStatusFilter] = useState('');
   const [activeTab, setActiveTab] = useState('all');
 
-  const isClassA = userData?.role === 'class_a';
-  const isClassB = userData?.role === 'class_b';
-  const isClassC = userData?.role === 'class_c';
-
+ 
   useEffect(() => {
-    if (!authLoading && (!userData?.role || !userData.role.includes('class_'))) {
+    if (!authLoading && userData.role == "citizen") {
       router.push('/auth/login');
     }
   }, [userData, authLoading, router]);
@@ -49,7 +65,7 @@ export default function OfficerTicketsPage() {
       // Build query params
       const params = new URLSearchParams({
         userId: userId,
-        role: userData.role
+        role: userData.officer_class || 'class_a',
       });
 
       if ((isClassB || isClassC) && userData.ward_id) {
@@ -68,13 +84,14 @@ export default function OfficerTicketsPage() {
       const response = await fetch(`/api/tickets?${params.toString()}`);
       if (response.ok) {
         const data = await response.json();
+        console.log(data)
         setTickets(data.tickets || []);
 
         // If class_b, also fetch assigned tickets
         if (isClassB) {
           const assignedParams = new URLSearchParams({
             userId: userId,
-            role: userData.role,
+            role: userData.officer_class || 'class_b',
             filterType: 'assigned',
             ward: userData.ward_id || ''
           });
@@ -276,15 +293,11 @@ export default function OfficerTicketsPage() {
                         <span>ID: {ticket.ticket_id}</span>
                         <span>Created: {new Date(ticket.created_at).toLocaleDateString()}</span>
                       </div>
-                      <button
-                        onClick={() => {
-                          // Could open detail view or assign
-                          alert('Ticket detail view coming soon');
-                        }}
-                        className="text-blue-600 hover:text-blue-700 font-medium"
-                      >
-                        View Details →
-                      </button>
+                      <Link href={`/officer/tickets/${ticket.ticket_id}`}>
+                        <button className="text-blue-600 hover:text-blue-700 font-medium">
+                          View Details →
+                        </button>
+                      </Link>
                     </div>
                   </div>
                 ))}

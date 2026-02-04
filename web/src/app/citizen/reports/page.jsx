@@ -217,7 +217,7 @@ export default function CitizenReportsPage() {
               <div className="space-y-4">
                 {allItems.map((item) => (
                   <Link
-                    key={item.report_id || item.ticket_id}
+                    key={item.ticket_id}
                     href={item.type === 'report' 
                       ? `/citizen/reports/${item.report_id}`
                       : `/citizen/reports/ticket/${item.ticket_id}`
