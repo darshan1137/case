@@ -68,9 +68,9 @@ export function DashboardLayout({ children, navigation, title }) {
         </div>
       </nav>
 
-      <div className="flex">
+      <div className="flex h-[calc(100vh-4rem)]">
         {/* Sidebar */}
-        <aside className="w-64 bg-white shadow-sm min-h-[calc(100vh-4rem)] border-r border-gray-200">
+        <aside className="w-64 bg-white shadow-sm border-r border-gray-200 overflow-y-auto">
           <nav className="p-4 space-y-1">
             {navigation.map((item) => {
               const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
@@ -94,7 +94,7 @@ export function DashboardLayout({ children, navigation, title }) {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-6 overflow-y-auto">
           {children}
         </main>
       </div>
