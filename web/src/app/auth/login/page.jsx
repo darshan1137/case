@@ -23,7 +23,7 @@ export default function LoginPage() {
     { email: 'alfiyasiddique1708@gmail.com', password: '123456', role: 'Citizen' },
     { email: 'contractor@demo.com', password: 'demo123', role: 'Contractor' },
     { email: 'officer.c@demo.com', password: 'demo123', role: 'Class C Officer' },
-    { email: 'officer.b@demo.com', password: 'demo123', role: 'Class B Officer' },
+    { email: 'darshankhapekar8520@gmail.com', password: '123456', role: 'Class B Officer' },
     { email: 'admin@demo.com', password: 'demo123', role: 'Admin' }
   ];
 
@@ -67,6 +67,7 @@ export default function LoginPage() {
       });
 
       const data = await response.json();
+      console.log(data)
 
       if (!data.success) {
         const errorMessage = data.error || 'Login failed';

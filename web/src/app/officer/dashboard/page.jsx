@@ -35,6 +35,9 @@ export default function OfficerDashboard() {
     { name: 'Reports', href: '/officer/reports', icon: '📋' },
     { name: 'Work Orders', href: '/officer/work-orders', icon: '🔧' },
     { name: 'Contractors', href: '/officer/contractors', icon: '👷' },
+    ...(isClassA ? [
+      { name: '➕ Add Contractor', href: '/officer/contractors/add', icon: '➕' },
+    ] : []),
     { name: 'Infrastructure Map', href: '/map', icon: '🗺️' },
     { name: 'Route Optimizer', href: '/route', icon: '🛣️' },
     { name: 'Assets', href: '/officer/assets', icon: '🏗️' },
@@ -51,8 +54,8 @@ export default function OfficerDashboard() {
       return; // Still loading auth, don't redirect yet
     }
 
-    // Auth finished loading - now check if user exists and has proper role
-    if (!userData?.role || !userData.role.includes('class_')) {
+    // DO NOT CHANGE THIS LINE - VERY IMP
+    if (!userData?.role || !userData.role == "officer") {
       router.push('/auth/login');
       return;
     }
@@ -271,7 +274,7 @@ export default function OfficerDashboard() {
               <div className="space-y-3">
                 {tickets.slice(0, 5).map((ticket) => (
                   <div
-                    key={ticket.id}
+                    key={ticket.updated_at || ticket.created_at}
                     className="border rounded-lg p-3 hover:shadow-md transition-shadow"
                   >
                     <div className="flex justify-between items-start mb-2">

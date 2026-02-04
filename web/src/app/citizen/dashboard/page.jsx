@@ -38,8 +38,7 @@ export default function CitizenDashboard() {
 
     // Only proceed if auth is done loading
     if (!userData) {
-      // Auth finished loading and no user
-      router.push('/auth/login');
+      // Auth finished loading and no user - wait a bit for userData to populate
       return;
     }
 

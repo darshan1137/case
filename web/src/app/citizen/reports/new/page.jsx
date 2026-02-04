@@ -38,7 +38,8 @@ export default function NewReportPage() {
     severity_level: '',
     confidence_score: 0,
     reasoning: '',
-    message: ''
+    message: '',
+    ward: ''
   });
 
   useEffect(() => {
@@ -212,7 +213,8 @@ export default function NewReportPage() {
         severity_level: result.severity_level || '',
         confidence_score: result.confidence_score || 0,
         reasoning: result.reasoning || '',
-        message: result.message || ''
+        message: result.message || '',
+        ward: result?.ward || ''
       });
 
       setError('');
@@ -246,15 +248,13 @@ export default function NewReportPage() {
         throw new Error('User ID not found. Please log in again.');
       }
 
-      // Generate ticket ID
-      const ticketId = `TICKET-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
-
-      // Prepare ticket data for Firestore - ensure no undefined values
+      // Prepare ticket data for API
       const ticketData = {
-        ticket_id: ticketId,
         citizen_id: userId,
         citizen_name: userData.name || 'Anonymous',
         citizen_phone: userData.phone || '',
+        ward: formData.ward || null,
+        location: userData.location || null,
         title: formData.title || '',
         description: formData.description || '',
         issue_type: formData.issue_type || '',
@@ -265,21 +265,33 @@ export default function NewReportPage() {
         images: apiResponse.imageUrls || [],
         detected: apiResponse.detected || false,
         reasoning: formData.reasoning || '',
-        message: formData.message || '',
-        status: 'submitted',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        is_active: true
+        message: formData.message || ''
       };
 
-      console.log('Saving ticket data:', ticketData);
+      console.log('Submitting ticket data:', ticketData);
 
-      // Save directly to Firestore using client SDK
-      const ticketsRef = collection(db, 'tickets');
-      const docRef = await addDoc(ticketsRef, ticketData);
+      // Create ticket via API endpoint (handles Firestore + email notification)
+      const response = await fetch('/api/tickets', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(ticketData)
+      });
 
-      console.log('Ticket created:', ticketId, 'Doc ID:', docRef.id);
-      setSuccess(`Ticket created successfully! ID: ${ticketId}`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create ticket');
+      }
+
+      const result = await response.json();
+      console.log('Ticket created:', result.ticket_id);
+      
+      if (result.notification_sent) {
+        setSuccess(`Ticket created successfully! ID: ${result.ticket_id}\nWard officer has been notified.`);
+      } else {
+        setSuccess(`Ticket created successfully! ID: ${result.ticket_id}`);
+      }
       
       // Clear form
       setImages([]);
@@ -294,7 +306,8 @@ export default function NewReportPage() {
         severity_level: '',
         confidence_score: 0,
         reasoning: '',
-        message: ''
+        message: '',
+        ward: ''
       });
       
       setTimeout(() => {
@@ -512,6 +525,20 @@ export default function NewReportPage() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Ward
+                      </label>
+                      <input
+                        type="text"
+                        name="ward"
+                        value={formData.ward}
+                        onChange={handleInputChange}
+                        placeholder="e.g., Ward A, Ward 23"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
                         Confidence Score
                       </label>
                       <div className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 flex items-center">
@@ -591,7 +618,8 @@ export default function NewReportPage() {
                         severity_level: '',
                         confidence_score: 0,
                         reasoning: '',
-                        message: ''
+                        message: '',
+                        ward: ''
                       });
                     } else {
                       router.back();
