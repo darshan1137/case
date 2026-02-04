@@ -266,7 +266,7 @@ export default function NewReportPage() {
         detected: apiResponse.detected || false,
         reasoning: formData.reasoning || '',
         message: formData.message || '',
-        status: 'submitted',
+        status: 'pending',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         is_active: true
@@ -277,6 +277,12 @@ export default function NewReportPage() {
       // Save directly to Firestore using client SDK
       const ticketsRef = collection(db, 'tickets');
       const docRef = await addDoc(ticketsRef, ticketData);
+
+      // Update the ticket document to include the Firestore document id as ticket_id
+      const { updateDoc, doc } = await import('firebase/firestore');
+      await updateDoc(doc(db, 'tickets', docRef.id), {
+        ticket_id: docRef.id
+      });
 
       console.log('Ticket created:', ticketId, 'Doc ID:', docRef.id);
       setSuccess(`Ticket created successfully! ID: ${ticketId}`);

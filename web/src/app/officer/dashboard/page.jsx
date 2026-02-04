@@ -261,7 +261,7 @@ export default function OfficerDashboard() {
               <div className="space-y-3">
                 {tickets.slice(0, 5).map((ticket) => (
                   <div
-                    key={ticket.id}
+                    key={ticket.updated_at || ticket.created_at}
                     className="border rounded-lg p-3 hover:shadow-md transition-shadow"
                   >
                     <div className="flex justify-between items-start mb-2">
