@@ -9,6 +9,8 @@ import { Card, CardHeader, CardTitle, CardContent, Button, Badge } from '@/compo
 import { reportService } from '@/lib/reportService';
 import { REPORT_STATUS, CATEGORIES_LIST } from '@/lib/constants/sla';
 import Image from 'next/image';
+import CitizenTour from '@/components/CitizenTour';
+import TourButton from '@/components/TourButton';
 
 const navigation = [
   { name: 'Dashboard', href: '/citizen/dashboard', icon: '📊' },
@@ -27,6 +29,7 @@ export default function CitizenDashboard() {
   const [reports, setReports] = useState([]);
   const [stats, setStats] = useState({});
   const [loading, setLoading] = useState(true);
+  const [runTour, setRunTour] = useState(false);
 
   useEffect(() => {
     if (authLoading) {
@@ -35,8 +38,7 @@ export default function CitizenDashboard() {
 
     // Only proceed if auth is done loading
     if (!userData) {
-      // Auth finished loading and no user
-      router.push('/auth/login');
+      // Auth finished loading and no user - wait a bit for userData to populate
       return;
     }
 
@@ -48,6 +50,13 @@ export default function CitizenDashboard() {
 
     // User is authenticated and has correct role
     loadData();
+    
+    // Check if user has seen the tour
+    const tourCompleted = localStorage.getItem('citizenTourCompleted');
+    if (!tourCompleted) {
+      // Start tour after a brief delay
+      setTimeout(() => setRunTour(true), 1000);
+    }
   }, [userData, authLoading, router]);
 
   const loadData = async () => {
@@ -350,6 +359,22 @@ export default function CitizenDashboard() {
           </CardContent>
         </Card>
       </div>
+      
+      {/* Tour Guide */}
+      <CitizenTour 
+        run={runTour} 
+        onComplete={() => {
+          setRunTour(false);
+          localStorage.setItem('citizenTourCompleted', 'true');
+        }} 
+      />
+      <TourButton 
+        onClick={() => {
+          localStorage.removeItem('citizenTourCompleted');
+          setRunTour(true);
+        }}
+        color="#4f46e5"
+      />
     </DashboardLayout>
   );
 }

@@ -101,7 +101,7 @@ export default function Home() {
                   Login
                 </Button>
               </Link>
-              <Link href="/auth/register">
+              <Link href="/auth/register" className="register-btn">
                 <Button className="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 shadow-md">
                   Register
                 </Button>
@@ -145,7 +145,7 @@ export default function Home() {
               </svg>
             </motion.div>
 
-            <h1 className="text-5xl md:text-7xl font-black text-slate-900 mb-6 leading-tight">
+            <h1 className="hero-title text-5xl md:text-7xl font-black text-slate-900 mb-6 leading-tight">
               Empowering Citizens,
               <br />
               <span className="bg-gradient-to-r from-orange-500 via-blue-900 to-green-600 bg-clip-text text-transparent">
@@ -159,7 +159,7 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Link href="/auth/register">
+              <Link href="/auth/register" className="report-issue-btn">
                 <Button
                   size="lg"
                   className="px-8 py-6 text-lg bg-gradient-to-r from-orange-500 to-green-600 hover:from-orange-600 hover:to-green-700 shadow-xl shadow-orange-500/30"
@@ -167,13 +167,22 @@ export default function Home() {
                   Report an Issue
                 </Button>
               </Link>
-              <Link href="/track">
+              <Link href="/track" className="track-status-btn">
                 <Button
                   variant="outline"
                   size="lg"
                   className="px-8 py-6 text-lg border-2 hover:border-orange-500 hover:text-orange-600"
                 >
                   Track Status
+                </Button>
+              </Link>
+              <Link href="/revenue-audit" className="revenue-audit-btn">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="px-8 py-6 text-lg border-2 hover:border-blue-500 hover:text-blue-600 bg-gradient-to-r from-blue-50 to-cyan-50"
+                >
+                  🏛️ Revenue Guard AI
                 </Button>
               </Link>
             </div>
@@ -185,7 +194,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-white">
+      <section className="features-section py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -312,7 +321,7 @@ export default function Home() {
             </h3>
           </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          <div className="categories-section grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {CATEGORIES_LIST.slice(0, 12).map((category, idx) => (
               <motion.div
                 key={category.id}

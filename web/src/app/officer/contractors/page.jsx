@@ -31,15 +31,19 @@ export default function OfficerContractorsPage() {
   const [formData, setFormData] = useState([
     { name: '', email: '', phone: '', company_name: '', specializations: [] }
   ]);
-  const isClassA = userData?.role === 'class_a';
-  const isClassB = userData?.role === 'class_b';
-  const isClassC = userData?.role === 'class_c';
+  const isClassA = userData?.role === 'officer' && userData?.class === 'class_a';
+  const isClassB = userData?.role === 'officer' && userData?.class === 'class_b';
+  const isClassC = userData?.role === 'officer' && userData?.class === 'class_c';
 
    const navigation = [
     { name: 'Dashboard', href: '/officer/dashboard', icon: '📊' },
     { name: 'Reports', href: '/officer/reports', icon: '📋' },
+    { name: 'Tickets', href: '/officer/tickets', icon: '📋' },
     { name: 'Work Orders', href: '/officer/work-orders', icon: '🔧' },
     { name: 'Contractors', href: '/officer/contractors', icon: '👷' },
+    ...(isClassA ? [
+      { name: '➕ Add Contractor', href: '/officer/contractors/add', icon: '➕' },
+    ] : []),
     { name: 'Infrastructure Map', href: '/map', icon: '🗺️' },
     { name: 'Route Optimizer', href: '/route', icon: '🛣️' },
     { name: 'Assets', href: '/officer/assets', icon: '🏗️' },
@@ -51,7 +55,7 @@ export default function OfficerContractorsPage() {
     { name: 'Profile', href: '/officer/profile', icon: '👤' },
   ];
 
-  const isAdmin = userData?.role === 'class_a';
+  const isAdmin = userData?.role === 'officer' && userData?.class === 'class_a';
   const isOfficer = userData?.role == "officer"
 
   useEffect(() => {
@@ -63,7 +67,7 @@ export default function OfficerContractorsPage() {
   }, [userData, authLoading, router]);
 
   useEffect(() => {
-    if (!authLoading && userData && userData.role != "officer") {
+    if (!authLoading && userData && userData.role === "officer") {
       loadContractors();
     }
   }, [userData, authLoading, filter]);

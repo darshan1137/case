@@ -2,6 +2,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
+import Chatbot from "@/components/Chatbot";
+import ScreenReader from "@/components/ScreenReader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -58,9 +60,13 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+
+          <AuthProvider>
+            {children}
+            <Chatbot />
+            <ScreenReader />
+          </AuthProvider>
+      
       </body>
     </html>
   );

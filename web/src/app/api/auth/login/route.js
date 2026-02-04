@@ -52,6 +52,7 @@ export async function POST(request) {
         email: userData.email,
         name: userData.name,
         role: userData.role,
+        class: userData.class,
         department: userData.department || null,
         ward_id: userData.ward_id || null,
         zone: userData.zone || null,

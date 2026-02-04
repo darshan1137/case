@@ -1,0 +1,1054 @@
+# CASE Platform - Comprehensive Knowledge Base for RAG Chatbot
+
+## 🎯 Platform Overview
+
+**CASE** (Citizen Assistance & Service Enhancement) is a municipal infrastructure management platform that connects citizens, government officers, and contractors to efficiently manage and resolve infrastructure issues.
+
+### Core Purpose
+- Enable citizens to report infrastructure problems (potholes, garbage, broken pipes, etc.)
+- Use AI to validate and categorize issues automatically
+- Route problems to appropriate departments and contractors
+- Track resolution progress with SLA (Service Level Agreement) monitoring
+- Optimize routes for contractors and officers
+- Provide real-time analytics and reporting
+
+---
+
+## 👥 User Roles & Access Levels
+
+### 1. **Citizen** (Level 0)
+**Description:** Public users who report infrastructure issues
+
+**Capabilities:**
+- Submit reports with photos and GPS location
+- AI-powered issue validation and categorization
+- Track report status in real-time
+- View infrastructure map with issues
+- Access route optimizer
+- View public analytics
+- Manage profile
+
+**Dashboard Access:** `/citizen/dashboard`
+**Key Features:**
+- New Report: `/citizen/reports/new`
+- My Reports: `/citizen/reports`
+- Track Status: `/citizen/track`
+- Infrastructure Map: `/map`
+- Route Optimizer: `/route`
+- Profile: `/citizen/profile`
+
+**Permissions:**
+- `reports:create` - Create new reports
+- `reports:view_own` - View own reports
+- `analytics:view_public` - View public analytics
+- `assets:view` - View infrastructure assets
+- `sla:view` - View SLA information
+
+---
+
+### 2. **Contractor** (Level 1)
+**Description:** Third-party vendors who physically execute repair work
+
+**Capabilities:**
+- View assigned work orders
+- Accept/reject assignments
+- Update job status (assigned → accepted → en_route → on_site → in_progress → completed)
+- Upload proof of work (before/after photos)
+- Track performance metrics
+- View route maps for assigned jobs
+- Access route optimizer
+
+**Dashboard Access:** `/contractor/dashboard`
+**Key Features:**
+- Assigned Jobs: `/contractor/jobs`
+- Active Jobs: `/contractor/jobs/active`
+- Completed Jobs: `/contractor/jobs/completed`
+- Route Map: `/contractor/map`
+- Performance: `/contractor/performance`
+- Profile: `/contractor/profile`
+
+**Work Order Lifecycle:**
+1. **Assigned** - New work order received
+2. **Accepted** - Contractor accepts the job
+3. **En Route** - Traveling to location
+4. **On Site** - Arrived at location
+5. **In Progress** - Work being performed
+6. **Completed** - Work finished, awaiting verification
+
+**Permissions:**
+- `workorders:view_assigned` - View own work orders
+- `workorders:update_status` - Update work order status
+- `analytics:view_public` - View public analytics
+- `sla:view` - View SLA information
+
+---
+
+### 3. **Class C Officer** (Level 2)
+**Description:** Ward/Field Level Supervisor - ground-level supervisory staff
+
+**Scope:** Ward-level access
+**Capabilities:**
+- View and validate citizen reports in their ward
+- Create work orders from validated reports
+- Assign work orders to contractors
+- Monitor contractor performance
+- Field verification of completed work
+- Override AI categorization if needed
+- Close reports after verification
+
+**Dashboard Access:** `/officer/dashboard`
+**Key Features:**
+- Tickets: `/officer/tickets`
+- Reports: `/officer/reports`
+- Work Orders: `/officer/work-orders`
+- Contractors: `/officer/contractors`
+- Assets: `/officer/assets`
+- Analytics: `/officer/analytics`
+- Profile: `/officer/profile`
+
+**Permissions:**
+- `reports:view_ward` - View ward-level reports
+- `reports:validate` - Validate citizen reports
+- `reports:override_ai` - Override AI categorization
+- `reports:close` - Close resolved reports
+- `workorders:create` - Create work orders
+- `workorders:view_ward` - View ward work orders
+- `workorders:assign` - Assign to contractors
+- `workorders:verify` - Verify completed work
+- `contractors:view_ward` - View ward contractors
+- `assets:view_ward` - View ward assets
+- `analytics:view_ward` - View ward analytics
+
+---
+
+### 4. **Class B Officer** (Level 3)
+**Description:** Department/Ward Head - mid-level decision makers
+
+**Scope:** Department-level access
+**Capabilities:**
+- All Class C officer capabilities
+- Manage multiple wards within department
+- Team management (manage Class C officers)
+- Budget allocation and tracking
+- Contractor verification and management
+- Department-wide analytics
+- SLA configuration for department
+
+**Dashboard Access:** `/officer/dashboard`
+**Additional Features:**
+- Team: `/officer/team`
+- Budgets: `/officer/budgets`
+
+**Permissions:**
+- All Class C permissions
+- `reports:view_department` - View department reports
+- `workorders:view_department` - View department work orders
+- `workorders:reassign` - Reassign work orders
+- `contractors:view_all` - View all contractors
+- `contractors:approve` - Approve contractors
+- `contractors:suspend` - Suspend contractors
+- `assets:view_department` - View department assets
+- `analytics:view_department` - View department analytics
+- `team:manage` - Manage team members
+
+---
+
+### 5. **Class A Officer / Admin** (Level 4)
+**Description:** City Commissioner - top-level authority
+
+**Scope:** City-wide access
+**Capabilities:**
+- Complete platform access and control
+- User management (create, update, delete users)
+- Contractor blacklisting
+- System-wide SLA configuration
+- City-wide analytics and reporting
+- Audit log access
+- System settings and configuration
+- Department management
+
+**Dashboard Access:** `/admin/dashboard`
+**Key Features:**
+- Reports: `/admin/reports`
+- Work Orders: `/admin/work-orders`
+- Users: `/admin/users`
+- Contractors: `/admin/contractors`
+- Departments: `/admin/departments`
+- Analytics: `/admin/analytics`
+- SLA Config: `/admin/sla`
+- Audit Logs: `/admin/audit`
+- Settings: `/admin/settings`
+
+**Permissions:**
+- All lower-level permissions
+- `users:view_all` - View all users
+- `users:create` - Create users
+- `users:update` - Update users
+- `contractors:blacklist` - Blacklist contractors
+- `sla:configure` - Configure SLA rules
+- `analytics:view_city` - City-wide analytics
+- `audit:view` - View audit logs
+- `system:configure` - System configuration
+
+---
+
+## 🎫 Core Features
+
+### 1. AI-Powered Citizen Reporting
+
+#### How It Works:
+1. **Image Upload** - Citizen takes photo of infrastructure issue
+2. **AI Validation** - Groq Vision AI (Llama 4 Scout) analyzes image
+3. **Automatic Categorization** - AI determines:
+   - Issue type (Pothole, Garbage, Broken Pipe, Other)
+   - Confidence score (0-1)
+   - Severity level (critical, dangerous, moderate, minor)
+   - Department (Roads & Traffic, Waste Management, Water Supply, Other)
+   - Sub-department (specific team responsible)
+   - Title and detailed description
+   - Reasoning for classification
+
+4. **Location Tagging** - GPS coordinates + ward determination
+5. **Ticket Creation** - Unique ticket ID generated
+6. **Status Tracking** - Real-time status updates
+
+#### API Endpoints:
+- `POST /api/tickets/validate-image-only` - Preview validation without saving
+- `POST /api/tickets/validate-image` - Validate and create ticket
+- `POST /api/tickets/create-manual` - Manual ticket creation
+- `GET /api/tickets/{ticket_id}` - Get ticket details
+- `GET /api/tickets/` - List tickets with filters
+- `PATCH /api/tickets/{ticket_id}` - Update ticket status
+
+#### Issue Types Detected:
+- **Pothole** - Road surface damage
+- **Garbage** - Waste accumulation
+- **Broken Pipe** - Water/sewage pipe damage
+- **Other** - General infrastructure issues
+
+#### Severity Levels:
+- **Critical** - Immediate danger, requires urgent action
+- **Dangerous** - Potential hazard, high priority
+- **Moderate** - Significant issue, normal priority
+- **Minor** - Low impact, can be scheduled
+
+---
+
+### 2. Ticket/Report Management
+
+#### Report Lifecycle:
+```
+Submitted → Accepted → Assigned → In Progress → Completed → Verified → Closed
+           ↓
+        Rejected
+```
+
+#### Status Descriptions:
+
+**Submitted** 📝
+- Initial state when citizen creates report
+- Awaiting officer review
+- AI validation complete
+
+**Accepted** ✅
+- Officer validates the report
+- Deemed legitimate and actionable
+- Ready for work order creation
+
+**Assigned** 👷
+- Work order created and assigned to contractor
+- Contractor notified
+
+**In Progress** 🔧
+- Contractor actively working on issue
+- Can track contractor location
+
+**Completed** ✔️
+- Contractor finished work
+- Uploaded proof of completion
+- Awaiting officer verification
+
+**Verified** 🔍
+- Officer verified completion
+- Work meets quality standards
+
+**Closed** 🏁
+- Issue fully resolved
+- Report archived
+
+**Rejected** ❌
+- Report deemed invalid or duplicate
+- Reason provided to citizen
+
+#### Data Model (Firebase Collection: `reports`):
+```javascript
+{
+  report_id: "RPT-2026-02-04-ABC123",
+  citizen_id: "user_uid",
+  reporter_name: "John Doe",
+  reporter_phone: "+911234567890",
+  reporter_email: "john@example.com",
+  anonymous: false,
+  
+  category: "pothole_repair", // From CATEGORIES_LIST
+  ai_category: "Pothole",
+  ai_confidence: 0.92,
+  severity: "moderate",
+  
+  title: "Large pothole on Main Street",
+  description: "Deep pothole causing traffic issues",
+  
+  location: {
+    lat: 19.0760,
+    lng: 72.8777,
+    accuracy: 10.5,
+    address: "Main Street, Mumbai"
+  },
+  ward_id: "A",
+  
+  images: ["https://cloudinary.com/image1.jpg"],
+  
+  status: "submitted",
+  
+  // SLA tracking
+  sla_response_deadline: "2026-02-04T18:00:00Z",
+  sla_resolution_deadline: "2026-02-06T18:00:00Z",
+  sla_breached: false,
+  
+  // Timestamps
+  created_at: "2026-02-04T12:00:00Z",
+  updated_at: "2026-02-04T12:00:00Z",
+  
+  // Assignment
+  work_order_id: "WO-2026-02-04-XYZ789",
+  assigned_to: "contractor_uid",
+  
+  // Timeline
+  timeline: [
+    {
+      status: "submitted",
+      timestamp: "2026-02-04T12:00:00Z",
+      actor: "citizen_uid",
+      note: "Report submitted"
+    }
+  ]
+}
+```
+
+---
+
+### 3. Work Order Management
+
+#### Work Order Lifecycle:
+```
+Created → Assigned → Accepted → En Route → On Site → In Progress → Completed → Verified
+```
+
+#### Data Model (Firebase Collection: `work_orders`):
+```javascript
+{
+  work_order_id: "WO-2026-02-04-XYZ789",
+  source: "citizen_report", // or "manual", "sensor_alert"
+  source_id: "RPT-2026-02-04-ABC123",
+  
+  category: "pothole_repair",
+  priority: "high", // high, medium, low
+  description: "Repair large pothole on Main Street",
+  
+  location: {
+    lat: 19.0760,
+    lng: 72.8777,
+    address: "Main Street, Mumbai"
+  },
+  ward_id: "A",
+  department: "Roads & Traffic",
+  
+  // Assignment
+  assigned_to: "contractor_uid",
+  assigned_by: "officer_uid",
+  contractor_name: "ABC Contractors Ltd",
+  
+  // Status
+  status: "in_progress",
+  
+  // SLA
+  sla_response_deadline: "2026-02-04T18:00:00Z",
+  sla_completion_deadline: "2026-02-06T18:00:00Z",
+  sla_breached: false,
+  
+  // Work details
+  estimated_hours: 4,
+  actual_hours: null,
+  materials_needed: ["Asphalt", "Gravel"],
+  budget: 5000,
+  
+  // Completion
+  completion_images: [],
+  completion_notes: "",
+  verified_by: "officer_uid",
+  verification_notes: "",
+  
+  // Timestamps
+  created_at: "2026-02-04T12:00:00Z",
+  assigned_at: "2026-02-04T12:30:00Z",
+  accepted_at: "2026-02-04T13:00:00Z",
+  started_at: "2026-02-04T14:00:00Z",
+  completed_at: null,
+  verified_at: null,
+  updated_at: "2026-02-04T14:00:00Z",
+  
+  // Timeline
+  timeline: [
+    {
+      status: "created",
+      timestamp: "2026-02-04T12:00:00Z",
+      actor: "officer_uid",
+      note: "Work order created from citizen report"
+    },
+    {
+      status: "assigned",
+      timestamp: "2026-02-04T12:30:00Z",
+      actor: "officer_uid",
+      note: "Assigned to ABC Contractors Ltd"
+    }
+  ]
+}
+```
+
+---
+
+### 4. Contractor Management
+
+#### Contractor Statuses:
+- **Pending** - Awaiting verification by officers
+- **Active** - Verified and available for assignments
+- **Suspended** - Temporarily inactive (poor performance)
+- **Blacklisted** - Permanently banned (serious violations)
+
+#### Specializations:
+- `pothole_repair` - Road surface repair
+- `garbage_collection` - Waste management
+- `pipe_repair` - Plumbing and water supply
+- `drainage` - Drainage system maintenance
+- `road_maintenance` - General road work
+- `general` - Multi-purpose contractor
+
+#### Data Model (Firebase Collection: `users` where role=`contractor`):
+```javascript
+{
+  uid: "contractor_uid",
+  role: "contractor",
+  name: "ABC Contractors Ltd",
+  email: "abc@contractors.com",
+  phone: "+919876543210",
+  
+  company_name: "ABC Contractors Ltd",
+  company_registration: "REG123456",
+  specializations: ["pothole_repair", "road_maintenance"],
+  
+  status: "active",
+  verified: true,
+  verified_by: "officer_uid",
+  verified_at: "2026-01-15T10:00:00Z",
+  
+  service_wards: ["A", "B", "C"],
+  
+  // Performance metrics
+  total_jobs_assigned: 45,
+  total_jobs_completed: 42,
+  total_jobs_rejected: 1,
+  current_active_jobs: 2,
+  average_completion_time: 3.5, // days
+  rating: 4.6,
+  on_time_completion_rate: 0.93,
+  
+  // Financial
+  total_earnings: 125000,
+  pending_payments: 15000,
+  
+  created_at: "2025-12-01T00:00:00Z",
+  updated_at: "2026-02-04T12:00:00Z",
+  active: true
+}
+```
+
+---
+
+### 5. Ward System
+
+**Mumbai Ward Structure:**
+- Mumbai is divided into 24 wards (A, B, C, D, E, F-North, F-South, G-North, G-South, H-East, H-West, K-East, K-West, L, M-East, M-West, N, P-North, P-South, R-Central, R-North, R-South, S, T)
+- Each ward has specific geographic boundaries
+- Class C officers are assigned to specific wards
+- Contractors can service multiple wards
+
+#### Ward Service (`server/services/ward_service.py`):
+- Determines ward from GPS coordinates
+- Uses KML boundary files
+- Provides ward information (name, code, boundaries)
+
+---
+
+### 6. Infrastructure Map
+
+**Location:** `/map`
+**Features:**
+- Interactive map showing all reported issues
+- Color-coded markers by issue type and status
+- Hotspot detection (multiple issues in same area)
+- Filter by status, category, severity
+- Click marker to view issue details
+- Real-time updates
+- Route to location
+
+**Marker Colors:**
+- 🔴 Red - Critical/Pending issues
+- 🟡 Yellow - In Progress
+- 🟢 Green - Completed/Verified
+- 🔵 Blue - Garbage/Waste
+- 🟠 Orange - Road/Pothole
+- 🟣 Purple - Water/Pipe issues
+
+**Hotspots:**
+- Areas with 2+ tickets within 0.5 km radius
+- Highlighted with special markers
+- Suggests coordinated resolution
+- Priority boost for hotspot areas
+
+---
+
+### 7. Route Optimizer
+
+**Location:** `/route`
+**Purpose:** Optimize travel routes considering real-time conditions
+
+**Features:**
+- Point A to Point B routing
+- Real-time traffic consideration
+- Multiple scenario simulation:
+  - **Normal Traffic** - Optimal route
+  - **Festival/Event** - Avoid procession routes (e.g., Ganesh Chaturthi)
+  - **Road Construction** - Bypass metro construction zones
+  - **Monsoon Flooding** - Avoid waterlogged areas
+  - **Traffic Accident** - Reroute around incidents
+  - **VIP Movement** - Navigate during security restrictions
+
+**Technology:**
+- Leaflet.js for mapping
+- GraphHopper API for routing
+- Leaflet Routing Machine plugin
+
+**Use Cases:**
+- Contractors planning site visits
+- Officers conducting field inspections
+- Citizens navigating during disruptions
+
+---
+
+### 8. SLA (Service Level Agreement) Management
+
+#### SLA Rules by Category:
+```javascript
+{
+  pothole_repair: {
+    response_time: 4, // hours
+    resolution_time: 48 // hours
+  },
+  garbage_collection: {
+    response_time: 2,
+    resolution_time: 24
+  },
+  water_pipe_burst: {
+    response_time: 1,
+    resolution_time: 12
+  },
+  drainage_blockage: {
+    response_time: 6,
+    resolution_time: 48
+  },
+  street_light: {
+    response_time: 12,
+    resolution_time: 72
+  }
+}
+```
+
+#### SLA Tracking:
+- **Response Deadline** - Time by which officer must review
+- **Resolution Deadline** - Time by which issue must be resolved
+- **Breach Detection** - Automatic flagging of overdue tickets
+- **Escalation** - Alerts to higher authorities on breach
+
+---
+
+## 🗄️ Database Structure (Firebase Firestore)
+
+### Collections:
+
+#### 1. `users`
+**Purpose:** Store all user profiles (citizens, contractors, officers)
+**Key Fields:**
+- `uid` (document ID)
+- `role` (citizen/contractor/class_c/class_b/class_a)
+- `name`, `email`, `phone`
+- `ward_id`, `department`
+- `active`, `verified`
+- For contractors: `specializations`, `company_name`, performance metrics
+
+#### 2. `reports`
+**Purpose:** Citizen-submitted infrastructure issue reports
+**Key Fields:**
+- `report_id` (e.g., RPT-2026-02-04-ABC123)
+- `citizen_id`, `reporter_name`
+- `category`, `severity`, `status`
+- `location` (lat, lng, address)
+- `ward_id`
+- `images[]`
+- `ai_confidence`, `ai_category`
+- `sla_response_deadline`, `sla_resolution_deadline`
+- `timeline[]` (status history)
+
+#### 3. `tickets`
+**Purpose:** AI-validated infrastructure issues (from mobile app)
+**Key Fields:**
+- `ticket_id` (e.g., TICKET-1770212366474-K3CU9NN8W)
+- `issue_type`, `title`, `description`
+- `latitude`, `longitude`, `ward`
+- `images[]`
+- `status` (pending/submitted/resolved)
+- `severity_level`, `confidence_score`
+- `department`, `sub_department`
+- `reporter_id`, `reporter_name`
+- `detected`, `reasoning`
+
+#### 4. `work_orders`
+**Purpose:** Tasks assigned to contractors
+**Key Fields:**
+- `work_order_id` (e.g., WO-2026-02-04-XYZ789)
+- `source` (citizen_report/manual/sensor_alert)
+- `source_id` (links to report/ticket)
+- `category`, `priority`, `status`
+- `assigned_to` (contractor_uid)
+- `assigned_by` (officer_uid)
+- `location`, `ward_id`, `department`
+- `sla_completion_deadline`
+- `completion_images[]`
+- `timeline[]` (status history)
+
+---
+
+## 🔐 Authentication & Authorization
+
+### Firebase Authentication
+- Email/password authentication
+- Role-based access control
+- Email verification
+- Password reset functionality
+
+### Authorization Flow:
+1. User logs in with email/password
+2. Firebase Auth validates credentials
+3. User profile fetched from Firestore
+4. Role and permissions checked
+5. Redirect to appropriate dashboard
+6. Protected routes verify role on each access
+
+### Dashboard Routing:
+```javascript
+{
+  citizen: '/citizen/dashboard',
+  contractor: '/contractor/dashboard',
+  class_c: '/officer/dashboard',
+  class_b: '/officer/dashboard',
+  class_a: '/admin/dashboard'
+}
+```
+
+---
+
+## 🤖 AI Integration
+
+### Technology Stack:
+- **AI Model:** Meta Llama 4 Scout (via Groq API)
+- **Vision Capabilities:** Image analysis and classification
+- **Confidence Threshold:** 0.7 (70%)
+
+### AI Prompt Structure:
+```
+Analyze this image and determine if it contains any infrastructure issues:
+Pothole, Garbage, Broken Pipe, Other
+
+Respond in JSON format with:
+- detected: true/false
+- issue_type: category
+- confidence_score: 0.0-1.0
+- title: brief title
+- description: detailed description
+- severity_level: critical/dangerous/moderate/minor
+- department: responsible department
+- sub_department: specific team
+- reasoning: explanation of detection
+```
+
+### AI Validation Workflow:
+1. Citizen uploads image
+2. Image converted to base64
+3. Sent to Groq Vision API with prompt
+4. AI analyzes and returns JSON response
+5. Backend validates response format
+6. Confidence score compared to threshold
+7. If >= 0.7: Issue detected
+8. Ticket created with AI metadata
+
+---
+
+## 📊 Analytics & Reporting
+
+### Available Metrics:
+
+**For Officers:**
+- Total reports in ward/department
+- Reports by status
+- Reports by category
+- Average resolution time
+- SLA breach rate
+- Contractor performance
+- Hotspot locations
+
+**For Contractors:**
+- Total jobs assigned/completed
+- Average completion time
+- On-time completion rate
+- Current active jobs
+- Earnings and payments
+- Performance rating
+
+**For Admin:**
+- City-wide statistics
+- Department performance comparison
+- Ward-wise issue distribution
+- Trend analysis (daily/weekly/monthly)
+- Budget utilization
+- Resource allocation efficiency
+
+---
+
+## 🔧 Technical Architecture
+
+### Frontend (Next.js 14):
+- **Framework:** Next.js 14 with App Router
+- **Language:** JavaScript/React
+- **Styling:** Tailwind CSS
+- **UI Components:** Custom component library
+- **Maps:** Leaflet.js
+- **Routing:** Leaflet Routing Machine + GraphHopper
+- **State Management:** React Context API
+- **Image Upload:** Cloudinary
+
+### Backend (FastAPI):
+- **Framework:** FastAPI (Python)
+- **AI Service:** Groq API (Llama 4 Scout)
+- **Database:** Firebase Firestore
+- **Authentication:** Firebase Auth
+- **Storage:** Cloudinary for images
+
+### Database:
+- **Primary:** Firebase Firestore (NoSQL)
+- **Collections:** users, reports, tickets, work_orders
+- **Real-time:** Firestore real-time listeners
+
+### External Services:
+- **Cloudinary:** Image hosting and optimization
+- **Groq:** AI vision analysis
+- **GraphHopper:** Route optimization
+- **Firebase:** Auth, Firestore, Storage
+
+---
+
+## 🚀 Common User Workflows
+
+### Citizen Report Flow:
+1. Navigate to `/citizen/reports/new`
+2. Upload photo(s) of issue
+3. Add location (auto-detected or manual)
+4. Click "Validate & Continue"
+5. AI analyzes image
+6. Review AI-generated details
+7. Edit if needed
+8. Submit report
+9. Receive report ID
+10. Track status at `/citizen/track` or `/citizen/reports`
+
+### Officer Work Order Creation:
+1. Navigate to `/officer/reports`
+2. Review pending reports
+3. Click "Create Work Order"
+4. Select contractor
+5. Set priority and deadline
+6. Add special instructions
+7. Submit work order
+8. Contractor receives notification
+
+### Contractor Job Completion:
+1. Navigate to `/contractor/jobs`
+2. Accept assigned job
+3. Update status to "En Route"
+4. Arrive: update to "On Site"
+5. Start work: update to "In Progress"
+6. Complete work
+7. Upload "after" photos
+8. Update status to "Completed"
+9. Wait for officer verification
+
+---
+
+## 📱 Mobile App Integration
+
+The platform supports mobile app access (Android/iOS) with the same backend API endpoints.
+
+**Mobile-Specific Features:**
+- Native GPS access
+- Camera integration
+- Push notifications for status updates
+- Offline mode support
+- Quick report submission
+
+**API Endpoints Used:**
+- `POST /api/tickets/validate-image-only` - Preview
+- `POST /api/tickets/create-manual` - Submit
+- `GET /api/tickets/{ticket_id}` - Track status
+
+---
+
+## 🔍 Search & Filter Capabilities
+
+### Report Filters:
+- Status (submitted, assigned, in_progress, completed, etc.)
+- Category (pothole, garbage, pipe, etc.)
+- Severity (critical, moderate, minor)
+- Ward
+- Date range
+- Reporter (for citizens viewing own reports)
+
+### Work Order Filters:
+- Status
+- Priority
+- Contractor
+- Ward
+- Department
+- Overdue status
+
+### Contractor Filters:
+- Status (active, pending, suspended)
+- Specialization
+- Ward coverage
+- Performance rating
+
+---
+
+## 💡 Special Features
+
+### 1. Hotspot Detection
+- Automatically identifies areas with multiple issues
+- Radius: 0.5 km
+- Threshold: 2+ tickets
+- Priority boost for coordinated resolution
+
+### 2. Priority Scoring
+- Based on AI confidence score
+- Location density factor
+- SLA urgency
+- Severity level
+- Historical data
+
+### 3. Anonymous Reporting
+- Citizens can report without account
+- Limited tracking capabilities
+- Encourages public participation
+
+### 4. Timeline Tracking
+- Every status change logged
+- Actor identification (who made the change)
+- Timestamp recorded
+- Notes/comments attached
+
+### 5. Image Comparison
+- Before/after photos
+- Verification evidence
+- Quality assurance
+
+---
+
+## 🛠️ Troubleshooting Guide
+
+### Common Issues:
+
+**1. AI Validation Fails:**
+- Check GROQ_API_KEY is set
+- Verify API key is valid
+- Check image format (JPG, PNG, GIF, WebP)
+- Ensure image size < 10MB
+
+**2. Location Not Detected:**
+- Enable browser location permissions
+- Check GPS accuracy
+- Verify ward boundaries are loaded
+- Fallback to manual entry
+
+**3. Report Not Found:**
+- Verify report ID format (RPT-YYYY-MM-DD-XXXXXX)
+- Check user has permission to view
+- Ensure report exists in database
+
+**4. Contractor Assignment Fails:**
+- Verify contractor status is "active"
+- Check contractor specialization matches issue
+- Ensure contractor serves the ward
+- Verify work order created successfully
+
+---
+
+## 📚 API Reference
+
+### Backend Server Endpoints (FastAPI)
+
+**Base URL:** `http://127.0.0.1:8005`
+
+#### Health Check
+```
+GET /health
+Response: { "status": "healthy", "version": "1.0.0" }
+```
+
+#### Validate Image (Preview)
+```
+POST /api/tickets/validate-image-only
+Form Data:
+  - file: Image file
+  - latitude: float (optional)
+  - longitude: float (optional)
+  - description: string (optional)
+Response: AI validation results without saving
+```
+
+#### Validate Image (Create Ticket)
+```
+POST /api/tickets/validate-image
+Form Data:
+  - file: Image file
+  - latitude: float
+  - longitude: float
+  - description: string (optional)
+Response: Validation results + ticket ID if detected
+```
+
+#### Create Manual Ticket
+```
+POST /api/tickets/create-manual
+Form Data:
+  - issue_type: string
+  - title: string
+  - description: string
+  - latitude: float
+  - longitude: float
+  - severity_level: string
+  - department: string (optional)
+Response: Created ticket with priority scoring
+```
+
+#### Get Ticket
+```
+GET /api/tickets/{ticket_id}
+Response: Ticket details
+```
+
+#### List Tickets
+```
+GET /api/tickets/
+Query Params:
+  - status_filter: string (optional)
+  - issue_type: string (optional)
+Response: List of tickets
+```
+
+#### Update Ticket
+```
+PATCH /api/tickets/{ticket_id}
+Body:
+  - status: string (optional)
+  - priority: string (optional)
+Response: Success message
+```
+
+#### Get Hotspots
+```
+GET /api/tickets/hotspots
+Query Params:
+  - min_tickets: int (default: 2)
+  - radius_km: float (default: 0.5)
+Response: List of hotspot locations
+```
+
+---
+
+## 🎓 Training & Best Practices
+
+### For Citizens:
+- Take clear, well-lit photos
+- Include multiple angles
+- Add location context in description
+- Check status regularly
+- Provide contact info for follow-up
+
+### For Officers:
+- Review reports within SLA response time
+- Validate AI categorization
+- Assign to appropriate contractors
+- Verify completed work quality
+- Close reports promptly after verification
+
+### For Contractors:
+- Accept jobs promptly
+- Update status at each stage
+- Upload quality proof photos
+- Complete within SLA deadline
+- Communicate delays immediately
+
+---
+
+## 📞 Support & Contact
+
+For technical support or queries:
+- Platform: CASE Municipal Management System
+- Email: support@case-platform.com
+- Phone: +91-XXXX-XXXXXX
+
+---
+
+## 📝 Version History
+
+**Version 1.0.0** (February 2026)
+- Initial release
+- AI-powered citizen reporting
+- Work order management
+- Contractor tracking
+- Route optimization
+- Real-time analytics
+
+---
+
+## 🔮 Upcoming Features
+
+- Mobile app for iOS and Android
+- SMS notifications
+- Voice-based reporting
+- Predictive maintenance
+- Budget management module
+- Citizen feedback system
+- Gamification for active citizens
+- IoT sensor integration
+- Advanced analytics dashboard
+
+---
+
+*This knowledge base is comprehensive and covers all aspects of the CASE platform. Use it to help users navigate, understand features, troubleshoot issues, and make the most of the platform.*

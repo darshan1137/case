@@ -11,6 +11,8 @@ import { workOrderService } from '@/lib/workOrderService';
 import { REPORT_STATUS, WORKORDER_STATUS, CATEGORIES_LIST } from '@/lib/constants/sla';
 import { getDepartmentName } from '@/lib/constants/departments';
 import { getWardName } from '@/lib/constants/wards';
+import OfficerTour from '@/components/OfficerTour';
+import TourButton from '@/components/TourButton';
 
 export default function OfficerDashboard() {
   const router = useRouter();
@@ -21,6 +23,7 @@ export default function OfficerDashboard() {
   const [reportStats, setReportStats] = useState({});
   const [woStats, setWoStats] = useState({});
   const [loading, setLoading] = useState(true);
+  const [runTour, setRunTour] = useState(false);
 
   const isClassA = userData?.role === 'class_a';
   const isClassB = userData?.role === 'class_b';
@@ -32,6 +35,9 @@ export default function OfficerDashboard() {
     { name: 'Reports', href: '/officer/reports', icon: '📋' },
     { name: 'Work Orders', href: '/officer/work-orders', icon: '🔧' },
     { name: 'Contractors', href: '/officer/contractors', icon: '👷' },
+    ...(isClassA ? [
+      { name: '➕ Add Contractor', href: '/officer/contractors/add', icon: '➕' },
+    ] : []),
     { name: 'Infrastructure Map', href: '/map', icon: '🗺️' },
     { name: 'Route Optimizer', href: '/route', icon: '🛣️' },
     { name: 'Assets', href: '/officer/assets', icon: '🏗️' },
@@ -48,14 +54,21 @@ export default function OfficerDashboard() {
       return; // Still loading auth, don't redirect yet
     }
 
-    // Auth finished loading - now check if user exists and has proper role
-    if (!userData?.role || !userData.role.includes('class_')) {
+    // DO NOT CHANGE THIS LINE - VERY IMP
+    if (!userData?.role || !userData.role == "officer") {
       router.push('/auth/login');
       return;
     }
 
     // User is authenticated with proper officer role
     loadData();
+    
+    // Check if tour should run
+    const tourCompleted = localStorage.getItem('officerTourCompleted');
+    if (!tourCompleted) {
+      // Small delay to ensure DOM is ready
+      setTimeout(() => setRunTour(true), 500);
+    }
   }, [userData, authLoading, router]);
 
   const loadData = async () => {
@@ -261,7 +274,7 @@ export default function OfficerDashboard() {
               <div className="space-y-3">
                 {tickets.slice(0, 5).map((ticket) => (
                   <div
-                    key={ticket.id}
+                    key={ticket.updated_at || ticket.created_at}
                     className="border rounded-lg p-3 hover:shadow-md transition-shadow"
                   >
                     <div className="flex justify-between items-start mb-2">
@@ -403,6 +416,21 @@ export default function OfficerDashboard() {
           </CardContent>
         </Card>
       </div>
+      <OfficerTour 
+        run={runTour} 
+        onComplete={() => {
+          setRunTour(false);
+          localStorage.setItem('officerTourCompleted', 'true');
+        }}
+        userRole={userData?.role}
+      />
+      <TourButton 
+        onClick={() => {
+          localStorage.removeItem('officerTourCompleted');
+          setRunTour(true);
+        }}
+        color="#0ea5e9"
+      />
     </DashboardLayout>
   );
 }

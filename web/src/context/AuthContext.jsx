@@ -77,6 +77,11 @@ export function AuthProvider({ children }) {
     return { success: false, error: 'No user logged in' };
   };
 
+  // Manually set user data (used after login)
+  const updateUserData = (data) => {
+    setUserData(data);
+  };
+
   // Check if user has a specific role
   const hasRole = (role) => {
     return userData?.role === role;
@@ -114,6 +119,7 @@ export function AuthProvider({ children }) {
     loading,
     error,
     refreshUserData,
+    updateUserData, // Manually set user data
     hasRole,
     hasMinRole,
     isOfficer,
