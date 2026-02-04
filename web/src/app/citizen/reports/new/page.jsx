@@ -252,9 +252,9 @@ export default function NewReportPage() {
       // Prepare ticket data for Firestore - ensure no undefined values
       const ticketData = {
         ticket_id: ticketId,
-        reporter_id: userId,
-        reporter_name: userData.name || 'Anonymous',
-        reporter_phone: userData.phone || '',
+        citizen_id: userId,
+        citizen_name: userData.name || 'Anonymous',
+        citizen_phone: userData.phone || '',
         title: formData.title || '',
         description: formData.description || '',
         issue_type: formData.issue_type || '',

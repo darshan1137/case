@@ -25,7 +25,7 @@ export async function GET(request) {
     // Role-based filtering
     if (role === 'citizen') {
       // Citizens can only see their own tickets
-      constraints.push(where('reporter_id', '==', userId));
+      constraints.push(where('citizen_id', '==', userId));
     } else if (role === 'class_a') {
       // Class A officers can see all tickets
       // No additional constraint
