@@ -14,6 +14,8 @@ const navigation = [
   { name: 'New Report', href: '/citizen/reports/new', icon: '📝' },
   { name: 'My Reports', href: '/citizen/reports', icon: '📋' },
   { name: 'Track Status', href: '/citizen/track', icon: '🔍' },
+  { name: 'Infrastructure Map', href: '/map', icon: '🗺️' },
+  { name: 'Route Optimizer', href: '/route', icon: '🛣️' },
   { name: 'Profile', href: '/citizen/profile', icon: '👤' },
 ];
 

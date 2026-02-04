@@ -11,6 +11,8 @@ const navigation = [
   { name: 'New Report', href: '/citizen/reports/new', icon: '📝' },
   { name: 'My Reports', href: '/citizen/reports', icon: '📋' },
   { name: 'Track Status', href: '/citizen/track', icon: '🔍' },
+  { name: 'Infrastructure Map', href: '/map', icon: '🗺️' },
+  { name: 'Route Optimizer', href: '/route', icon: '🛣️' },
   { name: 'Profile', href: '/citizen/profile', icon: '👤' },
 ];
 
@@ -146,28 +148,21 @@ export default function NewReportPage() {
         throw new Error('Please upload at least one image of the issue');
       }
 
-      // Upload all images to Cloudinary
-      const imageUrls = [];
-      for (const file of imageFiles) {
-        const url = await uploadToCloudinary(file);
-        imageUrls.push(url);
-      }
-
-      console.log('Cloudinary image URLs:', imageUrls);
-
-      // Prepare data for backend with Cloudinary URLs
+      // Prepare data for backend
       const ticketData = new FormData();
       
-      // Add the Cloudinary URLs
-      imageUrls.forEach((url, index) => {
-        ticketData.append(`image_url_${index}`, url);
-      });
+      // Add the file directly for validation
+      if (imageFiles.length > 0) {
+        ticketData.append('file', imageFiles[0]);
+      }
       
-      // Also send the count of images
-      ticketData.append('image_count', imageUrls.length);
-      console.log('Final ticket data to send:', ticketData);
+      // Add metadata if available (assuming these fields exist on your form, otherwise omit)
+      // ticketData.append('description', 'Validation request'); 
+
+      console.log('Sending file for validation...');
+
       // Send to backend API
-      const response = await fetch('http://0.0.0.0:8005/api/tickets/validate-image-only', {
+      const response = await fetch('http://127.0.0.1:8005/api/tickets/validate-image-only', {
         method: 'POST',
         body: ticketData,
         headers: {
@@ -181,7 +176,34 @@ export default function NewReportPage() {
       }
 
       const result = await response.json();
-      setSuccess(`Report submitted successfully! ID: ${result.ticket_id || 'processing'}`);
+      console.log('✅ Backend Response:', result);
+      console.log('📋 Validation Result:', {
+        detected: result.detected,
+        issue_type: result.issue_type,
+        confidence_score: result.confidence_score,
+        severity_level: result.severity_level
+      });
+
+      // Now upload image to Cloudinary for permanent storage
+      console.log('📤 Uploading image to Cloudinary...');
+      const cloudinaryUrls = [];
+      for (const file of imageFiles) {
+        try {
+          const cloudUrl = await uploadToCloudinary(file);
+          cloudinaryUrls.push(cloudUrl);
+          console.log('☁️ Image uploaded to Cloudinary:', cloudUrl);
+        } catch (cloudErr) {
+          console.warn('⚠️ Cloudinary upload failed:', cloudErr);
+        }
+      }
+
+      if (cloudinaryUrls.length > 0) {
+        console.log('✅ All images successfully uploaded to Cloudinary:', cloudinaryUrls);
+      } else {
+        console.warn('⚠️ No images were uploaded to Cloudinary');
+      }
+
+      setSuccess(`Report validated successfully! Issue detected: ${result.detected ? result.issue_type : 'None'}`);
       
       // Clear form
       setImages([]);
