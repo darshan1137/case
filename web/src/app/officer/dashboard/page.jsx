@@ -11,6 +11,8 @@ import { workOrderService } from '@/lib/workOrderService';
 import { REPORT_STATUS, WORKORDER_STATUS, CATEGORIES_LIST } from '@/lib/constants/sla';
 import { getDepartmentName } from '@/lib/constants/departments';
 import { getWardName } from '@/lib/constants/wards';
+import OfficerTour from '@/components/OfficerTour';
+import TourButton from '@/components/TourButton';
 
 export default function OfficerDashboard() {
   const router = useRouter();
@@ -21,6 +23,7 @@ export default function OfficerDashboard() {
   const [reportStats, setReportStats] = useState({});
   const [woStats, setWoStats] = useState({});
   const [loading, setLoading] = useState(true);
+  const [runTour, setRunTour] = useState(false);
 
   const isClassA = userData?.role === 'class_a';
   const isClassB = userData?.role === 'class_b';
@@ -59,6 +62,13 @@ export default function OfficerDashboard() {
 
     // User is authenticated with proper officer role
     loadData();
+    
+    // Check if tour should run
+    const tourCompleted = localStorage.getItem('officerTourCompleted');
+    if (!tourCompleted) {
+      // Small delay to ensure DOM is ready
+      setTimeout(() => setRunTour(true), 500);
+    }
   }, [userData, authLoading, router]);
 
   const loadData = async () => {
@@ -406,6 +416,21 @@ export default function OfficerDashboard() {
           </CardContent>
         </Card>
       </div>
+      <OfficerTour 
+        run={runTour} 
+        onComplete={() => {
+          setRunTour(false);
+          localStorage.setItem('officerTourCompleted', 'true');
+        }}
+        userRole={userData?.role}
+      />
+      <TourButton 
+        onClick={() => {
+          localStorage.removeItem('officerTourCompleted');
+          setRunTour(true);
+        }}
+        color="#0ea5e9"
+      />
     </DashboardLayout>
   );
 }

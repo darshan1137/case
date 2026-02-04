@@ -39,6 +39,7 @@ const getNavigation = (role) => {
       { name: 'Departments', href: '/admin/departments', icon: '🏛️' },
       { name: 'Infrastructure Map', href: '/map', icon: '🌍' },
       { name: 'Route Optimizer', href: '/route', icon: '🛣️' },
+      { name: 'Revenue Guard AI', href: '/revenue-audit', icon: '🏛️' },
       { name: 'Assets', href: '/admin/assets', icon: '🏗️' },
       { name: 'Analytics', href: '/admin/analytics', icon: '📈' },
       { name: 'SLA Config', href: '/admin/sla', icon: '⏱️' },
