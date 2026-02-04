@@ -2,140 +2,270 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 import { authService } from '@/lib/auth';
 import { cn } from '@/lib/utils';
+import { Bell, LogOut, User, Home, FileText, Briefcase, Settings, Menu, X, AlertTriangle } from 'lucide-react';
+import { useState } from 'react';
 
 export function DashboardLayout({ children, navigation, title }) {
   const pathname = usePathname();
   const router = useRouter();
   const { userData, loading } = useAuth();
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
 
   const handleLogout = async () => {
+    setShowLogoutDialog(false);
     await authService.signOut();
-    router.push('/auth/login');
+    router.push('/');
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-indigo-50/20 to-blue-50/20">
         <div className="text-center">
-          <div className="w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 animate-pulse">
+          <div className="w-16 h-16 bg-gradient-to-br from-indigo-600 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg animate-pulse">
             <span className="text-white text-2xl font-bold">C</span>
           </div>
-          <p className="text-slate-600">Loading...</p>
+          <div className="flex items-center gap-2 text-slate-600">
+            <div className="w-2 h-2 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+            <div className="w-2 h-2 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+            <div className="w-2 h-2 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+          </div>
+          <p className="text-slate-600 text-sm font-medium mt-3">Loading dashboard...</p>
         </div>
       </div>
     );
   }
 
+  const iconMap = {
+    'Dashboard': Home,
+    'Reports': FileText,
+    'Work Orders': Briefcase,
+    'Jobs': Briefcase,
+    'Profile': User,
+    'Settings': Settings,
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Top Navigation Bar */}
-      <nav className="bg-white/80 backdrop-blur-md shadow-sm border-b border-slate-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <Link href="/" className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center shadow-md">
-                  <span className="text-white text-lg font-bold">C</span>
+    <>
+      {/* Logout Confirmation Dialog */}
+      <AnimatePresence>
+        {showLogoutDialog && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+            onClick={() => setShowLogoutDialog(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white rounded-2xl shadow-2xl p-6 max-w-md w-full mx-4 border border-slate-200"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                  <AlertTriangle className="w-6 h-6 text-red-600" />
                 </div>
                 <div>
-                  <span className="font-bold text-slate-900">CASE</span>
-                  <span className="text-xs text-slate-500 block -mt-1">Platform</span>
+                  <h3 className="text-lg font-bold text-slate-900">Confirm Logout</h3>
+                  <p className="text-sm text-slate-600">Are you sure you want to sign out?</p>
                 </div>
-              </Link>
-              <span className="ml-6 px-4 py-1.5 text-xs font-semibold bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 rounded-full border border-indigo-200">
-                {title}
-              </span>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              {/* Notifications */}
-              <button className="relative p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
-                <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
-              </button>
-              
-              {/* User Menu */}
-              <div className="flex items-center space-x-3 border-l border-slate-200 pl-4">
-                <div className="text-right">
-                  <p className="text-sm font-semibold text-slate-900">{userData?.name}</p>
-                  <p className="text-xs text-slate-500 capitalize">{userData?.role?.replace('_', ' ')}</p>
-                </div>
-                <div className="w-9 h-9 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-lg flex items-center justify-center">
-                  <span className="text-indigo-600 font-semibold text-sm">
-                    {userData?.name?.charAt(0).toUpperCase()}
-                  </span>
-                </div>
+              </div>
+              <div className="flex gap-3 mt-6">
+                <button
+                  onClick={() => setShowLogoutDialog(false)}
+                  className="flex-1 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition-colors"
+                >
+                  Cancel
+                </button>
                 <button
                   onClick={handleLogout}
-                  className="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-                  title="Logout"
+                  className="flex-1 px-4 py-2.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-medium rounded-lg transition-all shadow-md"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>
+                  Logout
                 </button>
               </div>
-            </div>
-          </div>
-        </div>
-      </nav>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <div className="flex max-w-7xl mx-auto">
-        {/* Sidebar */}
-        <aside className="w-64 bg-white/60 backdrop-blur-sm min-h-[calc(100vh-4rem)] border-r border-slate-200">
-          <nav className="p-4 space-y-1">
-            {navigation.map((item) => {
-              const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={cn(
-                    'flex items-center space-x-3 px-4 py-3 rounded-xl transition-all group',
-                    isActive
-                      ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold shadow-md'
-                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                  )}
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30">
+        {/* Top Navigation Bar */}
+        <nav className="bg-white/95 backdrop-blur-xl shadow-sm border-b border-slate-200/60 sticky top-0 z-40">
+          <div className="max-w-full px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between h-16">
+              <div className="flex items-center gap-4">
+                {/* Mobile menu button */}
+                <button
+                  onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+                  className="lg:hidden p-2 rounded-lg text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
                 >
-                  <span className="text-xl">{item.icon}</span>
-                  <span>{item.name}</span>
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeTab"
-                      className="ml-auto w-1.5 h-1.5 bg-white rounded-full"
-                    />
-                  )}
+                  {mobileSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                </button>
+
+                <Link href="/" className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <span className="text-white text-lg font-bold">C</span>
+                  </div>
+                  <div className="hidden sm:block">
+                    <span className="font-bold text-slate-900 text-lg">CASE</span>
+                    <span className="text-xs text-slate-500 block -mt-0.5">Platform</span>
+                  </div>
                 </Link>
-              );
-            })}
-          </nav>
-          
-          {/* Built in Bharat Badge */}
-          <div className="absolute bottom-6 left-4 right-4">
-            <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-3">
-              <div className="flex items-center gap-2 text-amber-700 text-xs">
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="12" cy="12" r="10" opacity="0.2"/>
-                  <circle cx="12" cy="12" r="3" fill="currentColor"/>
-                </svg>
-                <span className="font-medium">Built in Bharat</span>
+                <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-lg shadow-sm">
+                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                  <span className="text-xs font-semibold">{title}</span>
+                </div>
               </div>
-              <p className="text-xs text-amber-600 mt-1">by Coding Gurus</p>
+              
+              <div className="flex items-center gap-2">
+                {/* Notifications */}
+                <button className="relative p-2.5 text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/80 rounded-xl transition-all">
+                  <Bell className="w-5 h-5" />
+                  <span className="absolute top-2 right-2 h-2 w-2 bg-red-500 rounded-full ring-2 ring-white"></span>
+                </button>
+                
+                {/* User Menu */}
+                <div className="flex items-center gap-3 border-l border-slate-200 pl-3 ml-1">
+                  <div className="text-right hidden sm:block">
+                    <p className="text-sm font-semibold text-slate-900">{userData?.name}</p>
+                    <p className="text-xs text-slate-500 capitalize">{userData?.role?.replace('_', ' ')}</p>
+                  </div>
+                  <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-blue-500 rounded-xl flex items-center justify-center shadow-md ring-2 ring-indigo-100">
+                    <span className="text-white font-bold text-sm">
+                      {userData?.name?.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setShowLogoutDialog(true)}
+                    className="p-2.5 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
+                    title="Logout"
+                  >
+                    <LogOut className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-        </aside>
+        </nav>
 
-        {/* Main Content */}
-        <main className="flex-1 p-8 min-h-[calc(100vh-4rem)]">
-          {children}
-        </main>
+        <div className="flex max-w-full">
+          {/* Sidebar - Desktop */}
+          <aside className="hidden lg:block w-64 bg-white/80 backdrop-blur-sm min-h-[calc(100vh-4rem)] border-r border-slate-200/60 shadow-sm">
+            <nav className="p-3 space-y-1">
+              {navigation.map((item) => {
+                const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+                const IconComponent = iconMap[item.name];
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={cn(
+                      'flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-sm font-medium group relative overflow-hidden',
+                      isActive
+                        ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-lg shadow-indigo-200/50'
+                        : 'text-slate-700 hover:bg-slate-50 hover:text-indigo-700'
+                    )}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeTab"
+                        className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-blue-600"
+                        transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+                    <div className="relative z-10 flex items-center gap-3 flex-1">
+                      {IconComponent && (
+                        <IconComponent className={cn('w-5 h-5', isActive ? 'text-white' : 'text-slate-500 group-hover:text-indigo-600')} />
+                      )}
+                      <span>{item.name}</span>
+                    </div>
+                    {isActive && (
+                      <div className="relative z-10 w-1.5 h-1.5 bg-white rounded-full shadow-sm" />
+                    )}
+                  </Link>
+                );
+              })}
+            </nav>
+            
+            {/* Footer Badge */}
+            <div className="absolute bottom-4 left-3 right-3">
+              <div className="bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 rounded-xl p-4 shadow-sm">
+                <div className="flex items-center gap-2 text-slate-700 text-xs mb-1">
+                  <div className="w-2 h-2 bg-indigo-600 rounded-full"></div>
+                  <span className="font-semibold">Made in India</span>
+                </div>
+                <p className="text-xs text-slate-500 ml-4">by Coding Gurus</p>
+              </div>
+            </div>
+          </aside>
+
+          {/* Mobile Sidebar */}
+          <AnimatePresence>
+            {mobileSidebarOpen && (
+              <>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+                  onClick={() => setMobileSidebarOpen(false)}
+                />
+                <motion.aside
+                  initial={{ x: -320 }}
+                  animate={{ x: 0 }}
+                  exit={{ x: -320 }}
+                  transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+                  className="lg:hidden fixed left-0 top-0 bottom-0 z-50 w-64 bg-white shadow-2xl"
+                >
+                  <div className="p-4 border-b border-slate-200 flex items-center justify-between">
+                    <span className="font-bold text-slate-900">Menu</span>
+                    <button onClick={() => setMobileSidebarOpen(false)} className="p-2 hover:bg-slate-100 rounded-lg">
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                  <nav className="p-3 space-y-1">
+                    {navigation.map((item) => {
+                      const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+                      const IconComponent = iconMap[item.name];
+                      return (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          onClick={() => setMobileSidebarOpen(false)}
+                          className={cn(
+                            'flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-sm font-medium',
+                            isActive
+                              ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-lg'
+                              : 'text-slate-700 hover:bg-slate-50'
+                          )}
+                        >
+                          {IconComponent && <IconComponent className="w-5 h-5" />}
+                          <span>{item.name}</span>
+                        </Link>
+                      );
+                    })}
+                  </nav>
+                </motion.aside>
+              </>
+            )}
+          </AnimatePresence>
+
+          {/* Main Content */}
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 min-h-[calc(100vh-4rem)] bg-gradient-to-br from-transparent via-indigo-50/10 to-blue-50/20">
+            <div className="max-w-7xl mx-auto">
+              {children}
+            </div>
+          </main>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

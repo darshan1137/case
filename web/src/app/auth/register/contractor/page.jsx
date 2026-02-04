@@ -313,20 +313,21 @@ export default function ContractorRegisterPage() {
                     exit={{ opacity: 0, x: -20 }}
                     className="space-y-4"
                   >
-                <label htmlFor="companyName" className="text-sm font-medium text-gray-700">
-                  Company Name
-                </label>
-                <Input
-                  id="companyName"
-                  name="companyName"
-                  type="text"
-                  placeholder="Enter company name"
-                  value={formData.companyName}
-                  onChange={handleChange}
-                  required
-                  disabled={loading}
-                />
-              </div>
+                    <div>
+                      <label htmlFor="companyName" className="text-sm font-medium text-gray-700">
+                        Company Name
+                      </label>
+                      <Input
+                        id="companyName"
+                        name="companyName"
+                        type="text"
+                        placeholder="Enter company name"
+                        value={formData.companyName}
+                        onChange={handleChange}
+                        required
+                        disabled={loading}
+                      />
+                    </div>
 
               <div className="space-y-2">
                 <label htmlFor="contactPerson" className="text-sm font-medium text-gray-700">
