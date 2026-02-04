@@ -8,6 +8,8 @@ import { DashboardLayout } from '@/components/layout';
 import { Card, CardHeader, CardTitle, CardContent, Button, Badge } from '@/components/ui';
 import { workOrderService } from '@/lib/workOrderService';
 import { WORKORDER_STATUS, CATEGORIES_LIST } from '@/lib/constants/sla';
+import ContractorTour from '@/components/ContractorTour';
+import TourButton from '@/components/TourButton';
 
 const navigation = [
   { name: 'Dashboard', href: '/contractor/dashboard', icon: '📊' },
@@ -26,6 +28,7 @@ export default function ContractorDashboard() {
   const [workOrders, setWorkOrders] = useState([]);
   const [stats, setStats] = useState({});
   const [loading, setLoading] = useState(true);
+  const [runTour, setRunTour] = useState(false);
 
   useEffect(() => {
     if (authLoading) {
@@ -40,6 +43,13 @@ export default function ContractorDashboard() {
 
     // User is authenticated with correct role
     loadData();
+    
+    // Check if user has seen the tour
+    const tourCompleted = localStorage.getItem('contractorTourCompleted');
+    if (!tourCompleted) {
+      // Start tour after a brief delay
+      setTimeout(() => setRunTour(true), 1000);
+    }
   }, [userData, authLoading, router]);
 
   const loadData = async () => {
@@ -243,6 +253,22 @@ export default function ContractorDashboard() {
           </CardContent>
         </Card>
       </div>
+      
+      {/* Tour Guide */}
+      <ContractorTour 
+        run={runTour} 
+        onComplete={() => {
+          setRunTour(false);
+          localStorage.setItem('contractorTourCompleted', 'true');
+        }} 
+      />
+      <TourButton 
+        onClick={() => {
+          localStorage.removeItem('contractorTourCompleted');
+          setRunTour(true);
+        }}
+        color="#f59e0b"
+      />
     </DashboardLayout>
   );
 }
