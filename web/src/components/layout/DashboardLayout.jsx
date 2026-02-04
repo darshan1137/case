@@ -9,6 +9,8 @@ import { authService } from '@/lib/auth';
 import { cn } from '@/lib/utils';
 import { Bell, LogOut, User, Home, FileText, Briefcase, Settings, Menu, X, AlertTriangle } from 'lucide-react';
 import { useState } from 'react';
+import GoogleTranslate from '@/components/GoogleTranslate';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export function DashboardLayout({ children, navigation, title }) {
   const pathname = usePathname();
@@ -25,7 +27,7 @@ export function DashboardLayout({ children, navigation, title }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-indigo-50/20 to-blue-50/20">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-white to-purple-100">
         <div className="text-center">
           <div className="w-16 h-16 bg-gradient-to-br from-indigo-600 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg animate-pulse">
             <span className="text-white text-2xl font-bold">C</span>
@@ -97,9 +99,9 @@ export function DashboardLayout({ children, navigation, title }) {
         )}
       </AnimatePresence>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-100">
         {/* Top Navigation Bar */}
-        <nav className="bg-white/95 backdrop-blur-xl shadow-sm border-b border-slate-200/60 sticky top-0 z-40">
+        <nav className="bg-white/95 backdrop-blur-xl shadow-sm border-b border-purple-200/50 sticky top-0 z-40">
           <div className="max-w-full px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-16">
               <div className="flex items-center gap-4">
@@ -131,6 +133,12 @@ export function DashboardLayout({ children, navigation, title }) {
               </div>
               
               <div className="flex items-center gap-2">
+                {/* Theme Toggle */}
+                <ThemeToggle />
+                
+                {/* Google Translate */}
+                <GoogleTranslate />
+                
                 {/* Notifications */}
                 <button className="relative p-2.5 text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/80 rounded-xl transition-all">
                   <Bell className="w-5 h-5" />
@@ -264,7 +272,7 @@ export function DashboardLayout({ children, navigation, title }) {
           </AnimatePresence>
 
           {/* Main Content */}
-          <main className="flex-1 p-4 sm:p-6 lg:p-8 min-h-[calc(100vh-4rem)] bg-gradient-to-br from-transparent via-indigo-50/10 to-blue-50/20">
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 min-h-[calc(100vh-4rem)] bg-gradient-to-br from-transparent via-purple-50/30 to-white">
             <div className="max-w-7xl mx-auto">
               {children}
             </div>

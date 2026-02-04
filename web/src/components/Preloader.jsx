@@ -202,7 +202,7 @@ const Preloader = ({ onComplete }) => {
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
       {/* Background with subtle gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900">
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-blue-950 to-indigo-950">
         {/* Animated grid pattern */}
         <motion.div 
           className="absolute inset-0 opacity-10"
@@ -227,10 +227,10 @@ const Preloader = ({ onComplete }) => {
         <motion.div
           className="absolute inset-0"
           initial={{ opacity: 0 }}
-          animate={{ opacity: currentStep >= 5 ? 0.15 : 0 }}
+          animate={{ opacity: currentStep >= 5 ? 0.2 : 0 }}
           transition={{ duration: 1 }}
           style={{
-            background: 'linear-gradient(to bottom, rgba(255,153,51,0.3) 0%, rgba(255,255,255,0.3) 50%, rgba(19,136,8,0.3) 100%)'
+            background: 'linear-gradient(to bottom, rgba(79, 70, 229, 0.4) 0%, rgba(59, 130, 246, 0.4) 50%, rgba(99, 102, 241, 0.4) 100%)'
           }}
         />
       </div>
@@ -310,7 +310,7 @@ const Preloader = ({ onComplete }) => {
                 ))}
                 
                 <motion.h1
-                  className="absolute left-1/2 top-1/2 text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-white to-green-400"
+                  className="absolute left-1/2 top-1/2 text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-blue-300 to-indigo-500"
                   initial={{ scale: 0, opacity: 0, x: '-50%', y: '-50%' }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
@@ -353,7 +353,7 @@ const Preloader = ({ onComplete }) => {
 
               {/* Brand Name */}
               <motion.h1
-                className="text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-white to-green-400 mb-4"
+                className="text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-blue-300 to-indigo-500 mb-4"
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3 }}
@@ -419,7 +419,7 @@ const Preloader = ({ onComplete }) => {
                 transition={{ delay: 0.3 }}
               >
                 Designed & Developed by{' '}
-                <span className="font-bold bg-gradient-to-r from-orange-400 to-green-400 bg-clip-text text-transparent">
+                <span className="font-bold bg-gradient-to-r from-indigo-400 to-blue-500 bg-clip-text text-transparent">
                   Coding Gurus
                 </span>
               </motion.p>

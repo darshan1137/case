@@ -5,3 +5,12 @@ export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 export { Badge } from './Badge';
 export { Alert, AlertTitle, AlertDescription } from './Alert';
 export { Spinner, LoadingOverlay, PageLoader } from './Spinner';
+export {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from './Dropdown';
+
