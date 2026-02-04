@@ -1,0 +1,2478 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.10 2d4cfc48",
+  "osm3s": {
+    "timestamp_osm_base": "2026-02-04T08:43:31Z",
+    "timestamp_areas_base": "2026-01-22T23:45:51Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "node",
+  "id": 1174929416,
+  "lat": 19.1597156,
+  "lon": 72.8399209,
+  "tags": {
+    "addr:district": "Mumbai",
+    "addr:full": "Siddarth Municipal General Hospital, Opp Motilal Nagar Post Office, Goregaon (W), Mumbai",
+    "addr:postcode": "400104",
+    "addr:state": "Maharashtra",
+    "amenity": "hospital",
+    "description": "Civil Hospital/General Hospital",
+    "emergency": "yes",
+    "healthcare": "hospital",
+    "name": "Siddarth Municipal Hospital",
+    "operator": "BMC",
+    "operator:type": "government",
+    "source": "OpenGovernmentData"
+  }
+},
+{
+  "type": "node",
+  "id": 1398699938,
+  "lat": 19.0616398,
+  "lon": 72.8994545,
+  "tags": {
+    "access": "yes",
+    "addr:postcode": "400071",
+    "amenity": "toilets",
+    "female": "yes",
+    "male": "yes",
+    "operator": "Brihanmumbai Municipal Corporation",
+    "toilets:disposal": "pitlatrine"
+  }
+},
+{
+  "type": "node",
+  "id": 4400730193,
+  "lat": 19.0599814,
+  "lon": 72.8725423,
+  "tags": {
+    "amenity": "toilets",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "node",
+  "id": 4585363490,
+  "lat": 19.1836322,
+  "lon": 72.9527832,
+  "tags": {
+    "amenity": "toilets",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "node",
+  "id": 4585364195,
+  "lat": 19.1831246,
+  "lon": 72.9552155,
+  "tags": {
+    "amenity": "toilets",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "node",
+  "id": 4690189689,
+  "lat": 18.9263954,
+  "lon": 72.8336738,
+  "tags": {
+    "amenity": "toilets",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "node",
+  "id": 4784894322,
+  "lat": 19.1748812,
+  "lon": 72.9592760,
+  "tags": {
+    "amenity": "toilets",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "node",
+  "id": 4809609628,
+  "lat": 19.1759212,
+  "lon": 72.9470179,
+  "tags": {
+    "amenity": "toilets",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "node",
+  "id": 5380378592,
+  "lat": 18.9635026,
+  "lon": 72.8040175,
+  "tags": {
+    "access": "yes",
+    "leisure": "sports_centre",
+    "name": "Mount Blanc community Pool",
+    "operator": "BMC",
+    "sport": "swimming"
+  }
+},
+{
+  "type": "node",
+  "id": 8438952889,
+  "lat": 19.0537188,
+  "lon": 72.8329159,
+  "tags": {
+    "amenity": "marketplace",
+    "name": "Bandra Market",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "node",
+  "id": 9081826006,
+  "lat": 19.0100965,
+  "lon": 72.8294139,
+  "tags": {
+    "access": "yes",
+    "amenity": "waste_disposal",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "node",
+  "id": 9506956959,
+  "lat": 19.1410744,
+  "lon": 72.8156944,
+  "tags": {
+    "amenity": "shelter",
+    "bench": "yes",
+    "bin": "yes",
+    "name": "ANIMAL SHELTER",
+    "operator": "BMC",
+    "shelter_type": "animal_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 9510034192,
+  "lat": 19.1651808,
+  "lon": 72.8471790,
+  "tags": {
+    "addr:city": "Mumbai",
+    "addr:housenumber": "1245",
+    "addr:postcode": "400104",
+    "addr:street": "Station Rd.",
+    "leisure": "park",
+    "name": "B.R. Ambedkar park",
+    "opening_hours": "Mo-Su 09:00-21:00",
+    "operator": "BMC",
+    "smoking": "no"
+  }
+},
+{
+  "type": "node",
+  "id": 10253314761,
+  "lat": 19.2125846,
+  "lon": 72.8798612,
+  "tags": {
+    "content": "water",
+    "description": "its a water tank of 500m probably.",
+    "height": "500",
+    "man_made": "storage_tank",
+    "material": "cement",
+    "name": "MSEB Water Tank",
+    "operator": "BMC",
+    "start_date": "1/5/1962"
+  }
+},
+{
+  "type": "node",
+  "id": 11430420743,
+  "lat": 19.0267688,
+  "lon": 72.8366692,
+  "tags": {
+    "access": "yes",
+    "addr:city": "Mumbai",
+    "addr:district": "Mumbai",
+    "addr:postcode": "400028",
+    "addr:street": "old cadel road",
+    "leisure": "park",
+    "name": "Shivaji Park",
+    "name:en": "Shivaji Park",
+    "name:etymology:wikidata": "Q239505",
+    "official_name:mr": "छत्रपती शिवाजी महाराज उद्यान",
+    "opening_hours": "Mo-Sa 08:00-18:00",
+    "operator": "BMC",
+    "operator:type": "public"
+  }
+},
+{
+  "type": "way",
+  "id": 40734136,
+  "center": {
+    "lat": 18.9847060,
+    "lon": 72.8261326
+  },
+  "nodes": [
+    494928814,
+    494928819,
+    494928822,
+    494928824,
+    4294895120,
+    494928827,
+    4294895121,
+    494928829,
+    494928814
+  ],
+  "tags": {
+    "amenity": "waste_transfer_station",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "way",
+  "id": 113711205,
+  "center": {
+    "lat": 19.0272817,
+    "lon": 72.8381880
+  },
+  "nodes": [
+    2294332771,
+    11023592571,
+    2294332766,
+    2294332763,
+    2294332760,
+    2294332753,
+    2294332749,
+    2294332746,
+    2294332745,
+    2294332748,
+    11452052388,
+    11452052387,
+    2294332761,
+    2294332771
+  ],
+  "tags": {
+    "addr:postcode": "400028",
+    "landuse": "recreation_ground",
+    "leisure": "park",
+    "name": "Shivaji Park",
+    "name:en": "Shivaji Park",
+    "name:etymology:wikidata": "Q239505",
+    "name:hi": "शिवाजी पार्क",
+    "name:mr": "शिवाजी पार्क",
+    "official_name": "Chhatrapati Shivaji Maharaj Park",
+    "official_name:en": "Chhatrapati Shivaji Maharaj Park",
+    "official_name:mr": "छत्रपती शिवाजी महाराज उद्यान",
+    "operator": "Municipal Corporation of Greater Mumbai",
+    "operator:type": "government",
+    "wikidata": "Q7499285",
+    "wikimedia_commons": "Category:Shivaji Park",
+    "wikipedia": "en:Shivaji Park"
+  }
+},
+{
+  "type": "way",
+  "id": 151352627,
+  "center": {
+    "lat": 19.0752216,
+    "lon": 72.8231550
+  },
+  "nodes": [
+    1641738402,
+    1641738403,
+    1641738401,
+    1641738400,
+    1641738402
+  ],
+  "tags": {
+    "name": "Khar Danda fish market",
+    "opening_hours": "10:00-14:00,18:00-21:00",
+    "operator": "BMC",
+    "shop": "seafood"
+  }
+},
+{
+  "type": "way",
+  "id": 151861273,
+  "center": {
+    "lat": 19.1673655,
+    "lon": 72.9729356
+  },
+  "nodes": [
+    1647015537,
+    5769694594,
+    5769694595,
+    5769694596,
+    5839715513,
+    5839715512,
+    5761650603,
+    5769694590,
+    1647015482,
+    1647015488,
+    3981439583,
+    1647015505,
+    1647015530,
+    3981439586,
+    1647015553,
+    3981439594,
+    1647015607,
+    1647015615,
+    1647015586,
+    1647015597,
+    1647015602,
+    1647015620,
+    3981439601,
+    3981439604,
+    3981439606,
+    3981439614,
+    3981439616,
+    3981439623,
+    1647015688,
+    1647015681,
+    3981439624,
+    3981439641,
+    1647015733,
+    3981439643,
+    3981439638,
+    3981439636,
+    1728628037,
+    1728628051,
+    1647015761,
+    3981439660,
+    3981439644,
+    1647015723,
+    1647015676,
+    1647015666,
+    1647015610,
+    3981439591,
+    1647015537
+  ],
+  "tags": {
+    "landuse": "landfill",
+    "name": "Mulund Dumping Ground",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "way",
+  "id": 152314268,
+  "center": {
+    "lat": 19.0579284,
+    "lon": 72.8993331
+  },
+  "nodes": [
+    12934970622,
+    12934970675,
+    12934970666,
+    1651414446,
+    11124607401,
+    12934751680,
+    12934970622
+  ],
+  "tags": {
+    "addr:city": "Chembur",
+    "addr:district": "Mumbai",
+    "addr:postcode": "400071",
+    "addr:street": "G",
+    "landuse": "recreation_ground",
+    "name": "Gandhi Maidan",
+    "opening_hours": "24/7",
+    "operator": "BMC",
+    "operator:type": "government"
+  }
+},
+{
+  "type": "way",
+  "id": 207318955,
+  "center": {
+    "lat": 18.9228842,
+    "lon": 72.8338002
+  },
+  "nodes": [
+    2175129148,
+    2175129150,
+    2175129152,
+    2175129155,
+    11950780570,
+    2175129161,
+    2175129156,
+    11950780569,
+    2175129148
+  ],
+  "tags": {
+    "leisure": "park",
+    "name": "BMC Garden",
+    "name:hi": "बीएमसी उद्यान",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "way",
+  "id": 222784833,
+  "center": {
+    "lat": 19.0636417,
+    "lon": 72.9001779
+  },
+  "nodes": [
+    2317251627,
+    2317251629,
+    2317251631,
+    2317251632,
+    2317251633,
+    2317251627
+  ],
+  "tags": {
+    "addr:city": "MUMBAI",
+    "addr:postcode": "400089",
+    "addr:street": "Prakash Thorat Marg",
+    "amenity": "school",
+    "building": "apartments",
+    "name": "Dr. Babasaheb Ambedkar High School AND GRAND NALANDA HALL",
+    "operator": "Brihanmumbai Municipal Corporation"
+  }
+},
+{
+  "type": "way",
+  "id": 253793764,
+  "center": {
+    "lat": 19.0874273,
+    "lon": 72.9151203
+  },
+  "nodes": [
+    2596795891,
+    2596795892,
+    2596795893,
+    2596795894,
+    2596795895,
+    2596795896,
+    2596795897,
+    2596795898,
+    2596795891
+  ],
+  "tags": {
+    "leisure": "park",
+    "name": "Subhash Chandra Bose Garden",
+    "name:etymology:wikidata": "Q2153",
+    "operator": "Owned by BMC (Municipality)"
+  }
+},
+{
+  "type": "way",
+  "id": 257441960,
+  "center": {
+    "lat": 19.2244485,
+    "lon": 72.8413491
+  },
+  "nodes": [
+    2629701278,
+    2629701279,
+    2629701270,
+    2629701273,
+    6919534958,
+    2629701278
+  ],
+  "tags": {
+    "leisure": "park",
+    "name": "Chintamani Park",
+    "operator": "BMC",
+    "operator:type": "public"
+  }
+},
+{
+  "type": "way",
+  "id": 257455759,
+  "center": {
+    "lat": 19.2364167,
+    "lon": 72.8266382
+  },
+  "nodes": [
+    2629773268,
+    2629773260,
+    2629773261,
+    2629773257,
+    2629773258,
+    2629773259,
+    2629773262,
+    11042182218,
+    12401839333,
+    2629773263,
+    11042130202,
+    11042130198,
+    12401839334,
+    2629773268
+  ],
+  "tags": {
+    "disused": "yes",
+    "landuse": "landfill",
+    "name": "Gorai Landfill",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "way",
+  "id": 289511744,
+  "center": {
+    "lat": 19.0669442,
+    "lon": 72.9294437
+  },
+  "nodes": [
+    3981413780,
+    3981413785,
+    3981413788,
+    3981413791,
+    3981413805,
+    3981413808,
+    3981413810,
+    3981413843,
+    3981413846,
+    3981413849,
+    3981413850,
+    3205767896,
+    3981415156,
+    1366795241,
+    2319149014,
+    1366795248,
+    3204191044,
+    3204191045,
+    10307255812,
+    1366795252,
+    3981415961,
+    1366795244,
+    3226211860,
+    3226211961,
+    1366795245,
+    3226211857,
+    3226211858,
+    1366795256,
+    3215654163,
+    5921500606,
+    7847541717,
+    5921500605,
+    7847541716,
+    5921500604,
+    10307229579,
+    10307229580,
+    5921500602,
+    5921500601,
+    5921500600,
+    5921500599,
+    7847541714,
+    7847541715,
+    1366795291,
+    3981415996,
+    3981415997,
+    3981415995,
+    1366795295,
+    1366795303,
+    3981415998,
+    1366795301,
+    10307255725,
+    10307255726,
+    3981415994,
+    3981415987,
+    10307255727,
+    3981415986,
+    1366795270,
+    1366795264,
+    1366795262,
+    3981415967,
+    1366795259,
+    3981415963,
+    1366795238,
+    1366795226,
+    1366795209,
+    3981413844,
+    3981413837,
+    3981413834,
+    1366795199,
+    3981413804,
+    1366795184,
+    3981413775,
+    1366795162,
+    3204171990,
+    1366795165,
+    1366795176,
+    2930715802,
+    1366795116,
+    3981413771,
+    3981413779,
+    1366795171,
+    3981413780
+  ],
+  "tags": {
+    "landuse": "landfill",
+    "name": "Deonar Municipal Dumping Ground",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "way",
+  "id": 315334208,
+  "center": {
+    "lat": 19.0525249,
+    "lon": 72.9008968
+  },
+  "nodes": [
+    3214452090,
+    3214452091,
+    3214452092,
+    3214452093,
+    3214452094,
+    3214452090
+  ],
+  "tags": {
+    "access": "yes",
+    "amenity": "toilets",
+    "building": "yes",
+    "operator": "Municipal Corporation of Greater Mumbai",
+    "toilets:disposal": "pitlatrine"
+  }
+},
+{
+  "type": "way",
+  "id": 352988902,
+  "center": {
+    "lat": 19.1729094,
+    "lon": 72.9546345
+  },
+  "nodes": [
+    3587746482,
+    3587746491,
+    3587747997,
+    3587748023,
+    3587748003,
+    3587746482
+  ],
+  "tags": {
+    "addr:city": "Mulund (West)",
+    "addr:postcode": "400080",
+    "addr:street": "Sewaram Lalwani Road",
+    "amenity": "marketplace",
+    "landuse": "commercial",
+    "name": "Sant Jalaram Bappa Market",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "way",
+  "id": 353203398,
+  "center": {
+    "lat": 18.9660054,
+    "lon": 72.8222742
+  },
+  "nodes": [
+    3589724381,
+    3589724345,
+    3589724340,
+    3589724344,
+    3589724346,
+    3589724357,
+    3589724358,
+    3589724362,
+    3589724363,
+    3589724369,
+    3589724371,
+    3589724374,
+    3589724381
+  ],
+  "tags": {
+    "amenity": "school",
+    "building": "yes",
+    "education": "school",
+    "name": "KK Marg Municipal School",
+    "operator": "Brihanmumbai Municipal Corporation",
+    "operator:type": "public/government"
+  }
+},
+{
+  "type": "way",
+  "id": 362762257,
+  "center": {
+    "lat": 19.0575629,
+    "lon": 72.8314705
+  },
+  "nodes": [
+    3670198088,
+    5813989849,
+    5372158186,
+    5813989850,
+    3670198089,
+    4592107746,
+    5372158182,
+    3670198090,
+    5372158181,
+    5813989841,
+    3670198091,
+    5372158180,
+    5372158179,
+    5813989852,
+    3670198092,
+    5813989851,
+    5372158176,
+    5813989853,
+    3670198093,
+    5813989854,
+    5372178892,
+    5813989855,
+    5372158177,
+    5813989856,
+    5372158178,
+    5813989842,
+    3670198094,
+    5813989843,
+    3670198095,
+    5813989844,
+    5372158197,
+    12716963174,
+    5372178891,
+    3670198096,
+    5372158196,
+    3670198097,
+    5813989846,
+    5372158195,
+    5813989847,
+    3670198098,
+    5813989845,
+    3670198099,
+    5813989848,
+    5372158194,
+    3670198088
+  ],
+  "tags": {
+    "addr:city": "Bandra, Mumbai",
+    "addr:district": "Mumbai Suburban",
+    "addr:postcode": "400050",
+    "addr:street": "Almeida Park Road",
+    "dog": "leashed",
+    "leisure": "park",
+    "name": "Almeida Park",
+    "opening_hours": "Mo-Su 10:00-21:00",
+    "operator": "Municipal Corporation of Greater Mumbai"
+  }
+},
+{
+  "type": "way",
+  "id": 363871513,
+  "center": {
+    "lat": 19.2164483,
+    "lon": 72.8711655
+  },
+  "nodes": [
+    3679895884,
+    3679895885,
+    3679895886,
+    3679895887,
+    3679895888,
+    3679895889,
+    3679895890,
+    3679895884
+  ],
+  "tags": {
+    "leisure": "park",
+    "name": "Shrikant Thakrey BMC Park",
+    "opening_hours": "Mo-Su 07:00-12:00, 16:00-20:00",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "way",
+  "id": 363904546,
+  "center": {
+    "lat": 19.2233079,
+    "lon": 72.8499894
+  },
+  "nodes": [
+    3680209988,
+    3680209989,
+    3680209990,
+    3680209991,
+    3680209992,
+    3680209993,
+    3680209988
+  ],
+  "tags": {
+    "leisure": "park",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "way",
+  "id": 411617420,
+  "center": {
+    "lat": 19.0495692,
+    "lon": 72.9111283
+  },
+  "nodes": [
+    4132480380,
+    9327764518,
+    9311772367,
+    9311772366,
+    4132480381,
+    11021399248,
+    4132480382,
+    9340776353,
+    9327764517,
+    4132480383,
+    9327764516,
+    9340776354,
+    4132480380
+  ],
+  "tags": {
+    "addr:city": "Mumbai",
+    "addr:postcode": "400088",
+    "addr:street": "Waman Tukaram Patil Marg (Ghatkopar Sewri Wadala Road)",
+    "amenity": "hospital",
+    "emergency": "yes",
+    "healthcare": "hospital",
+    "name": "Shatabdi Hospital",
+    "operator": "Municipal Corporation of Greater Mumbai",
+    "phone": "+912225564069, +912225564070"
+  }
+},
+{
+  "type": "way",
+  "id": 416521085,
+  "center": {
+    "lat": 19.0730464,
+    "lon": 72.9049638
+  },
+  "nodes": [
+    4172682434,
+    4172682435,
+    4172682436,
+    4172682437,
+    4172682438,
+    4172682439,
+    4172682440,
+    4172682434
+  ],
+  "tags": {
+    "leisure": "park",
+    "name": "Dr. Keshav Baliram Hedgewar Garden",
+    "name:etymology:wikidata": "Q3497648",
+    "opening_hours": "06:00-22:00",
+    "operator": "Brihanmumbai Municipal Corporation"
+  }
+},
+{
+  "type": "way",
+  "id": 492698234,
+  "center": {
+    "lat": 19.0397694,
+    "lon": 72.8439383
+  },
+  "nodes": [
+    4846878577,
+    4846878578,
+    2444292267,
+    2444292265,
+    4846878579,
+    4846878577
+  ],
+  "tags": {
+    "addr:city": "Mumbai",
+    "addr:country": "IN",
+    "addr:postcode": "400016",
+    "addr:state": "Maharastra",
+    "leisure": "park",
+    "name": "MM Chhotani Garden",
+    "opening_hours": "Mo-Su 08:00-22:00",
+    "operator": "BMC",
+    "operator:type": "public"
+  }
+},
+{
+  "type": "way",
+  "id": 544746557,
+  "center": {
+    "lat": 19.0636823,
+    "lon": 72.8259825
+  },
+  "nodes": [
+    13087473567,
+    5265594467,
+    5265594468,
+    5265594469,
+    5265594470,
+    13088720447,
+    5265594471,
+    5265594472,
+    5265594473,
+    5265594474,
+    5265594475,
+    5265594476,
+    5265594477,
+    5265594478,
+    13087473569,
+    13087473568,
+    13087473567
+  ],
+  "tags": {
+    "addr:city": "Mumbai",
+    "addr:housenumber": "954",
+    "addr:postcode": "400050",
+    "addr:street": "St. Anne's Lane",
+    "addr:suburb": "Bandra West",
+    "leisure": "park",
+    "name": "Malla Park",
+    "name:en": "Malla Park",
+    "official_name": "Padma Vibhushan Pandit Shivkumar Sharma Garden & Ground",
+    "official_name:en": "Padma Vibhushan Pandit Shivkumar Sharma Garden & Ground",
+    "official_name:mr": "पद्म विभूषण पंडित शिवकुमार शर्मा उद्यान आणि मैदान",
+    "opening_hours": "Mo-Sa 05:00-13:00,15:00-22:00; Su 15:00-22:00; PH 15:00-22:00",
+    "operator": "BMC",
+    "operator:type": "government",
+    "wheelchair": "no"
+  }
+},
+{
+  "type": "way",
+  "id": 675093586,
+  "center": {
+    "lat": 19.0757346,
+    "lon": 72.9057673
+  },
+  "nodes": [
+    6322314085,
+    6322314086,
+    6322314087,
+    6322314088,
+    6322314085
+  ],
+  "tags": {
+    "amenity": "school",
+    "name": "Marathi Municipal school",
+    "operator": "Brihanmumbai Municipal Corporation"
+  }
+},
+{
+  "type": "way",
+  "id": 675093587,
+  "center": {
+    "lat": 19.0762999,
+    "lon": 72.9059524
+  },
+  "nodes": [
+    6322314089,
+    6322314090,
+    6322314091,
+    6322314092,
+    6322314093,
+    6322314094,
+    6322314089
+  ],
+  "tags": {
+    "leisure": "park",
+    "name": "Lions Garden",
+    "operator": "Brihanmumbai Municipal Corporation"
+  }
+},
+{
+  "type": "way",
+  "id": 682058290,
+  "center": {
+    "lat": 19.0947342,
+    "lon": 72.9131792
+  },
+  "nodes": [
+    6387259385,
+    6387259386,
+    6387259387,
+    6387259388,
+    6387259385
+  ],
+  "tags": {
+    "addr:city": "Ghatkopar West, Mumbai",
+    "addr:housenumber": "Garden Road",
+    "addr:postcode": "400086",
+    "addr:street": "LBS Marg",
+    "leisure": "park",
+    "name": "Shreyas Garden Park",
+    "opening_hours": "Mo-Su 08:00-22:00",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "way",
+  "id": 729980784,
+  "center": {
+    "lat": 19.2129770,
+    "lon": 72.8264755
+  },
+  "nodes": [
+    6838319804,
+    6838319805,
+    6838319806,
+    6838319807,
+    6838319804
+  ],
+  "tags": {
+    "leisure": "park",
+    "name": "Nana Nani Park",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "way",
+  "id": 746574059,
+  "center": {
+    "lat": 19.0821001,
+    "lon": 72.8850282
+  },
+  "nodes": [
+    4264814749,
+    8150915435,
+    4264814734,
+    4264814728,
+    4264814717,
+    6986627926,
+    6986627927,
+    6986627928,
+    4264814752,
+    4264814749
+  ],
+  "tags": {
+    "addr:city": "Mumbai",
+    "addr:postcode": "400070",
+    "addr:street": "Premier Road",
+    "description": "The park is open to people of all ages and is frequented by people particularly in the mornings when it is cool",
+    "dog": "no",
+    "ele": "0",
+    "leisure": "park",
+    "name": "Mother Teresa Brihanmumbai Mahanagarpalika Udyan",
+    "name:etymology:wikidata": "Q30547",
+    "opening_hours": "Mo-Su 06:00-12:00,15:00-21:00",
+    "operator": "Brihanmumbai Municipal Corporation"
+  }
+},
+{
+  "type": "way",
+  "id": 746582668,
+  "center": {
+    "lat": 19.0778488,
+    "lon": 72.8847325
+  },
+  "nodes": [
+    6986702161,
+    6986702162,
+    6986702163,
+    6986702164,
+    6986702165,
+    6986702166,
+    6986702167,
+    6986702168,
+    6986702169,
+    6986702170,
+    6986702171,
+    6986702172,
+    6986702161
+  ],
+  "tags": {
+    "addr:city": "Kurla West, Mumbai",
+    "addr:postcode": "400070",
+    "leisure": "park",
+    "name": "Mahanagarpalika Udyan",
+    "opening_hours": "sunrise-sunset",
+    "operator": "Brihanmumbai Municipal Corporation"
+  }
+},
+{
+  "type": "way",
+  "id": 783083045,
+  "center": {
+    "lat": 19.1110506,
+    "lon": 72.8328959
+  },
+  "nodes": [
+    7312804102,
+    7312804103,
+    7312804104,
+    7312804105,
+    7312804106,
+    7312804107,
+    7312804108,
+    7312804109,
+    7312804110,
+    7312804111,
+    7312804112,
+    7312804113,
+    7312804114,
+    7312804102
+  ],
+  "tags": {
+    "addr:city": "Mumbai",
+    "addr:postcode": "400049",
+    "addr:street": "Vidyanidhi Marg",
+    "leisure": "park",
+    "name": "Kishore Kumar Park",
+    "operator": "Municipal Corporation of Greater Mumbai",
+    "operator:type": "government"
+  }
+},
+{
+  "type": "way",
+  "id": 821248092,
+  "center": {
+    "lat": 19.2165643,
+    "lon": 72.8183172
+  },
+  "nodes": [
+    7667971276,
+    11599046064,
+    8647816520,
+    8647816519,
+    7504395103,
+    7504395094,
+    7504395095,
+    7667971277,
+    8647816518,
+    8647792016,
+    8647816517,
+    7667971278,
+    7667191446,
+    8647816521,
+    7667971276
+  ],
+  "tags": {
+    "addr:city": "charkop tourson road",
+    "addr:district": "mumbai",
+    "addr:housenumber": "sec 08",
+    "addr:postcode": "400067",
+    "addr:street": "Turzon Road",
+    "leisure": "park",
+    "name": "Shree Duttguru Sangharsh Park",
+    "opening_hours": "sunrise-sunset",
+    "operator": "BMC",
+    "operator:type": "government"
+  }
+},
+{
+  "type": "way",
+  "id": 822770827,
+  "center": {
+    "lat": 19.1369580,
+    "lon": 72.8640131
+  },
+  "nodes": [
+    7681948860,
+    7681948861,
+    7681948862,
+    7681948860
+  ],
+  "tags": {
+    "leisure": "park",
+    "name": "मुंबई महापालिका गार्डन",
+    "opening_hours": "sunrise-sunset",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "way",
+  "id": 822770828,
+  "center": {
+    "lat": 19.1375115,
+    "lon": 72.8657142
+  },
+  "nodes": [
+    1651801024,
+    7681948863,
+    7681948864,
+    7681948865,
+    1651801024
+  ],
+  "tags": {
+    "description": "Small park made by BMC",
+    "leisure": "park",
+    "name": "Vijay Salaskar park",
+    "name:etymology:wikidata": "Q7929201",
+    "opening_hours": "24/7",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "way",
+  "id": 822774096,
+  "center": {
+    "lat": 19.1311083,
+    "lon": 72.8642134
+  },
+  "nodes": [
+    7682028556,
+    12071342103,
+    7682028558,
+    7682028559,
+    7682028560,
+    7682028561,
+    7682028562,
+    7682028563,
+    7682028564,
+    7682028568,
+    7682028565,
+    7682028556
+  ],
+  "tags": {
+    "leisure": "park",
+    "name": "Shree Swami Samarth Udyan",
+    "opening_hours": "24/7",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "way",
+  "id": 822774097,
+  "center": {
+    "lat": 19.1315859,
+    "lon": 72.8635205
+  },
+  "nodes": [
+    7682028566,
+    7682028567,
+    7682028568,
+    7682028569,
+    7682028566
+  ],
+  "tags": {
+    "leisure": "park",
+    "name": "Lalji Mehrotra Technical Playground",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "way",
+  "id": 822774545,
+  "center": {
+    "lat": 19.1347992,
+    "lon": 72.8648061
+  },
+  "nodes": [
+    7682078899,
+    7682078901,
+    7682078902,
+    7682078903,
+    7682078904,
+    1651800894,
+    7682078906,
+    7682078899
+  ],
+  "tags": {
+    "leisure": "park",
+    "name": "Swapnapurti Ganesh Playground",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "way",
+  "id": 822774546,
+  "center": {
+    "lat": 19.1356560,
+    "lon": 72.8650850
+  },
+  "nodes": [
+    7682078907,
+    7682078908,
+    7682078909,
+    7682078910,
+    7682078911,
+    11071029199,
+    7682078913,
+    7682078914,
+    7682078915,
+    7682078916,
+    7682078917,
+    7682078918,
+    7682078919,
+    7682078920,
+    7682078921,
+    7682078922,
+    7682078907
+  ],
+  "tags": {
+    "leisure": "park",
+    "name": "Major Unikrishnan Udyan",
+    "name:etymology:wikidata": "Q3345102",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "way",
+  "id": 888547414,
+  "center": {
+    "lat": 19.1960451,
+    "lon": 72.8436753
+  },
+  "nodes": [
+    3680210012,
+    3680210008,
+    3680210009,
+    3680210010,
+    3680210011,
+    3680210012
+  ],
+  "tags": {
+    "addr:city": "Mumbai",
+    "addr:housenumber": "345",
+    "addr:postcode": "400064",
+    "addr:street": "Adarsha Dughdalaya Road",
+    "leisure": "park",
+    "name": "Adarsh garden",
+    "opening_hours": "sunrise-sunset",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "way",
+  "id": 904636029,
+  "center": {
+    "lat": 19.1946177,
+    "lon": 72.8405706
+  },
+  "nodes": [
+    8401335345,
+    8401335346,
+    8401335347,
+    8401335348,
+    8401335349,
+    8401335345
+  ],
+  "tags": {
+    "addr:city": "Mumbai",
+    "addr:postcode": "400064",
+    "addr:street": "J Dsuoza Road",
+    "description": "playground, ground for senior citizens",
+    "leisure": "park",
+    "name": "Fr. Salvador Rodrigues Ground",
+    "opening_hours": "Mo-Sa 08:00-20:00",
+    "operator": "BMC",
+    "source": "local knowledge"
+  }
+},
+{
+  "type": "way",
+  "id": 910561949,
+  "center": {
+    "lat": 19.2261659,
+    "lon": 72.8592406
+  },
+  "nodes": [
+    8455056711,
+    8455056712,
+    8455056713,
+    8455056714,
+    8455056715,
+    8455056716,
+    8455056711
+  ],
+  "tags": {
+    "addr:city": "Mumbai",
+    "addr:postcode": "400066",
+    "addr:street": "Chinchpada Road",
+    "building": "hospital",
+    "name": "Shatabdi Hospital",
+    "operator": "Municipal Corporation of Greater Mumbai"
+  }
+},
+{
+  "type": "way",
+  "id": 925846444,
+  "center": {
+    "lat": 19.1851520,
+    "lon": 72.8501119
+  },
+  "nodes": [
+    9861074910,
+    9861074911,
+    9861074912,
+    9861074913,
+    9861074914,
+    9861074915,
+    9861074916,
+    1361589362,
+    8592217431,
+    8592217432,
+    8592217433,
+    8592217434,
+    9861074908,
+    9861074909,
+    8592217435,
+    9861074904,
+    9861074905,
+    9861074906,
+    9861074907,
+    9861074910
+  ],
+  "tags": {
+    "leisure": "park",
+    "name": "Poddar Park",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "way",
+  "id": 965339362,
+  "center": {
+    "lat": 19.1428991,
+    "lon": 72.8085007
+  },
+  "nodes": [
+    8930350627,
+    8930350628,
+    8930350629,
+    3640594205,
+    8930350630,
+    8930350631,
+    8930350632,
+    8930350627
+  ],
+  "tags": {
+    "addr:city": "Mumbai",
+    "addr:housenumber": "003",
+    "addr:postcode": "400056",
+    "addr:street": "Sea Beach Road",
+    "dog": "leashed",
+    "leisure": "park",
+    "name": "Goverment Park For Public",
+    "opening_hours": "sunrise-sunset",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "way",
+  "id": 979583328,
+  "center": {
+    "lat": 19.0075113,
+    "lon": 72.8354724
+  },
+  "nodes": [
+    9062426486,
+    9062426487,
+    9062426488,
+    9062426489,
+    9062426486
+  ],
+  "tags": {
+    "alt_name": "Muktangan School",
+    "amenity": "school",
+    "building": "yes",
+    "isced:level": "1;2;3",
+    "name": "Elphinstone Road Municipal School",
+    "operator": "BMC",
+    "operator:type": "government"
+  }
+},
+{
+  "type": "way",
+  "id": 979610953,
+  "center": {
+    "lat": 18.9906119,
+    "lon": 72.8429131
+  },
+  "nodes": [
+    9062411514,
+    9062411515,
+    9062411516,
+    9062578817,
+    9062411514
+  ],
+  "tags": {
+    "amenity": "school",
+    "name": "Abhyudaya Nagar Municipal School",
+    "operator": "BMC",
+    "operator:type": "government"
+  }
+},
+{
+  "type": "way",
+  "id": 981822226,
+  "center": {
+    "lat": 19.0139108,
+    "lon": 72.8322785
+  },
+  "nodes": [
+    9080654295,
+    9080654294,
+    9080654293,
+    9080654292,
+    9080654295
+  ],
+  "tags": {
+    "amenity": "school",
+    "isced:level": "1;2;3",
+    "name": "Sayani Road Municipal School",
+    "operator": "BMC",
+    "operator:type": "government"
+  }
+},
+{
+  "type": "way",
+  "id": 1003386614,
+  "center": {
+    "lat": 19.0498224,
+    "lon": 72.8225939
+  },
+  "nodes": [
+    9259352368,
+    9259352369,
+    9259352370,
+    13009290104,
+    9259352371,
+    9259352372,
+    9259352368
+  ],
+  "tags": {
+    "access": "yes",
+    "addr:city": "Mumbai",
+    "addr:postcode": "400050",
+    "addr:street": "Mount Mary Road",
+    "leisure": "park",
+    "name": "Sukoon Park",
+    "name:mr": "सुकून उद्यान",
+    "opening_hours": "Mo-Fr 05:00-13:00,15:00-22:00; Sa-Su 05:00-22:00; PH 05:00-22:00",
+    "operator": "BMC",
+    "operator:type": "government"
+  }
+},
+{
+  "type": "way",
+  "id": 1117097218,
+  "center": {
+    "lat": 19.2388221,
+    "lon": 72.8672981
+  },
+  "nodes": [
+    10216709181,
+    10216709182,
+    10216709183,
+    10216709184,
+    10216709181
+  ],
+  "tags": {
+    "addr:city": "Mumbai",
+    "addr:postcode": "400066",
+    "addr:street": "Vivek Kambli Marg",
+    "leisure": "park",
+    "name": "Nancy Park",
+    "opening_hours": "Mo-Sa 07:00-20:00",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "way",
+  "id": 1118317440,
+  "center": {
+    "lat": 19.1219732,
+    "lon": 72.8307979
+  },
+  "nodes": [
+    2567773438,
+    2567773578,
+    2567773651,
+    4357151490,
+    10228091066,
+    2567773438
+  ],
+  "tags": {
+    "access": "yes",
+    "addr:city": "mumbai",
+    "addr:postcode": "400053",
+    "addr:street": "JP Road",
+    "leisure": "park",
+    "name": "DN Nagar Ground",
+    "opening_hours": "24/7",
+    "operator": "BMC"
+  }
+},
+{
+  "type": "way",
+  "id": 1187638402,
+  "center": {
+    "lat": 19.1261176,
+    "lon": 72.8949091
+  },
+  "nodes": [
+    4883769835,
+    11028036298,
+    11028036297,
+    4883769828,
+    4883769835
+  ],
+  "tags": {
+    "amenity": "school",
+    "name": "Passpoli Municipal School",
+    "operator": "Brihanmumbai Municipal Corporation"
+  }
+},
+{
+  "type": "way",
+  "id": 1232327567,
+  "center": {
+    "lat": 19.0768605,
+    "lon": 72.9021891
+  },
+  "nodes": [
+    11430516869,
+    11430516870,
+    11430516871,
+    11430516869
+  ],
+  "tags": {
+    "leisure": "park",
+    "name": "RAJAWADI GARDEN",
+    "opening_hours": "sunrise-sunset",
+    "operator": "BMC",
+    "operator:type": "government"
+  }
+},
+{
+  "type": "way",
+  "id": 1265759258,
+  "center": {
+    "lat": 19.0295979,
+    "lon": 72.8904048
+  },
+  "nodes": [
+    11757575099,
+    11757575100,
+    11757575101,
+    11801187856,
+    11757575102,
+    11757575103,
+    11757575099
+  ],
+  "tags": {
+    "leisure": "park",
+    "name": "Acharya Sharad Narayan Udyan",
+    "operator": "Brihanmumbai Municipal Corporation",
+    "operator:type": "public"
+  }
+},
+{
+  "type": "way",
+  "id": 1288957913,
+  "center": {
+    "lat": 18.9336931,
+    "lon": 72.8295239
+  },
+  "nodes": [
+    11952315787,
+    2175535153,
+    6764468442,
+    621950894,
+    13471619922,
+    621950888,
+    12948769889,
+    4307040359,
+    11952315788,
+    4307040369,
+    11952315789,
+    11952315790,
+    11952315787
+  ],
+  "tags": {
+    "leisure": "park",
+    "name": "Cross Maidan Garden",
+    "name:en": "Cross Maidan Garden",
+    "operator": "BMC",
+    "operator:type": "government"
+  }
+},
+{
+  "type": "way",
+  "id": 1341470187,
+  "center": {
+    "lat": 19.0811033,
+    "lon": 72.8486489
+  },
+  "nodes": [
+    12408807095,
+    12408807096,
+    12408807097,
+    12408807098,
+    12408807095
+  ],
+  "tags": {
+    "addr:city": "mumbai",
+    "addr:district": "Mumbai",
+    "addr:housenumber": "Anand Nagar",
+    "addr:postcode": "400055",
+    "addr:street": "Kalina-Vakola Flyover",
+    "leisure": "park",
+    "name": "Anand Nagar Garden",
+    "opening_hours": "Mo-Su 06:00-22:00",
+    "operator": "BMC",
+    "operator:type": "public"
+  }
+},
+{
+  "type": "way",
+  "id": 1341471445,
+  "center": {
+    "lat": 19.2421079,
+    "lon": 72.8673090
+  },
+  "nodes": [
+    12408832504,
+    12408832505,
+    12408832506,
+    12408832504
+  ],
+  "tags": {
+    "addr:city": "Mumbai",
+    "addr:district": "Mumbai",
+    "addr:postcode": "400068",
+    "addr:street": "ashokvan",
+    "leisure": "park",
+    "name": "Aaji Ajoba Udyan",
+    "opening_hours": "Mo-Fr 08:00-17:00",
+    "operator": "BMC",
+    "operator:type": "public"
+  }
+},
+{
+  "type": "way",
+  "id": 1341473109,
+  "center": {
+    "lat": 19.1397457,
+    "lon": 72.8363633
+  },
+  "nodes": [
+    12408822897,
+    12408822898,
+    12408822899,
+    12408822900,
+    12408822897
+  ],
+  "tags": {
+    "addr:city": "Mumbai",
+    "addr:district": "Mumbai",
+    "addr:housenumber": "123",
+    "addr:postcode": "400102",
+    "addr:street": "Veera Desai Road",
+    "leisure": "park",
+    "name": "Common Ground",
+    "opening_hours": "Mo-Fr 09:00-17:00",
+    "operator": "BMC",
+    "operator:type": "public"
+  }
+},
+{
+  "type": "way",
+  "id": 1349066763,
+  "center": {
+    "lat": 19.0311668,
+    "lon": 72.8889621
+  },
+  "nodes": [
+    12479111259,
+    12479111260,
+    11801187817,
+    10216520733,
+    12479111259
+  ],
+  "tags": {
+    "leisure": "park",
+    "name": "global park",
+    "opening_hours": "Mo-Sa 07:00-20:00",
+    "operator": "BMC",
+    "operator:type": "public"
+  }
+},
+{
+  "type": "way",
+  "id": 1356803745,
+  "center": {
+    "lat": 19.1121043,
+    "lon": 72.8309842
+  },
+  "nodes": [
+    7312804103,
+    7312804102,
+    12557806166,
+    12557806167,
+    7312804103
+  ],
+  "tags": {
+    "addr:city": "Mumbai",
+    "addr:postcode": "400049",
+    "addr:street": "Vidyanidhi Marg",
+    "leisure": "park",
+    "name": "Kaifi Azmi Park",
+    "name:etymology:wikidata": "Q82066",
+    "operator": "Municipal Corporation of Greater Mumbai",
+    "operator:type": "government"
+  }
+},
+{
+  "type": "way",
+  "id": 1370700238,
+  "center": {
+    "lat": 19.0519907,
+    "lon": 72.8242508
+  },
+  "nodes": [
+    12695023196,
+    12695023197,
+    12695023198,
+    12695023199,
+    12695051708,
+    12695023200,
+    12695051701,
+    12695051702,
+    12695051703,
+    12695051704,
+    13009284675,
+    12695051705,
+    13009284673,
+    12695051706,
+    13009284674,
+    12695051707,
+    13009284669,
+    12695023196
+  ],
+  "tags": {
+    "access": "yes",
+    "fee": "no",
+    "garden:type": "public",
+    "leisure": "park",
+    "name": "Madhukar Kulkarni Garden",
+    "name:en": "Madhukar Kulkarni Garden",
+    "opening_hours": "Mo-Fr 05:00-13:00,15:00-22:00; Sa-Su 05:00-22:00; PH 05:00-22:00",
+    "operator": "BMC",
+    "operator:type": "government"
+  }
+},
+{
+  "type": "way",
+  "id": 1382534681,
+  "center": {
+    "lat": 18.9253154,
+    "lon": 72.8322521
+  },
+  "nodes": [
+    12800083940,
+    12800083941,
+    12800083942,
+    12800083943,
+    12800083944,
+    12800083945,
+    12800083946,
+    12800083947,
+    12800083948,
+    12800083949,
+    12800083950,
+    12800083951,
+    12800083952,
+    12800083953,
+    12800083954,
+    12800083955,
+    12800083956,
+    12800083957,
+    12800083958,
+    12800083959,
+    12800083960,
+    12800083961,
+    12800083940
+  ],
+  "tags": {
+    "amenity": "parking",
+    "operator": "BMC Parking",
+    "operator:type": "public",
+    "parking": "surface"
+  }
+},
+{
+  "type": "way",
+  "id": 1387161513,
+  "center": {
+    "lat": 19.0403129,
+    "lon": 72.8406209
+  },
+  "nodes": [
+    12841326481,
+    12841326482,
+    12841326483,
+    12841326484,
+    12841326481
+  ],
+  "tags": {
+    "amenity": "school",
+    "name": "RC Mahim Municipal School",
+    "operator": "Brihanmumbai Municipal Corporation",
+    "operator:type": "public/government"
+  }
+},
+{
+  "type": "way",
+  "id": 1388813516,
+  "center": {
+    "lat": 19.0622876,
+    "lon": 72.8354083
+  },
+  "nodes": [
+    12855850014,
+    12855850015,
+    12855850016,
+    12855850019,
+    12855850017,
+    12855850040,
+    12855850014
+  ],
+  "tags": {
+    "access": "yes",
+    "dog": "no",
+    "leisure": "park",
+    "name": "Nilgiri Park",
+    "name:en": "Nilgiri Park",
+    "name:mr": "निलगिरी उद्यान",
+    "opening_hours": "Mo-Sa 05:00-13:00,15:00-22:00; Su 05:00-22:00; PH 05:00-22:00",
+    "operator": "BMC",
+    "operator:type": "government"
+  }
+},
+{
+  "type": "way",
+  "id": 1420982492,
+  "center": {
+    "lat": 19.0566008,
+    "lon": 72.8345565
+  },
+  "nodes": [
+    13058306180,
+    13058306181,
+    13058306182,
+    13058306183,
+    13058306180
+  ],
+  "tags": {
+    "amenity": "school",
+    "name": "Bandra Petit School",
+    "name:en": "Bandra Petit School",
+    "operator": "BMC",
+    "operator:type": "government"
+  }
+},
+{
+  "type": "way",
+  "id": 1428261585,
+  "center": {
+    "lat": 19.1402889,
+    "lon": 72.8138935
+  },
+  "nodes": [
+    13130744194,
+    13130744195,
+    13130744196,
+    13130744197,
+    12082273276,
+    2069320692,
+    13130744198,
+    2130327316,
+    2130327222,
+    13130744199,
+    1919644785,
+    13130744194
+  ],
+  "tags": {
+    "access": "yes",
+    "addr:city": "Mumbai",
+    "addr:district": "mumbai suburban",
+    "addr:postcode": "400061",
+    "addr:street": "Fisheries university road",
+    "description": "Food and Drinks are strictly prohibited. There is a children's play area, an adult's exercise area, and numerous covered bench swings and gazebos.",
+    "dog": "no",
+    "leisure": "park",
+    "name": "BMC Park",
+    "name:mr": "प्रबोधनकर थाच्केरय उद्यान पार्क",
+    "opening_hours": "Mo-Su 06:00-21:00",
+    "operator": "Brihanmumbai Municipal Corporation",
+    "operator:type": "government",
+    "smoking": "no"
+  }
+},
+{
+  "type": "way",
+  "id": 1442093565,
+  "center": {
+    "lat": 19.0787355,
+    "lon": 72.8450980
+  },
+  "nodes": [
+    13232407990,
+    13232407991,
+    13232407992,
+    13232407993,
+    13232407994,
+    13232407995,
+    13232407996,
+    13232407990
+  ],
+  "tags": {
+    "addr:full": "11th Road, Golibar, Santacruz East",
+    "addr:postcode": "400055",
+    "addr:state": "Maharashtra",
+    "amenity": "hospital",
+    "healthcare": "hospital",
+    "name": "V.N. Desai Hospital",
+    "name:en": "V.N. Desai Hospital",
+    "operator": "BMC",
+    "operator:type": "government",
+    "website": "https://mumbaisuburban.gov.in/en/public-utility/v-n-desai-municipal-general-hospital/"
+  }
+},
+{
+  "type": "way",
+  "id": 1457963244,
+  "center": {
+    "lat": 18.9647272,
+    "lon": 72.8221738
+  },
+  "nodes": [
+    2294457669,
+    13371098134,
+    13371098135,
+    13371098136,
+    13371098137,
+    13371098138,
+    13371098174,
+    13371098173,
+    2294457676,
+    2294457669
+  ],
+  "tags": {
+    "industrial": "vehicle_depot",
+    "landuse": "industrial",
+    "name": "Municipal Workshop",
+    "operator": "Brihanmumbai Municipal Corporation"
+  }
+},
+{
+  "type": "relation",
+  "id": 7888990,
+  "center": {
+    "lat": 19.0808184,
+    "lon": 72.8788804
+  },
+  "members": [
+    {
+      "type": "way",
+      "ref": 431494574,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 431494578,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 625666100,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 625666102,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 173007507,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 112509736,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1288836633,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 19799199,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1288836634,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 625655113,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1459343476,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1459343475,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 625655116,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 625655140,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1459343477,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 384553864,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 53355636,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 625655134,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 625655137,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1078682563,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1078682570,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1078682569,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1078682566,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1078682567,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1472415852,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1472415851,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1472415850,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 113711202,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1472415848,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1459343478,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1459343479,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1459343480,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1459343464,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1459343463,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 19799017,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1459343481,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1459343482,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 689871749,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 557753708,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 551583415,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1112205251,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 980672957,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 551583385,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 552902324,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1028454740,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 551583346,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 552902325,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1459343468,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 609121545,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1459343466,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1459343467,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 206817506,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1459343469,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 430012293,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1459343470,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1459343471,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 206817499,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1459343472,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 436231919,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 436231921,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 436231917,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1459343473,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 436231915,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 1459343474,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 206817494,
+      "role": "outer"
+    },
+    {
+      "type": "way",
+      "ref": 932438978,
+      "role": "outer"
+    },
+    {
+      "type": "node",
+      "ref": 16173235,
+      "role": "label"
+    },
+    {
+      "type": "relation",
+      "ref": 7907705,
+      "role": "seat"
+    },
+    {
+      "type": "relation",
+      "ref": 7888968,
+      "role": "subarea"
+    },
+    {
+      "type": "relation",
+      "ref": 7888967,
+      "role": "subarea"
+    },
+    {
+      "type": "relation",
+      "ref": 7888966,
+      "role": "subarea"
+    },
+    {
+      "type": "relation",
+      "ref": 7888965,
+      "role": "subarea"
+    },
+    {
+      "type": "relation",
+      "ref": 7888964,
+      "role": "subarea"
+    }
+  ],
+  "tags": {
+    "admin_level": "8",
+    "alt_name:en": "Bombay",
+    "alt_name:fr": "Mumbai",
+    "is_in:country": "India",
+    "is_in:country_code": "IN",
+    "is_in:iso_3166_2": "IN-MH",
+    "is_in:state": "Maharashtra",
+    "name": "Mumbai",
+    "name:ar": "مومباي",
+    "name:arz": "مومباى",
+    "name:az": "Mumbay",
+    "name:azb": "بمبئی",
+    "name:bn": "মুম্বাই",
+    "name:ckb": "مومبای",
+    "name:el": "Μουμπάι",
+    "name:en": "Mumbai",
+    "name:fa": "مومبای",
+    "name:fr": "Bombay",
+    "name:gu": "મુંબઈ",
+    "name:he": "מומבאי",
+    "name:hi": "मुंबई",
+    "name:hr": "Mumbai",
+    "name:ja": "ムンバイ",
+    "name:ka": "მუმბაი",
+    "name:ko": "뭄바이",
+    "name:ks": "بَمبَے",
+    "name:ml": "മുംബൈ",
+    "name:mr": "मुंबई",
+    "name:mzn": "مومبای",
+    "name:or": "ମୁମ୍ବାଇ",
+    "name:pa": "ਮੁੰਬਈ",
+    "name:pnb": "ممبئی",
+    "name:ps": "ممبای",
+    "name:sd": "ممبئي",
+    "name:si": "මුම්බායි",
+    "name:sk": "Bombaj",
+    "name:th": "มุมไบ",
+    "name:uk": "Мумбаї",
+    "name:ur": "ممبئی",
+    "name:yi": "מומביי",
+    "name:yue": "孟買",
+    "name:zh": "孟买",
+    "operator": "Municipal Corporation of Greater Mumbai",
+    "operator:alt_name": "Brihanmumbai Municipal Corporation",
+    "operator:wikidata": "Q1195653",
+    "population": "12478447",
+    "population:date": "2011",
+    "type": "boundary",
+    "website": "https://portal.mcgm.gov.in/irj/portal/anonymous",
+    "wikidata": "Q1156",
+    "wikipedia": "en:Mumbai"
+  }
+}
+
+  ]
+}

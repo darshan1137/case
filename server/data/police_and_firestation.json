@@ -1,0 +1,751 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.10 2d4cfc48",
+  "osm3s": {
+    "timestamp_osm_base": "2026-02-04T08:47:36Z",
+    "timestamp_areas_base": "2026-01-22T23:45:51Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "node",
+  "id": 347152618,
+  "lat": 19.0640370,
+  "lon": 72.8371137,
+  "tags": {
+    "amenity": "police",
+    "name": "Khar Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 605221901,
+  "lat": 18.9453708,
+  "lon": 72.8303315,
+  "tags": {
+    "amenity": "police",
+    "name": "Lokmanya Tilak Road Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 605222184,
+  "lat": 18.9414817,
+  "lon": 72.8291567,
+  "tags": {
+    "amenity": "fire_station"
+  }
+},
+{
+  "type": "node",
+  "id": 623417932,
+  "lat": 18.9154546,
+  "lon": 72.8260531,
+  "tags": {
+    "addr:city": "Mumbai",
+    "addr:postcode": "400005",
+    "addr:street": "N Sawant Road",
+    "amenity": "fire_station",
+    "name": "Colaba Fire Station"
+  }
+},
+{
+  "type": "node",
+  "id": 700725781,
+  "lat": 18.9724562,
+  "lon": 72.8319615,
+  "tags": {
+    "amenity": "fire_station",
+    "name": "Byculla"
+  }
+},
+{
+  "type": "node",
+  "id": 858544370,
+  "lat": 18.9569275,
+  "lon": 72.8290998,
+  "tags": {
+    "amenity": "police",
+    "name": "Null Bazaar Police Chowkie"
+  }
+},
+{
+  "type": "node",
+  "id": 858544419,
+  "lat": 18.9541719,
+  "lon": 72.8320210,
+  "tags": {
+    "amenity": "police",
+    "name": "Pydhoni Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 860348747,
+  "lat": 18.9621396,
+  "lon": 72.8390488,
+  "tags": {
+    "amenity": "police",
+    "name": "Dongri Police Station",
+    "postal_code": "400009"
+  }
+},
+{
+  "type": "node",
+  "id": 861239805,
+  "lat": 18.9630060,
+  "lon": 72.8322910,
+  "tags": {
+    "amenity": "police",
+    "name": "Sir JJ Marg Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 861411346,
+  "lat": 18.9579623,
+  "lon": 72.8326392,
+  "tags": {
+    "amenity": "fire_station",
+    "name": "Umerkhadi Fire Station"
+  }
+},
+{
+  "type": "node",
+  "id": 985121037,
+  "lat": 19.1664849,
+  "lon": 72.8543819,
+  "tags": {
+    "amenity": "police",
+    "name": "Aarey Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 985121043,
+  "lat": 19.1558742,
+  "lon": 72.8576756,
+  "tags": {
+    "amenity": "police",
+    "name": "Goregaon (E) Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 1034965532,
+  "lat": 18.9474438,
+  "lon": 72.8333890,
+  "tags": {
+    "amenity": "police",
+    "name": "Lokmanya Tilak Police Chowkie Beat No 4",
+    "wpt_symbol": "Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 1034965537,
+  "lat": 18.9463293,
+  "lon": 72.8331294,
+  "tags": {
+    "amenity": "police",
+    "name": "Lokmanya Tilak Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 1241711502,
+  "lat": 18.9444479,
+  "lon": 72.8328893,
+  "tags": {
+    "amenity": "police",
+    "description": "Police commissioner",
+    "ele": "11.901855",
+    "sym": "Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 1301593213,
+  "lat": 18.9675282,
+  "lon": 72.8323654,
+  "tags": {
+    "amenity": "police"
+  }
+},
+{
+  "type": "node",
+  "id": 1332582403,
+  "lat": 18.9302617,
+  "lon": 72.8243459,
+  "tags": {
+    "amenity": "police",
+    "name:en": "Marine Drive Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 1697431324,
+  "lat": 19.1225849,
+  "lon": 72.8299999,
+  "tags": {
+    "amenity": "police",
+    "check_date": "2024-09-25",
+    "name": "D.N. Nagar Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 1905389024,
+  "lat": 19.1241245,
+  "lon": 72.8303704,
+  "tags": {
+    "amenity": "police",
+    "name": "Versova Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 2097757614,
+  "lat": 19.2282071,
+  "lon": 72.8582168,
+  "tags": {
+    "amenity": "police"
+  }
+},
+{
+  "type": "node",
+  "id": 2168679530,
+  "lat": 18.9350735,
+  "lon": 72.8346417,
+  "tags": {
+    "amenity": "fire_station",
+    "name": "Fort Fire Brigade"
+  }
+},
+{
+  "type": "node",
+  "id": 2171447204,
+  "lat": 19.0628319,
+  "lon": 72.8292193,
+  "tags": {
+    "amenity": "police",
+    "name": "Police Chowki"
+  }
+},
+{
+  "type": "node",
+  "id": 2187315849,
+  "lat": 19.0396241,
+  "lon": 72.8538869,
+  "tags": {
+    "amenity": "fire_station",
+    "name": "Testing Fire Station"
+  }
+},
+{
+  "type": "node",
+  "id": 2298079810,
+  "lat": 19.2059514,
+  "lon": 72.8729038,
+  "tags": {
+    "amenity": "police",
+    "name": "Police Station, Thakur Village"
+  }
+},
+{
+  "type": "node",
+  "id": 2308138695,
+  "lat": 19.1789489,
+  "lon": 72.8577333,
+  "tags": {
+    "amenity": "police",
+    "name": "Dindoshi Police station"
+  }
+},
+{
+  "type": "node",
+  "id": 2311428475,
+  "lat": 19.0545248,
+  "lon": 72.8935199,
+  "tags": {
+    "addr:city": "Chembur, Mumbai",
+    "addr:postcode": "400071",
+    "addr:street": "V N Purav Marg (Sion Trombay Road)",
+    "amenity": "fire_station",
+    "name": "Chembur Fire Station",
+    "operator": "Mumbai fire brigade"
+  }
+},
+{
+  "type": "node",
+  "id": 2449734722,
+  "lat": 18.9608206,
+  "lon": 72.8170666,
+  "tags": {
+    "amenity": "police",
+    "name": "Badhamkar Mark Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 2562631232,
+  "lat": 19.1755909,
+  "lon": 72.8676526,
+  "tags": {
+    "amenity": "police",
+    "name": "Gokuldham Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 2680678193,
+  "lat": 19.0738897,
+  "lon": 72.8294847,
+  "tags": {
+    "amenity": "police",
+    "name": "Police Chowk"
+  }
+},
+{
+  "type": "node",
+  "id": 2930732807,
+  "lat": 19.0652856,
+  "lon": 72.8959976,
+  "tags": {
+    "amenity": "police",
+    "name": "Tilak Nagar Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 2933183452,
+  "lat": 19.0717172,
+  "lon": 72.8842275,
+  "tags": {
+    "addr:city": "Kurla West, Mumbai",
+    "addr:postcode": "400070",
+    "amenity": "police",
+    "name": "VB Nagar Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 3008501715,
+  "lat": 18.9462953,
+  "lon": 72.8333070,
+  "tags": {
+    "amenity": "police",
+    "name": "Police Commissioner's Office"
+  }
+},
+{
+  "type": "node",
+  "id": 3186544582,
+  "lat": 19.2294953,
+  "lon": 72.8559481,
+  "tags": {
+    "amenity": "police"
+  }
+},
+{
+  "type": "node",
+  "id": 3204171992,
+  "lat": 19.0537000,
+  "lon": 72.9357000,
+  "tags": {
+    "amenity": "police",
+    "name": "POLICE STATION"
+  }
+},
+{
+  "type": "node",
+  "id": 3205945190,
+  "lat": 19.0361453,
+  "lon": 72.9499458,
+  "tags": {
+    "addr:city": "mumbai",
+    "amenity": "police",
+    "name": "trombay police station"
+  }
+},
+{
+  "type": "node",
+  "id": 3205950901,
+  "lat": 19.1548902,
+  "lon": 72.9291114,
+  "tags": {
+    "addr:postcode": "400 078",
+    "addr:street": "Tembhipada Road",
+    "amenity": "police",
+    "name": "Tembhipada Police Chowki"
+  }
+},
+{
+  "type": "node",
+  "id": 3205956099,
+  "lat": 19.0639495,
+  "lon": 72.9008254,
+  "tags": {
+    "addr:city": "mumbai",
+    "addr:housenumber": "near Handore office",
+    "addr:postcode": "400089",
+    "addr:street": "P.L. Lokhande Marg",
+    "amenity": "police",
+    "name": "chembur police station"
+  }
+},
+{
+  "type": "node",
+  "id": 3215545236,
+  "lat": 19.0502474,
+  "lon": 72.9378622,
+  "tags": {
+    "amenity": "police",
+    "name": "Maharashtra Nagar Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 3215577539,
+  "lat": 19.0595211,
+  "lon": 72.9116651,
+  "tags": {
+    "amenity": "police",
+    "name": "Govandi Police station"
+  }
+},
+{
+  "type": "node",
+  "id": 3215584200,
+  "lat": 19.0528478,
+  "lon": 72.9270997,
+  "tags": {
+    "amenity": "police",
+    "name": "Lallubhai Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 3215621243,
+  "lat": 19.0603518,
+  "lon": 72.9104397,
+  "tags": {
+    "addr:city": "mumbai",
+    "addr:postcode": "400089",
+    "addr:street": "P.L. Lokhande Marg",
+    "amenity": "police",
+    "name": "gaikwaad nagar police station"
+  }
+},
+{
+  "type": "node",
+  "id": 3532121099,
+  "lat": 19.0650661,
+  "lon": 72.8808749,
+  "tags": {
+    "amenity": "police",
+    "name": "Nehru Nagar Kurla E Police Chowky"
+  }
+},
+{
+  "type": "node",
+  "id": 3547889593,
+  "lat": 19.0557429,
+  "lon": 72.9088297,
+  "tags": {
+    "amenity": "police",
+    "name": "Khardev Nagar Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 3602876220,
+  "lat": 19.1187189,
+  "lon": 72.9373252,
+  "tags": {
+    "amenity": "police",
+    "name": "Vikhroli Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 4402150675,
+  "lat": 19.0672141,
+  "lon": 72.9031566,
+  "tags": {
+    "addr:city": "cheedanagar, chembur,mumbai",
+    "addr:postcode": "400089",
+    "addr:street": "Road No 1",
+    "amenity": "police",
+    "name": "Chheda Nagar Police Station",
+    "operator": "Mumbai Police",
+    "phone": "+912225259663"
+  }
+},
+{
+  "type": "node",
+  "id": 4621598794,
+  "lat": 19.2573838,
+  "lon": 72.8650937,
+  "tags": {
+    "addr:street": "C S Link Road",
+    "amenity": "police",
+    "name:en": "Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 4658680890,
+  "lat": 19.1695498,
+  "lon": 72.9591762,
+  "tags": {
+    "addr:postcode": "400081",
+    "addr:street": "Navghar Marg",
+    "amenity": "police"
+  }
+},
+{
+  "type": "node",
+  "id": 4791178925,
+  "lat": 19.1715844,
+  "lon": 72.9566550,
+  "tags": {
+    "addr:postcode": "400081",
+    "addr:street": "Lokmanya Tilak Road",
+    "amenity": "police"
+  }
+},
+{
+  "type": "node",
+  "id": 4848773734,
+  "lat": 19.0313226,
+  "lon": 72.8575876,
+  "tags": {
+    "amenity": "police",
+    "name": "Sion (E) Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 5057817507,
+  "lat": 19.0311163,
+  "lon": 72.8578787,
+  "tags": {
+    "amenity": "police",
+    "name": "Matunga Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 5116459526,
+  "lat": 19.2095830,
+  "lon": 72.8501404,
+  "tags": {
+    "amenity": "police",
+    "name": "Kandivali Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 5258276335,
+  "lat": 19.0519280,
+  "lon": 72.8232806,
+  "tags": {
+    "amenity": "police",
+    "name": "Mount Mary Police Chouki"
+  }
+},
+{
+  "type": "node",
+  "id": 5448387024,
+  "lat": 18.9978829,
+  "lon": 72.8374890,
+  "tags": {
+    "amenity": "police"
+  }
+},
+{
+  "type": "node",
+  "id": 5506320530,
+  "lat": 19.0645147,
+  "lon": 72.8603409,
+  "tags": {
+    "amenity": "police",
+    "name": "BKC Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 5614984680,
+  "lat": 19.1429738,
+  "lon": 72.8044882,
+  "tags": {
+    "amenity": "police",
+    "name": "Versova Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 5667043327,
+  "lat": 19.1998393,
+  "lon": 72.8614152,
+  "tags": {
+    "amenity": "police",
+    "name": "Samatanagar Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 5668284373,
+  "lat": 18.9914132,
+  "lon": 72.8309771,
+  "tags": {
+    "addr:city": "Mumbai",
+    "addr:postcode": "400013",
+    "addr:street": "Sakubai Mohite Marg",
+    "amenity": "police",
+    "name": "NM Joshi Marg Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 6052581621,
+  "lat": 19.1639760,
+  "lon": 72.9374814,
+  "tags": {
+    "amenity": "police",
+    "name": "Traffic Police Chowky"
+  }
+},
+{
+  "type": "node",
+  "id": 7499053623,
+  "lat": 18.9618784,
+  "lon": 72.8301422,
+  "tags": {
+    "addr:city": "Mumbai",
+    "addr:postcode": "400008",
+    "addr:street": "Undria Street",
+    "amenity": "police",
+    "name": "Chowki Mohalla Police Chowki",
+    "operator": "Mumbai Police"
+  }
+},
+{
+  "type": "node",
+  "id": 7506854141,
+  "lat": 18.9616064,
+  "lon": 72.8286697,
+  "tags": {
+    "amenity": "police",
+    "name": "Do Taki Police Chowki",
+    "operator": "Mumbai Police"
+  }
+},
+{
+  "type": "node",
+  "id": 8170852418,
+  "lat": 19.1834974,
+  "lon": 72.8445059,
+  "tags": {
+    "amenity": "police",
+    "name:en": "Malad Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 9024751917,
+  "lat": 19.0331179,
+  "lon": 72.8412091,
+  "tags": {
+    "amenity": "fire_station",
+    "name:en": "Shivaji ParkFire Station"
+  }
+},
+{
+  "type": "node",
+  "id": 9081860659,
+  "lat": 19.0085419,
+  "lon": 72.8325587,
+  "tags": {
+    "amenity": "police",
+    "name": "Elphinstone Road Traffic Police Chowki"
+  }
+},
+{
+  "type": "node",
+  "id": 9139914820,
+  "lat": 19.0981885,
+  "lon": 72.8266433,
+  "tags": {
+    "amenity": "police"
+  }
+},
+{
+  "type": "node",
+  "id": 9730701801,
+  "lat": 19.0728870,
+  "lon": 72.8376531,
+  "tags": {
+    "amenity": "police",
+    "name": "Khar Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 10296626442,
+  "lat": 19.1031659,
+  "lon": 72.8327116,
+  "tags": {
+    "amenity": "police",
+    "name": "Juhu Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 11452014435,
+  "lat": 19.0260237,
+  "lon": 72.8345223,
+  "tags": {
+    "amenity": "police",
+    "name": "Chaitya Bhumi Police Chowk"
+  }
+},
+{
+  "type": "node",
+  "id": 12026381269,
+  "lat": 19.0610978,
+  "lon": 72.8433693,
+  "tags": {
+    "amenity": "police",
+    "name": "Shivaji Nagar Police Station"
+  }
+},
+{
+  "type": "node",
+  "id": 12878867195,
+  "lat": 19.1721599,
+  "lon": 72.9575152,
+  "tags": {
+    "amenity": "police",
+    "name": "Office Of The Inspector Incharge, Mulund East",
+    "operator": "Indian Railways",
+    "operator:wikidata": "Q3523040"
+  }
+},
+{
+  "type": "node",
+  "id": 13514237453,
+  "lat": 18.9325312,
+  "lon": 72.8318499,
+  "tags": {
+    "amenity": "police",
+    "name": "Mata Ramabai Ambedkar Marg Police Thaane",
+    "name:mr": "माता रामबाई आंबेडकर मार्ग पोलीस ठाणे",
+    "wheelchair": "limited"
+  }
+}
+
+  ]
+}
