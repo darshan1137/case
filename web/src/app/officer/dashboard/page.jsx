@@ -41,7 +41,7 @@ export default function OfficerDashboard() {
 
   useEffect(() => {
     if (!authLoading) {
-      if (!['class_c', 'class_b', 'class_a'].includes(userData?.role)) {
+      if (!userData?.role == "officer") {
         router.push('/auth/login');
         return;
       }

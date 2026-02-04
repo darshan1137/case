@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { userService } from '@/lib/userService';
 import { CONTRACTOR_SERVICE_TYPES_LIST } from '@/lib/constants';
 import { WARDS_LIST } from '@/lib/constants/wards';
@@ -19,6 +20,7 @@ export default function ContractorRegisterPage() {
     confirmPassword: '',
     serviceTypes: [],
     coveredWards: [],
+    zone: '',
     gstNumber: '',
     address: '',
     fleetSize: '',
@@ -61,6 +63,11 @@ export default function ContractorRegisterPage() {
       setError('Phone number is required');
       return false;
     }
+  
+    if (!formData.zone.trim()) {
+      setError('Zone is required');
+      return false;
+    }
     if (formData.serviceTypes.length === 0) {
       setError('Please select at least one service type');
       return false;
@@ -99,10 +106,9 @@ export default function ContractorRegisterPage() {
         name: formData.companyName,
         phone: formData.phone,
         role: 'contractor',
-        department: null,
+        department: 'Contractor',
         ward_id: null,
-        zone: null,
-        // Additional contractor fields
+        zone: formData.zone,
         contact_person: formData.contactPerson,
         service_types: formData.serviceTypes,
         covered_wards: formData.coveredWards,
@@ -110,11 +116,7 @@ export default function ContractorRegisterPage() {
         address: formData.address,
         fleet_size: parseInt(formData.fleetSize) || 0,
         workforce_size: parseInt(formData.workforceSize) || 0,
-        rating: 0,
-        total_jobs: 0,
-        completed_jobs: 0,
-        verified: false, // Needs verification by officer
-        active: false, // Inactive until verified
+        verified: false,
       });
 
       if (!result.success) {
@@ -136,8 +138,14 @@ export default function ContractorRegisterPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-8">
       <Card className="w-full max-w-2xl">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-orange-600 flex items-center justify-center">
-            <span className="text-2xl text-white">🏗️</span>
+          <div className="mx-auto mb-4 h-16 w-16 relative">
+            <Image
+              src="/logo.svg"
+              alt="Municipal Corporation Logo"
+              width={64}
+              height={64}
+              className="w-full h-full object-contain"
+            />
           </div>
           <CardTitle className="text-2xl">Contractor Registration</CardTitle>
           <CardDescription>
@@ -203,21 +211,22 @@ export default function ContractorRegisterPage() {
                 />
               </div>
 
-              <div className="space-y-2">
-                <label htmlFor="phone" className="text-sm font-medium text-gray-700">
-                  Phone Number
-                </label>
-                <Input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  placeholder="Contact number"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                  disabled={loading}
-                />
-              </div>
+            <div className="space-y-2">
+              <label htmlFor="phone" className="text-sm font-medium text-gray-700">
+                Phone Number
+              </label>
+              <Input
+                id="phone"
+                name="phone"
+                type="tel"
+                placeholder="+91XXXXXXXXXX"
+                pattern="\+91[0-9]{10}"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+                disabled={loading}
+              />
+            </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -238,27 +247,48 @@ export default function ContractorRegisterPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
-                  Fleet & Workforce
+                <label htmlFor="zone" className="text-sm font-medium text-gray-700">
+                  Zone
                 </label>
-                <div className="flex gap-2">
-                  <Input
-                    name="fleetSize"
-                    type="number"
-                    placeholder="Vehicles"
-                    value={formData.fleetSize}
-                    onChange={handleChange}
-                    disabled={loading}
-                  />
-                  <Input
-                    name="workforceSize"
-                    type="number"
-                    placeholder="Workers"
-                    value={formData.workforceSize}
-                    onChange={handleChange}
-                    disabled={loading}
-                  />
-                </div>
+                <Input
+                  id="zone"
+                  name="zone"
+                  type="text"
+                  placeholder="e.g., WEST, EAST, CENTRAL"
+                  value={formData.zone}
+                  onChange={handleChange}
+                  required
+                  disabled={loading}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">
+                  Fleet Size
+                </label>
+                <Input
+                  name="fleetSize"
+                  type="number"
+                  placeholder="Number of vehicles"
+                  value={formData.fleetSize}
+                  onChange={handleChange}
+                  disabled={loading}
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">
+                  Workforce Size
+                </label>
+                <Input
+                  name="workforceSize"
+                  type="number"
+                  placeholder="Number of workers"
+                  value={formData.workforceSize}
+                  onChange={handleChange}
+                  disabled={loading}
+                />
               </div>
             </div>
 
