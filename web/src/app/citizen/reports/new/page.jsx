@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { DashboardLayout } from '@/components/layout';
 import { Button, Alert } from '@/components/ui';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 const navigation = [
   { name: 'Dashboard', href: '/citizen/dashboard', icon: '📊' },
@@ -165,36 +167,36 @@ export default function NewReportPage() {
         throw new Error('Please upload at least one image of the issue');
       }
 
-      // Prepare data for backend
+      // Upload all images to Cloudinary first
+      setError('Uploading images to cloud...');
+      const imageUrls = await Promise.all(
+        imageFiles.map(file => uploadToCloudinary(file))
+      );
+      console.log('Cloudinary URLs:', imageUrls);
+
+      // Prepare FormData for backend validation
+      // The backend validates the image content, we'll include the first image file
       const ticketData = new FormData();
+      ticketData.append('file', imageFiles[0]);
       
-      // Add the file directly for validation
-      if (imageFiles.length > 0) {
-        ticketData.append('file', imageFiles[0]);
-      }
+      console.log('Sending to backend for validation...');
       
-      // Also send the count of images
-      ticketData.append('image_count', imageUrls.length);
-      console.log('Final ticket data to send:', ticketData);
-      
-      // Send to backend API for validation
+      // Send to backend API for validation (validates the image for issues)
       const response = await fetch('http://127.0.0.1:8005/api/tickets/validate-image-only', {
         method: 'POST',
-        body: ticketData,
-        headers: {
-          'X-User-ID': userData.uid,
-          'X-User-Name': userData.name || 'Anonymous'
-        }
+        body: ticketData
       });
 
       if (!response.ok) {
-        throw new Error('Failed to validate report with server');
+        const errorText = await response.text();
+        console.error('Backend error response:', errorText);
+        throw new Error(`Failed to validate report with server (${response.status})`);
       }
 
       const result = await response.json();
       console.log('API Response:', result);
       
-      // Store the image URLs and API response
+      // Store the Cloudinary image URLs and API response
       setApiResponse({
         ...result,
         imageUrls: imageUrls
@@ -213,7 +215,7 @@ export default function NewReportPage() {
         message: result.message || ''
       });
 
-      setSuccess('');
+      setError('');
     } catch (err) {
       setError(err.message || 'Failed to validate report');
       console.error('Validation error:', err);
@@ -232,43 +234,52 @@ export default function NewReportPage() {
         throw new Error('Please validate images first');
       }
 
-      // Prepare ticket data for saving to collection
-      const ticketPayload = {
-        reporter_id: userData.uid,
-        reporter_name: userData.name || 'Anonymous',
-        reporter_phone: userData.phone || '',
-        title: formData.title,
-        description: formData.description,
-        issue_type: formData.issue_type,
-        department: formData.department,
-        sub_department: formData.sub_department,
-        severity_level: formData.severity_level,
-        confidence_score: formData.confidence_score,
-        images: apiResponse.imageUrls,
-        detected: apiResponse.detected,
-        reasoning: formData.reasoning,
-        message: formData.message,
-        status: 'submitted',
-        created_at: new Date().toISOString()
-      };
-
-      // Save to tickets collection via Next.js API
-      const saveResponse = await fetch('/api/tickets/create-manual', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-User-ID': userData.uid,
-          'X-User-Name': userData.name || 'Anonymous'
-        },
-        body: JSON.stringify(ticketPayload)
-      });
-
-      if (!saveResponse.ok) {
-        throw new Error('Failed to save ticket');
+      // Validate user data
+      if (!userData) {
+        throw new Error('User data not loaded. Please refresh and try again.');
       }
 
-      const saveResult = await saveResponse.json();
-      setSuccess(`Ticket created successfully! ID: ${saveResult.ticket_id || saveResult.id}`);
+      // Get user ID - from userService response, it's stored as 'id' or 'uid'
+      const userId = userData.id || userData.uid;
+      if (!userId) {
+        console.error('userData:', userData);
+        throw new Error('User ID not found. Please log in again.');
+      }
+
+      // Generate ticket ID
+      const ticketId = `TICKET-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+
+      // Prepare ticket data for Firestore - ensure no undefined values
+      const ticketData = {
+        ticket_id: ticketId,
+        reporter_id: userId,
+        reporter_name: userData.name || 'Anonymous',
+        reporter_phone: userData.phone || '',
+        title: formData.title || '',
+        description: formData.description || '',
+        issue_type: formData.issue_type || '',
+        department: formData.department || '',
+        sub_department: formData.sub_department || '',
+        severity_level: formData.severity_level || 'medium',
+        confidence_score: Number(formData.confidence_score) || 0,
+        images: apiResponse.imageUrls || [],
+        detected: apiResponse.detected || false,
+        reasoning: formData.reasoning || '',
+        message: formData.message || '',
+        status: 'submitted',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        is_active: true
+      };
+
+      console.log('Saving ticket data:', ticketData);
+
+      // Save directly to Firestore using client SDK
+      const ticketsRef = collection(db, 'tickets');
+      const docRef = await addDoc(ticketsRef, ticketData);
+
+      console.log('Ticket created:', ticketId, 'Doc ID:', docRef.id);
+      setSuccess(`Ticket created successfully! ID: ${ticketId}`);
       
       // Clear form
       setImages([]);

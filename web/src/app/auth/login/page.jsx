@@ -99,9 +99,6 @@ export default function LoginPage() {
         case 'contractor':
           router.push('/contractor/dashboard');
           break;
-        case 'class_c':
-        case 'class_b':
-        case 'class_a':
         case 'officer':
           router.push('/officer/dashboard');
           break;

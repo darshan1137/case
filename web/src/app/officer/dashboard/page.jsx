@@ -124,7 +124,7 @@ export default function OfficerDashboard() {
       <div className="space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">
-          <div>
+          <div> {console.log(userData)}
             <h1 className="text-2xl font-bold text-gray-900">Welcome, {userData?.name}!</h1>
             <p className="text-gray-600">
               {isClassC && `Ward: ${getWardName(userData.ward_id)}`}

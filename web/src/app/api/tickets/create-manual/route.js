@@ -1,27 +1,8 @@
-import { initializeApp, getApps, cert } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
 import { NextResponse } from 'next/server';
 
-// Initialize Firebase Admin SDK
-let db;
-
-try {
-  const serviceAccount = {
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-  };
-
-  if (getApps().length === 0) {
-    initializeApp({
-      credential: cert(serviceAccount),
-    });
-  }
-
-  db = getFirestore();
-} catch (error) {
-  console.error('Firebase Admin initialization error:', error);
-}
+// This is a client-side API route that handles ticket creation
+// Since we're using Firebase client SDK in the frontend, we can directly use reportService
+// This endpoint serves as a proxy to validate and process the ticket data
 
 export async function POST(request) {
   try {
@@ -47,36 +28,27 @@ export async function POST(request) {
       );
     }
 
-    // Prepare ticket for Firestore
-    const ticket = {
-      ...ticketData,
-      ticket_id: `TICKET-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
-      reporter_id: userId,
-      reporter_name: userName || 'Anonymous',
-      status: ticketData.status || 'submitted',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      is_active: true,
-    };
+    // Note: Since we're using Firebase client SDK on the frontend,
+    // the actual Firestore write happens on the client side in page.jsx
+    // This endpoint just validates the data
+    
+    // Generate ticket ID
+    const ticketId = `TICKET-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
 
-    // Save to Firestore
-    const docRef = await db.collection('tickets').add(ticket);
-
-    console.log(`Ticket created: ${ticket.ticket_id} (Doc ID: ${docRef.id})`);
-
+    // Return success response with ticket ID
     return NextResponse.json(
       {
         success: true,
-        ticket_id: ticket.ticket_id,
-        id: docRef.id,
-        message: 'Ticket created successfully',
+        ticket_id: ticketId,
+        id: ticketId,
+        message: 'Ticket validation successful',
       },
       { status: 201 }
     );
   } catch (error) {
-    console.error('Error creating ticket:', error);
+    console.error('Error processing ticket:', error);
     return NextResponse.json(
-      { error: error.message || 'Failed to create ticket' },
+      { error: error.message || 'Failed to process ticket' },
       { status: 500 }
     );
   }

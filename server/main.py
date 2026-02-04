@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 from typing import Optional
 import os
+import uuid
 
 from config import API_TITLE, API_VERSION, API_DESCRIPTION
 from services.ai_services import ai_service
@@ -222,7 +223,7 @@ async def validate_image_only(
         if file_ext not in allowed_extensions:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="File type not allowed. Use JPG, PNG, GIF, or WebP"
+                detail=f"File type not allowed. Use JPG, PNG, GIF, or WebP"
             )
         
         # Read file
@@ -233,8 +234,19 @@ async def validate_image_only(
                 detail="File is empty"
             )
         
+        # Validate file size (max 10MB)
+        if len(file_content) > 10 * 1024 * 1024:
+            raise HTTPException(
+                status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                detail="File size too large. Maximum 10MB allowed"
+            )
+        
+        print(f"Validating image: {file.filename}, size: {len(file_content)} bytes")
+        
         # Validate image using AI service
         validation_result = ai_service.validate_image(file_content)
+        
+        print(f"Validation result: {validation_result}")
         
         # Return validation result ONLY - do not save to Firebase
         return {
@@ -255,6 +267,9 @@ async def validate_image_only(
     except HTTPException:
         raise
     except Exception as e:
+        print(f"Error validating image: {str(e)}")
+        import traceback
+        traceback.print_exc()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Server error: {str(e)}"
