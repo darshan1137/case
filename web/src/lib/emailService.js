@@ -41,7 +41,7 @@ const generateWardOfficerEmailTemplate = (ticketData) => {
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; background-color: #F3F4F6; }
         .email-container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
         .header { background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%); padding: 30px 20px; text-align: center; }
-        .logo { width: 80px; height: 80px; margin-bottom: 15px; }
+        .logo { width: 80px; height: 80px; margin-bottom: 15px; background-color: #ffffff; border-radius: 50%; padding: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
         .header h1 { color: #ffffff; font-size: 28px; font-weight: 700; margin-bottom: 5px; }
         .tagline { color: #E0E7FF; font-size: 14px; letter-spacing: 2px; font-weight: 500; }
         .content { padding: 30px 20px; }
@@ -72,9 +72,9 @@ const generateWardOfficerEmailTemplate = (ticketData) => {
       <div class="email-container">
         <!-- Header -->
         <div class="header">
-          <img src="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/logo.svg" alt="CASE Logo" class="logo">
+          <img src="https://res.cloudinary.com/dahtmgyee/image/upload/v1770237614/hjf9nmxbh533sbwuyyl1.png" alt="CASE Logo" class="logo">
           <h1>CASE</h1>
-          <p class="tagline">CAPTURE • ASSESS • SERVE • EVOLVE</p>
+          <p class="tagline">Capture • Assess • Serve • Evolve</p>
         </div>
 
         <!-- Content -->
@@ -270,7 +270,7 @@ const generateCitizenStatusUpdateTemplate = (ticketData, statusData) => {
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; background-color: #F3F4F6; }
         .email-container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
         .header { background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%); padding: 30px 20px; text-align: center; }
-        .logo { width: 80px; height: 80px; margin-bottom: 15px; }
+        .logo { width: 80px; height: 80px; margin-bottom: 15px; background-color: #ffffff; border-radius: 50%; padding: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
         .header h1 { color: #ffffff; font-size: 28px; font-weight: 700; margin-bottom: 5px; }
         .tagline { color: #E0E7FF; font-size: 14px; letter-spacing: 2px; font-weight: 500; }
         .content { padding: 30px 20px; }
@@ -300,9 +300,9 @@ const generateCitizenStatusUpdateTemplate = (ticketData, statusData) => {
       <div class="email-container">
         <!-- Header -->
         <div class="header">
-          <img src="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/logo.svg" alt="CASE Logo" class="logo">
+          <img src="https://res.cloudinary.com/dahtmgyee/image/upload/v1770241197/htegpj15jn2peip4ewji.png" alt="CASE Logo" class="logo">
           <h1>CASE</h1>
-          <p class="tagline">CAPTURE • ASSESS • SERVE • EVOLVE</p>
+          <p class="tagline">Capture • Assess • Serve • Evolve</p>
         </div>
 
         <!-- Content -->
@@ -439,7 +439,7 @@ const generateContractorOnboardingTemplate = (contractorData, tempPassword, crea
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; background-color: #F3F4F6; }
         .email-container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
         .header { background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%); padding: 30px 20px; text-align: center; }
-        .logo { width: 80px; height: 80px; margin-bottom: 15px; }
+        .logo { width: 80px; height: 80px; margin-bottom: 15px; background-color: #ffffff; border-radius: 50%; padding: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
         .header h1 { color: #ffffff; font-size: 28px; font-weight: 700; margin-bottom: 5px; }
         .tagline { color: #E0E7FF; font-size: 14px; letter-spacing: 2px; font-weight: 500; }
         .content { padding: 30px 20px; }
@@ -469,9 +469,9 @@ const generateContractorOnboardingTemplate = (contractorData, tempPassword, crea
       <div class="email-container">
         <!-- Header -->
         <div class="header">
-          <img src="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/logo.svg" alt="CASE Logo" class="logo">
+          <img src="https://res.cloudinary.com/dahtmgyee/image/upload/v1770241197/htegpj15jn2peip4ewji.png" alt="CASE Logo" class="logo">
           <h1>CASE</h1>
-          <p class="tagline">CAPTURE • ASSESS • SERVE • EVOLVE</p>
+          <p class="tagline">Capture • Assess • Serve • Evolve</p>
         </div>
 
         <!-- Content -->
@@ -610,3 +610,158 @@ export const sendContractorOnboardingEmail = async (contractorData, tempPassword
     return { success: false, error: error.message };
   }
 };
+
+/**
+ * Generate HTML email template for password change notification
+ */
+const generatePasswordChangeTemplate = ({ name, timestamp }) => {
+  return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Password Changed Successfully</title>
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; background-color: #F3F4F6; }
+        .email-container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
+        .header { background: linear-gradient(135deg, #10B981 0%, #059669 100%); padding: 30px 20px; text-align: center; }
+        .logo { width: 80px; height: 80px; margin-bottom: 15px; background-color: #ffffff; border-radius: 50%; padding: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .header h1 { color: #ffffff; font-size: 28px; font-weight: 700; margin-bottom: 5px; }
+        .tagline { color: #D1FAE5; font-size: 14px; letter-spacing: 2px; font-weight: 500; }
+        .content { padding: 30px 20px; }
+        .success-badge { background-color: #D1FAE5; border-left: 4px solid #10B981; padding: 15px; border-radius: 8px; margin-bottom: 25px; text-align: center; }
+        .success-badge .icon { font-size: 48px; margin-bottom: 10px; }
+        .success-badge p { color: #065F46; font-size: 18px; font-weight: 600; }
+        .info-box { background-color: #F9FAFB; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #E5E7EB; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #E5E7EB; }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { color: #6B7280; font-size: 14px; font-weight: 500; }
+        .info-value { color: #111827; font-size: 14px; font-weight: 600; }
+        .security-notice { background-color: #FEF3C7; border: 1px solid #FCD34D; border-radius: 8px; padding: 15px; margin: 20px 0; }
+        .security-notice p { color: #92400E; font-size: 14px; line-height: 1.5; }
+        .tips-box { background-color: #EFF6FF; border-left: 4px solid #3B82F6; padding: 15px; border-radius: 8px; margin: 20px 0; }
+        .tips-box h3 { color: #1E40AF; font-size: 16px; font-weight: 600; margin-bottom: 10px; }
+        .tips-box ul { list-style: none; padding-left: 0; }
+        .tips-box li { color: #1E40AF; font-size: 14px; padding: 5px 0; padding-left: 20px; position: relative; }
+        .tips-box li:before { content: "✓"; position: absolute; left: 0; color: #10B981; font-weight: bold; }
+        .footer { background-color: #F9FAFB; padding: 20px; text-align: center; color: #6B7280; font-size: 13px; border-top: 1px solid #E5E7EB; }
+        .brand { color: #7C3AED; font-weight: 700; }
+      </style>
+    </head>
+    <body>
+      <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+          <img src="https://res.cloudinary.com/dtgjbojuh/image/upload/v1738758663/logo_rqgv34.png" alt="CASE Logo" class="logo">
+          <h1>CASE</h1>
+          <p class="tagline">Capture • Assess • Serve • Evolve</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+          <!-- Success Badge -->
+          <div class="success-badge">
+            <div class="icon">🔐✓</div>
+            <p>Password Changed Successfully</p>
+          </div>
+
+          <!-- Greeting -->
+          <p style="font-size: 16px; color: #374151; margin-bottom: 20px;">
+            Hello <strong>${name}</strong>,
+          </p>
+
+          <p style="font-size: 15px; color: #4B5563; margin-bottom: 20px;">
+            This email confirms that your password has been successfully changed for your CASE platform account.
+          </p>
+
+          <!-- Change Details -->
+          <div class="info-box">
+            <h3 style="color: #111827; font-size: 16px; font-weight: 600; margin-bottom: 15px;">Change Details</h3>
+            <div class="info-row">
+              <span class="info-label">Date & Time:</span>
+              <span class="info-value">${timestamp}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Platform:</span>
+              <span class="info-value">CASE Web Portal</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Status:</span>
+              <span class="info-value" style="color: #10B981;">✓ Confirmed</span>
+            </div>
+          </div>
+
+          <!-- Security Notice -->
+          <div class="security-notice">
+            <p>
+              <strong>⚠️ Important Security Notice:</strong><br>
+              If you did not make this change, please contact your system administrator immediately and secure your account.
+            </p>
+          </div>
+
+          <!-- Security Tips -->
+          <div class="tips-box">
+            <h3>🛡️ Keep Your Account Secure</h3>
+            <ul>
+              <li>Never share your password with anyone</li>
+              <li>Use a unique password not used on other websites</li>
+              <li>Log out when using shared or public computers</li>
+              <li>Change your password regularly (every 90 days)</li>
+              <li>Be cautious of phishing emails</li>
+            </ul>
+          </div>
+
+          <p style="font-size: 14px; color: #6B7280; margin-top: 25px;">
+            If you have any questions or concerns about this password change, please contact your system administrator.
+          </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+          <p>This is an automated security notification from CASE</p>
+          <p>Civic Action & Service Excellence Platform</p>
+          <p style="margin-top: 15px;">Powered by <span class="brand">CodingGurus</span></p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+};
+
+/**
+ * Send password change notification email
+ * @param {Object} userData - User information { email, name, timestamp }
+ * @returns {Promise<Object>} - Result of email send operation
+ */
+export const sendPasswordChangeNotification = async ({ email, name, timestamp }) => {
+  try {
+    if (!email) {
+      console.warn('[Email Service] No email provided for password change notification');
+      return { success: false, error: 'No email provided' };
+    }
+
+    if (!process.env.RESEND_API_KEY) {
+      console.error('[Email Service] RESEND_API_KEY not configured');
+      return { success: false, error: 'Email service not configured' };
+    }
+
+    const emailHtml = generatePasswordChangeTemplate({ name, timestamp });
+
+    const result = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || 'CASE Security <security@codinggurus.in>',
+      to: email,
+      subject: '🔐 Password Changed - CASE Account Security Alert',
+      html: emailHtml,
+    });
+
+    console.log(`[Email Service] Password change notification sent to ${email}`);
+    return { success: true, messageId: result.id };
+
+  } catch (error) {
+    console.error('[Email Service] Failed to send password change notification:', error);
+    return { success: false, error: error.message };
+  }
+};
+

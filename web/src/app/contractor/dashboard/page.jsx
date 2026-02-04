@@ -13,7 +13,7 @@ import TourButton from '@/components/TourButton';
 
 const navigation = [
   { name: 'Dashboard', href: '/contractor/dashboard', icon: '📊' },
-  { name: 'Assigned Jobs', href: '/contractor/jobs', icon: '📋' },
+  { name: 'Assigned Tickets', href: '/contractor/tickets', icon: '📋' },
   { name: 'Active Jobs', href: '/contractor/jobs/active', icon: '🔨' },
   { name: 'Completed', href: '/contractor/jobs/completed', icon: '✅' },
   { name: 'Infrastructure Map', href: '/map', icon: '🗺️' },

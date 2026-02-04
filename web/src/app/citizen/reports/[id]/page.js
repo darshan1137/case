@@ -5,8 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { DashboardLayout } from '@/components/layout';
-import { Card, CardHeader, CardTitle, CardContent, Button, Badge, Textarea, Alert } from '@/components/ui';
-import { reportService } from '@/lib/reportService';
+import { Card, CardHeader, CardTitle, CardContent, Button, Badge, Textarea, Alert } from '@/components/ui';import TicketTimeline from '@/components/TicketTimeline';import { reportService } from '@/lib/reportService';
 import { REPORT_STATUS, CATEGORIES_LIST } from '@/lib/constants/sla';
 import { getWardName } from '@/lib/constants/wards';
 
@@ -172,53 +171,8 @@ export default function ReportDetailPage() {
         {error && <Alert variant="danger">{error}</Alert>}
         {success && <Alert variant="success">{success}</Alert>}
 
-        {/* Status Timeline */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Progress Timeline</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {report.status === 'rejected' ? (
-              <div className="text-center py-6">
-                <span className="text-4xl">❌</span>
-                <p className="text-red-600 font-medium mt-2">Report was rejected</p>
-                {report.rejection_reason && (
-                  <p className="text-gray-600 mt-1">Reason: {report.rejection_reason}</p>
-                )}
-              </div>
-            ) : (
-              <div className="flex justify-between">
-                {statusSteps.map((step, index) => (
-                  <div key={step.key} className="flex flex-col items-center relative">
-                    <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center text-lg ${
-                        index <= currentStep
-                          ? 'bg-green-500 text-white'
-                          : 'bg-gray-200 text-gray-400'
-                      }`}
-                    >
-                      {step.icon}
-                    </div>
-                    <span
-                      className={`text-xs mt-2 ${
-                        index <= currentStep ? 'text-green-600 font-medium' : 'text-gray-400'
-                      }`}
-                    >
-                      {step.label}
-                    </span>
-                    {index < statusSteps.length - 1 && (
-                      <div
-                        className={`absolute top-5 left-12 w-16 h-0.5 ${
-                          index < currentStep ? 'bg-green-500' : 'bg-gray-200'
-                        }`}
-                      />
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        {/* Work Milestone Timeline */}
+        <TicketTimeline ticket={report} />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Report Details */}
