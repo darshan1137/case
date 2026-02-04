@@ -22,6 +22,19 @@ export function AuthProvider({ children }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // First, check if there's stored userData in localStorage (for non-Firebase auth)
+    const storedUserData = localStorage.getItem('userData');
+    if (storedUserData) {
+      try {
+        const parsedUserData = JSON.parse(storedUserData);
+        setUserData(parsedUserData);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error parsing stored userData:', err);
+      }
+    }
+
+    // Then set up Firebase auth listener
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setLoading(true);
       setError(null);
@@ -39,7 +52,11 @@ export function AuthProvider({ children }) {
         }
       } else {
         setUser(null);
-        setUserData(null);
+        // Keep userData from localStorage if Firebase user is null
+        // Only clear if there's no stored userData either
+        if (!localStorage.getItem('userData')) {
+          setUserData(null);
+        }
       }
       
       setLoading(false);

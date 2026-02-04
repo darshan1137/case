@@ -25,15 +25,24 @@ export default function CitizenDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!authLoading && userData?.role !== 'citizen') {
+    if (authLoading) {
+      return; // Still loading auth
+    }
+
+    // Check if user data exists and has correct role
+    if (!userData) {
       router.push('/auth/login');
       return;
     }
 
-    if (userData) {
-      loadData();
+    if (userData.role !== 'citizen') {
+      router.push('/auth/login');
+      return;
     }
-  }, [userData, authLoading]);
+
+    // User is authenticated and has correct role
+    loadData();
+  }, [userData, authLoading, router]);
 
   const loadData = async () => {
     setLoading(true);
