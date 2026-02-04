@@ -1,50 +1,50 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/context/AuthContext';
-import { DashboardLayout } from '@/components/layout';
-import { Button, Alert } from '@/components/ui';
-import { collection, addDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+import { DashboardLayout } from "@/components/layout";
+import { Button, Alert } from "@/components/ui";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 const navigation = [
-  { name: 'Dashboard', href: '/citizen/dashboard', icon: '📊' },
-  { name: 'New Report', href: '/citizen/reports/new', icon: '📝' },
-  { name: 'My Reports', href: '/citizen/reports', icon: '📋' },
-  { name: 'Track Status', href: '/citizen/track', icon: '🔍' },
-  { name: 'Infrastructure Map', href: '/map', icon: '🗺️' },
-  { name: 'Route Optimizer', href: '/route', icon: '🛣️' },
-  { name: 'Profile', href: '/citizen/profile', icon: '👤' },
+  { name: "Dashboard", href: "/citizen/dashboard", icon: "📊" },
+  { name: "New Report", href: "/citizen/reports/new", icon: "📝" },
+  { name: "My Reports", href: "/citizen/reports", icon: "📋" },
+  { name: "Track Status", href: "/citizen/track", icon: "🔍" },
+  { name: "Infrastructure Map", href: "/map", icon: "🗺️" },
+  { name: "Route Optimizer", href: "/route", icon: "🛣️" },
+  { name: "Profile", href: "/citizen/profile", icon: "👤" },
 ];
 
 export default function NewReportPage() {
   const router = useRouter();
   const { userData, loading: authLoading } = useAuth();
-  
+
   const [images, setImages] = useState([]);
   const [imageFiles, setImageFiles] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [dragActive, setDragActive] = useState(false);
   const [apiResponse, setApiResponse] = useState(null);
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    issue_type: '',
-    department: '',
-    sub_department: '',
-    severity_level: '',
+    title: "",
+    description: "",
+    issue_type: "",
+    department: "",
+    sub_department: "",
+    severity_level: "",
     confidence_score: 0,
-    reasoning: '',
-    message: '',
-    ward: ''
+    reasoning: "",
+    message: "",
+    ward: "",
   });
 
   useEffect(() => {
-    if (!authLoading && userData?.role !== 'citizen') {
-      router.push('/auth/login');
+    if (!authLoading && userData?.role !== "citizen") {
+      router.push("/auth/login");
     }
   }, [userData, authLoading, router]);
 
@@ -54,34 +54,34 @@ export default function NewReportPage() {
   };
 
   const addImages = (files) => {
-    const validFiles = files.filter(file => file.type.startsWith('image/'));
-    
+    const validFiles = files.filter((file) => file.type.startsWith("image/"));
+
     if (validFiles.length === 0) {
-      setError('Please select valid image files');
+      setError("Please select valid image files");
       return;
     }
 
     if (validFiles.length + images.length > 10) {
-      setError('Maximum 10 images allowed');
+      setError("Maximum 10 images allowed");
       return;
     }
 
-    const newImages = validFiles.map(file => ({
+    const newImages = validFiles.map((file) => ({
       file,
-      preview: URL.createObjectURL(file)
+      preview: URL.createObjectURL(file),
     }));
 
-    setImages(prev => [...prev, ...newImages]);
-    setImageFiles(prev => [...prev, ...validFiles]);
-    setError('');
+    setImages((prev) => [...prev, ...newImages]);
+    setImageFiles((prev) => [...prev, ...validFiles]);
+    setError("");
   };
 
   const handleDrag = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.type === 'dragenter' || e.type === 'dragover') {
+    if (e.type === "dragenter" || e.type === "dragover") {
       setDragActive(true);
-    } else if (e.type === 'dragleave') {
+    } else if (e.type === "dragleave") {
       setDragActive(false);
     }
   };
@@ -90,14 +90,14 @@ export default function NewReportPage() {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    
+
     const files = Array.from(e.dataTransfer.files || []);
     addImages(files);
   };
 
   const removeImage = (index) => {
-    setImages(prev => prev.filter((_, i) => i !== index));
-    setImageFiles(prev => prev.filter((_, i) => i !== index));
+    setImages((prev) => prev.filter((_, i) => i !== index));
+    setImageFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   const uploadToCloudinary = async (file) => {
@@ -106,39 +106,43 @@ export default function NewReportPage() {
     const apiSecret = process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET;
 
     if (!cloudName || !apiKey || !apiSecret) {
-      throw new Error('Cloudinary configuration is missing. Please check your .env.local file.');
+      throw new Error(
+        "Cloudinary configuration is missing. Please check your .env.local file.",
+      );
     }
 
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('api_key', apiKey);
-    formData.append('timestamp', Math.floor(Date.now() / 1000).toString());
+    formData.append("file", file);
+    formData.append("api_key", apiKey);
+    formData.append("timestamp", Math.floor(Date.now() / 1000).toString());
 
     // Generate signature
     const signature = await generateCloudinarySignature(
-      formData.get('timestamp'),
-      apiSecret
+      formData.get("timestamp"),
+      apiSecret,
     );
-    formData.append('signature', signature);
-    console.log('Uploading to Cloudinary with formData:', formData);
+    formData.append("signature", signature);
+    console.log("Uploading to Cloudinary with formData:", formData);
     try {
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
         {
-          method: 'POST',
-          body: formData
-        }
+          method: "POST",
+          body: formData,
+        },
       );
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error?.message || 'Failed to upload image to Cloudinary');
+        throw new Error(
+          errorData.error?.message || "Failed to upload image to Cloudinary",
+        );
       }
 
       const data = await response.json();
       return data.secure_url;
     } catch (err) {
-      console.error('Cloudinary upload error:', err);
+      console.error("Cloudinary upload error:", err);
       throw err;
     }
   };
@@ -147,80 +151,87 @@ export default function NewReportPage() {
     const signatureString = `timestamp=${timestamp}${apiSecret}`;
     const encoder = new TextEncoder();
     const data = encoder.encode(signatureString);
-    const hashBuffer = await crypto.subtle.digest('SHA-1', data);
+    const hashBuffer = await crypto.subtle.digest("SHA-1", data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    const hashHex = hashArray
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
     return hashHex;
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleValidateImages = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
       if (imageFiles.length === 0) {
-        throw new Error('Please upload at least one image of the issue');
+        throw new Error("Please upload at least one image of the issue");
       }
 
       // Upload all images to Cloudinary first
-      setError('Uploading images to cloud...');
+      setError("Uploading images to cloud...");
       const imageUrls = await Promise.all(
-        imageFiles.map(file => uploadToCloudinary(file))
+        imageFiles.map((file) => uploadToCloudinary(file)),
       );
-      console.log('Cloudinary URLs:', imageUrls);
+      console.log("Cloudinary URLs:", imageUrls);
 
       // Prepare FormData for backend validation
       // The backend validates the image content, we'll include the first image file
       const ticketData = new FormData();
-      ticketData.append('file', imageFiles[0]);
-      
-      console.log('Sending to backend for validation...');
-      
+      ticketData.append("file", imageFiles[0]);
+
+      console.log("Sending to backend for validation...");
+
       // Send to backend API for validation (validates the image for issues)
-      const response = await fetch('http://127.0.0.1:8005/api/tickets/validate-image-only', {
-        method: 'POST',
-        body: ticketData
-      });
+      const response = await fetch(
+        "http://127.0.0.1:8005/api/tickets/validate-image-only",
+        {
+          method: "POST",
+          body: ticketData,
+        },
+      );
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Backend error response:', errorText);
-        throw new Error(`Failed to validate report with server (${response.status})`);
+        console.error("Backend error response:", errorText);
+        throw new Error(
+          `Failed to validate report with server (${response.status})`,
+        );
       }
 
       const result = await response.json();
-      console.log('API Response:', result);
-      
+      console.log("API Response:", result);
+
       // Store the Cloudinary image URLs and API response
       setApiResponse({
         ...result,
-        imageUrls: imageUrls
+        imageUrls: imageUrls,
       });
 
       // Pre-fill form with API response data
       setFormData({
-        title: result.title || '',
-        description: result.description || '',
-        issue_type: result.issue_type || '',
-        department: result.department || '',
-        sub_department: result.sub_department || '',
-        severity_level: result.severity_level || '',
+        title: result.title || "",
+        description: result.description || "",
+        issue_type: result.issue_type || "",
+        department: result.department || "",
+        sub_department: result.sub_department || "",
+        severity_level: result.severity_level || "",
         confidence_score: result.confidence_score || 0,
-        reasoning: result.reasoning || '',
-        message: result.message || '',
-        ward: result?.ward || ''
+        reasoning: result.reasoning || "",
+        message: result.message || "",
+        ward: result?.ward || "",
       });
 
-      setError('');
+      setError("");
     } catch (err) {
-      setError(err.message || 'Failed to validate report');
-      console.error('Validation error:', err);
+      setError(err.message || "Failed to validate report");
+      console.error("Validation error:", err);
     } finally {
       setLoading(false);
     }
@@ -228,94 +239,96 @@ export default function NewReportPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
       if (!apiResponse || !apiResponse.imageUrls) {
-        throw new Error('Please validate images first');
+        throw new Error("Please validate images first");
       }
 
       // Validate user data
       if (!userData) {
-        throw new Error('User data not loaded. Please refresh and try again.');
+        throw new Error("User data not loaded. Please refresh and try again.");
       }
 
       // Get user ID - from userService response, it's stored as 'id' or 'uid'
       const userId = userData.id || userData.uid;
       if (!userId) {
-        console.error('userData:', userData);
-        throw new Error('User ID not found. Please log in again.');
+        console.error("userData:", userData);
+        throw new Error("User ID not found. Please log in again.");
       }
 
       // Prepare ticket data for API
       const ticketData = {
         citizen_id: userId,
-        citizen_name: userData.name || 'Anonymous',
-        citizen_phone: userData.phone || '',
+        citizen_name: userData.name || "Anonymous",
+        citizen_phone: userData.phone || "",
         ward: formData.ward || null,
         location: userData.location || null,
-        title: formData.title || '',
-        description: formData.description || '',
-        issue_type: formData.issue_type || '',
-        department: formData.department || '',
-        sub_department: formData.sub_department || '',
-        severity_level: formData.severity_level || 'medium',
+        title: formData.title || "",
+        description: formData.description || "",
+        issue_type: formData.issue_type || "",
+        department: formData.department || "",
+        sub_department: formData.sub_department || "",
+        severity_level: formData.severity_level || "medium",
         confidence_score: Number(formData.confidence_score) || 0,
         images: apiResponse.imageUrls || [],
         detected: apiResponse.detected || false,
-        reasoning: formData.reasoning || '',
-        message: formData.message || ''
+        reasoning: formData.reasoning || "",
+        message: formData.message || "",
       };
 
-      console.log('Submitting ticket data:', ticketData);
+      console.log("Submitting ticket data:", ticketData);
 
       // Create ticket via API endpoint (handles Firestore + email notification)
-      const response = await fetch('/api/tickets', {
-        method: 'POST',
+      const response = await fetch("/api/tickets", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(ticketData)
+        body: JSON.stringify(ticketData),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create ticket');
+        throw new Error(errorData.error || "Failed to create ticket");
       }
 
       const result = await response.json();
-      console.log('Ticket created:', result.ticket_id);
-      
+      console.log("Ticket created:", result.ticket_id);
+
       if (result.notification_sent) {
-        setSuccess(`Ticket created successfully! ID: ${result.ticket_id}\nWard officer has been notified.`);
+        setSuccess(
+          `Ticket created successfully! ID: ${result.ticket_id}\nWard officer has been notified.`,
+        );
       } else {
         setSuccess(`Ticket created successfully! ID: ${result.ticket_id}`);
       }
-      
+
       // Clear form
       setImages([]);
       setImageFiles([]);
       setApiResponse(null);
       setFormData({
-        title: '',
-        description: '',
-        issue_type: '',
-        department: '',
-        sub_department: '',
-        severity_level: '',
+        title: "",
+        description: "",
+        issue_type: "",
+        department: "",
+        sub_department: "",
+        severity_level: "",
         confidence_score: 0,
-        reasoning: '',
-        message: '',
-        ward: ''
+        reasoning: "",
+        message: "",
+        ward: "",
       });
-      
+
       setTimeout(() => {
-        router.push('/citizen/dashboard');
+        router.push("/citizen/dashboard");
       }, 2000);
     } catch (err) {
-      setError(err.message || 'Failed to submit report');
-      console.error('Submit error:', err);
+      setError(err.message || "Failed to submit report");
+      console.error("Submit error:", err);
     } finally {
       setLoading(false);
     }
@@ -341,8 +354,12 @@ export default function NewReportPage() {
             <div className="inline-block p-4 bg-white rounded-full shadow-lg mb-4">
               <span className="text-5xl">📸</span>
             </div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Report an Issue</h1>
-            <p className="text-gray-600 text-lg">Share photos of problems in your city</p>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+              Report an Issue
+            </h1>
+            <p className="text-gray-600 text-lg">
+              Share photos of problems in your city
+            </p>
           </div>
 
           {/* Main Card */}
@@ -359,7 +376,10 @@ export default function NewReportPage() {
               </div>
             )}
 
-            <form onSubmit={apiResponse ? handleSubmit : handleValidateImages} className="p-8">
+            <form
+              onSubmit={apiResponse ? handleSubmit : handleValidateImages}
+              className="p-8"
+            >
               {/* Image Upload Area */}
               {!apiResponse && (
                 <>
@@ -367,7 +387,7 @@ export default function NewReportPage() {
                     <label className="block text-sm font-semibold text-gray-900 mb-4">
                       Upload Photos <span className="text-red-500">*</span>
                     </label>
-                    
+
                     <div
                       onDragEnter={handleDrag}
                       onDragLeave={handleDrag}
@@ -375,8 +395,8 @@ export default function NewReportPage() {
                       onDrop={handleDrop}
                       className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all ${
                         dragActive
-                          ? 'border-indigo-500 bg-indigo-50'
-                          : 'border-gray-300 bg-gray-50 hover:border-indigo-400'
+                          ? "border-indigo-500 bg-indigo-50"
+                          : "border-gray-300 bg-gray-50 hover:border-indigo-400"
                       }`}
                     >
                       <input
@@ -427,7 +447,7 @@ export default function NewReportPage() {
                           </button>
                         )}
                       </div>
-                      
+
                       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                         {images.map((img, index) => (
                           <div key={index} className="relative group">
@@ -458,7 +478,9 @@ export default function NewReportPage() {
               {apiResponse && (
                 <div className="mb-8 space-y-6">
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <h3 className="font-semibold text-blue-900 mb-2">✅ Issue Detected</h3>
+                    <h3 className="font-semibold text-blue-900 mb-2">
+                      ✅ Issue Detected
+                    </h3>
                     <p className="text-sm text-blue-800">
                       {apiResponse.reasoning}
                     </p>
@@ -610,16 +632,16 @@ export default function NewReportPage() {
                     if (apiResponse) {
                       setApiResponse(null);
                       setFormData({
-                        title: '',
-                        description: '',
-                        issue_type: '',
-                        department: '',
-                        sub_department: '',
-                        severity_level: '',
+                        title: "",
+                        description: "",
+                        issue_type: "",
+                        department: "",
+                        sub_department: "",
+                        severity_level: "",
                         confidence_score: 0,
-                        reasoning: '',
-                        message: '',
-                        ward: ''
+                        reasoning: "",
+                        message: "",
+                        ward: "",
                       });
                     } else {
                       router.back();
@@ -627,22 +649,24 @@ export default function NewReportPage() {
                   }}
                   className="flex-1 py-3 font-semibold"
                 >
-                  {apiResponse ? 'Back to Upload' : 'Cancel'}
+                  {apiResponse ? "Back to Upload" : "Cancel"}
                 </Button>
                 <Button
                   type="submit"
-                  disabled={loading || (apiResponse ? false : imageFiles.length === 0)}
+                  disabled={
+                    loading || (apiResponse ? false : imageFiles.length === 0)
+                  }
                   className="flex-1 py-3 font-semibold bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-50"
                 >
                   {loading ? (
                     <>
                       <span className="animate-spin mr-2">⏳</span>
-                      {apiResponse ? 'Creating Ticket...' : 'Validating...'}
+                      {apiResponse ? "Creating Ticket..." : "Validating..."}
                     </>
                   ) : (
                     <>
-                      <span className="mr-2">{apiResponse ? '✓' : '→'}</span>
-                      {apiResponse ? 'Create Ticket' : 'Validate & Continue'}
+                      <span className="mr-2">{apiResponse ? "✓" : "→"}</span>
+                      {apiResponse ? "Create Ticket" : "Validate & Continue"}
                     </>
                   )}
                 </Button>
@@ -666,7 +690,9 @@ export default function NewReportPage() {
               </li>
               <li className="flex items-start">
                 <span className="text-indigo-500 font-bold mr-3">•</span>
-                <span>Capture nearby landmarks or street signs when possible</span>
+                <span>
+                  Capture nearby landmarks or street signs when possible
+                </span>
               </li>
               <li className="flex items-start">
                 <span className="text-indigo-500 font-bold mr-3">•</span>

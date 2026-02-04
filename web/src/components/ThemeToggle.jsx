@@ -1,55 +1,57 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { Sun, Moon, Monitor } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { Sun, Moon, Monitor } from "lucide-react";
 
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState("light");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
     // Get saved theme or system preference
-    const savedTheme = localStorage.getItem('theme');
+    const savedTheme = localStorage.getItem("theme");
     const html = document.documentElement;
-    
+
     if (savedTheme) {
       setTheme(savedTheme);
       applyTheme(savedTheme);
     } else {
       // Check current class
-      if (html.classList.contains('dark')) {
-        setTheme('dark');
-      } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        setTheme('system');
-        applyTheme('system');
+      if (html.classList.contains("dark")) {
+        setTheme("dark");
+      } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        setTheme("system");
+        applyTheme("system");
       }
     }
   }, []);
 
   const applyTheme = (newTheme) => {
     const html = document.documentElement;
-    
-    if (newTheme === 'dark') {
-      html.classList.remove('light');
-      html.classList.add('dark');
-    } else if (newTheme === 'light') {
-      html.classList.remove('dark');
-      html.classList.add('light');
-    } else if (newTheme === 'system') {
-      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      html.classList.remove('dark', 'light');
-      html.classList.add(systemPrefersDark ? 'dark' : 'light');
+
+    if (newTheme === "dark") {
+      html.classList.remove("light");
+      html.classList.add("dark");
+    } else if (newTheme === "light") {
+      html.classList.remove("dark");
+      html.classList.add("light");
+    } else if (newTheme === "system") {
+      const systemPrefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)",
+      ).matches;
+      html.classList.remove("dark", "light");
+      html.classList.add(systemPrefersDark ? "dark" : "light");
     }
   };
 
   const cycleTheme = () => {
-    const themes = ['light', 'dark', 'system'];
+    const themes = ["light", "dark", "system"];
     const currentIndex = themes.indexOf(theme);
     const nextTheme = themes[(currentIndex + 1) % themes.length];
-    
+
     setTheme(nextTheme);
-    localStorage.setItem('theme', nextTheme);
+    localStorage.setItem("theme", nextTheme);
     applyTheme(nextTheme);
   };
 
@@ -62,18 +64,18 @@ export default function ThemeToggle() {
   }
 
   const getIcon = () => {
-    if (theme === 'dark') {
+    if (theme === "dark") {
       return <Moon className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />;
-    } else if (theme === 'system') {
+    } else if (theme === "system") {
       return <Monitor className="w-4 h-4 text-green-600 dark:text-green-400" />;
     }
     return <Sun className="w-4 h-4 text-orange-500" />;
   };
 
   const getLabel = () => {
-    if (theme === 'dark') return 'Dark';
-    if (theme === 'system') return 'Auto';
-    return 'Light';
+    if (theme === "dark") return "Dark";
+    if (theme === "system") return "Auto";
+    return "Light";
   };
 
   return (
@@ -83,9 +85,7 @@ export default function ThemeToggle() {
       title={`Theme: ${getLabel()}`}
     >
       {getIcon()}
-      <span className="text-sm font-medium hidden sm:inline">
-        {getLabel()}
-      </span>
+      <span className="text-sm font-medium hidden sm:inline">{getLabel()}</span>
     </button>
   );
 }

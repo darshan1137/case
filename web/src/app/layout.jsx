@@ -17,14 +17,16 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "CASE Platform - Civic Action & Service Excellence",
-  description: "Modern civic infrastructure management platform. Capture, Assess, Serve, and Evolve city services with real-time reporting and resolution.",
-  keywords: "civic issues, municipal corporation, city infrastructure, smart city, CASE platform, Built in Bharat",
+  description:
+    "Modern civic infrastructure management platform. Capture, Assess, Serve, and Evolve city services with real-time reporting and resolution.",
+  keywords:
+    "civic issues, municipal corporation, city infrastructure, smart city, CASE platform, Built in Bharat",
   icons: {
     icon: [
-      { url: '/logo.svg', type: 'image/svg+xml' },
-      { url: '/favicon.ico', sizes: 'any' }
+      { url: "/logo.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
     ],
-    apple: '/logo.svg',
+    apple: "/logo.svg",
   },
 };
 
@@ -48,7 +50,7 @@ export default function RootLayout({ children }) {
                   try { window.dispatchEvent(new Event('googleTranslateLoaded')); } catch (e) {}
                 }
               }
-            `
+            `,
           }}
         />
         <Script
@@ -60,13 +62,11 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-
-          <AuthProvider>
-            {children}
-            <Chatbot />
-            <ScreenReader />
-          </AuthProvider>
-      
+        <AuthProvider>
+          {children}
+          <Chatbot />
+          <ScreenReader />
+        </AuthProvider>
       </body>
     </html>
   );

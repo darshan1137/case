@@ -1,19 +1,33 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 const Preloader = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [show, setShow] = useState(true);
 
   const steps = [
-    { 
-      word: 'CAPTURE', 
+    {
+      word: "CAPTURE",
       icon: (
-        <svg className="w-24 h-24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="10" y="10" width="80" height="80" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.3"/>
+        <svg
+          className="w-24 h-24"
+          viewBox="0 0 100 100"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            x="10"
+            y="10"
+            width="80"
+            height="80"
+            stroke="currentColor"
+            strokeWidth="2"
+            fill="none"
+            opacity="0.3"
+          />
           <motion.path
             d="M 20 20 L 40 20 M 60 20 L 80 20 M 20 80 L 40 80 M 60 80 L 80 80"
             stroke="currentColor"
@@ -36,12 +50,17 @@ const Preloader = ({ onComplete }) => {
           />
         </svg>
       ),
-      description: 'Real-time civic issue detection'
+      description: "Real-time civic issue detection",
     },
-    { 
-      word: 'ASSESS', 
+    {
+      word: "ASSESS",
       icon: (
-        <svg className="w-24 h-24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          className="w-24 h-24"
+          viewBox="0 0 100 100"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <motion.circle
             cx="30"
             cy="70"
@@ -80,12 +99,17 @@ const Preloader = ({ onComplete }) => {
           />
         </svg>
       ),
-      description: 'AI-powered priority analysis'
+      description: "AI-powered priority analysis",
     },
-    { 
-      word: 'SERVE', 
+    {
+      word: "SERVE",
       icon: (
-        <svg className="w-24 h-24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          className="w-24 h-24"
+          viewBox="0 0 100 100"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <motion.rect
             x="20"
             y="50"
@@ -96,7 +120,7 @@ const Preloader = ({ onComplete }) => {
             initial={{ scaleY: 0 }}
             animate={{ scaleY: 1 }}
             transition={{ delay: 0.2 }}
-            style={{ transformOrigin: 'bottom' }}
+            style={{ transformOrigin: "bottom" }}
           />
           <motion.rect
             x="45"
@@ -108,7 +132,7 @@ const Preloader = ({ onComplete }) => {
             initial={{ scaleY: 0 }}
             animate={{ scaleY: 1 }}
             transition={{ delay: 0.4 }}
-            style={{ transformOrigin: 'bottom' }}
+            style={{ transformOrigin: "bottom" }}
           />
           <motion.rect
             x="70"
@@ -119,7 +143,7 @@ const Preloader = ({ onComplete }) => {
             initial={{ scaleY: 0 }}
             animate={{ scaleY: 1 }}
             transition={{ delay: 0.6 }}
-            style={{ transformOrigin: 'bottom' }}
+            style={{ transformOrigin: "bottom" }}
           />
           <motion.path
             d="M 50 10 L 55 15 L 50 20 L 45 15 Z"
@@ -130,12 +154,17 @@ const Preloader = ({ onComplete }) => {
           />
         </svg>
       ),
-      description: 'Swift municipal response'
+      description: "Swift municipal response",
     },
-    { 
-      word: 'EVOLVE', 
+    {
+      word: "EVOLVE",
       icon: (
-        <svg className="w-24 h-24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          className="w-24 h-24"
+          viewBox="0 0 100 100"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <motion.path
             d="M 20 80 Q 35 60, 50 50 T 80 20"
             stroke="currentColor"
@@ -166,13 +195,13 @@ const Preloader = ({ onComplete }) => {
           />
         </svg>
       ),
-      description: 'Continuous improvement cycle'
-    }
+      description: "Continuous improvement cycle",
+    },
   ];
 
   useEffect(() => {
     const timers = [];
-    
+
     // Step through each word (0-4s, 1s each)
     steps.forEach((_, index) => {
       timers.push(setTimeout(() => setCurrentStep(index + 1), index * 1000));
@@ -188,12 +217,14 @@ const Preloader = ({ onComplete }) => {
     timers.push(setTimeout(() => setCurrentStep(7), 6500));
 
     // Complete (8s total)
-    timers.push(setTimeout(() => {
-      setShow(false);
-      setTimeout(() => onComplete?.(), 300);
-    }, 8000));
+    timers.push(
+      setTimeout(() => {
+        setShow(false);
+        setTimeout(() => onComplete?.(), 300);
+      }, 8000),
+    );
 
-    return () => timers.forEach(timer => clearTimeout(timer));
+    return () => timers.forEach((timer) => clearTimeout(timer));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onComplete]);
 
@@ -204,25 +235,25 @@ const Preloader = ({ onComplete }) => {
       {/* Background with subtle gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-blue-950 to-indigo-950">
         {/* Animated grid pattern */}
-        <motion.div 
+        <motion.div
           className="absolute inset-0 opacity-10"
           style={{
             backgroundImage: `
               linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
               linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
             `,
-            backgroundSize: '50px 50px'
+            backgroundSize: "50px 50px",
           }}
           animate={{
-            backgroundPosition: ['0px 0px', '50px 50px']
+            backgroundPosition: ["0px 0px", "50px 50px"],
           }}
           transition={{
             duration: 20,
             repeat: Infinity,
-            ease: 'linear'
+            ease: "linear",
           }}
         />
-        
+
         {/* Tricolor gradient overlay (subtle) */}
         <motion.div
           className="absolute inset-0"
@@ -230,7 +261,8 @@ const Preloader = ({ onComplete }) => {
           animate={{ opacity: currentStep >= 5 ? 0.2 : 0 }}
           transition={{ duration: 1 }}
           style={{
-            background: 'linear-gradient(to bottom, rgba(79, 70, 229, 0.4) 0%, rgba(59, 130, 246, 0.4) 50%, rgba(99, 102, 241, 0.4) 100%)'
+            background:
+              "linear-gradient(to bottom, rgba(79, 70, 229, 0.4) 0%, rgba(59, 130, 246, 0.4) 50%, rgba(99, 102, 241, 0.4) 100%)",
           }}
         />
       </div>
@@ -244,17 +276,17 @@ const Preloader = ({ onComplete }) => {
               initial={{ opacity: 0, scale: 0.8, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 1.1, y: -20 }}
-              transition={{ 
+              transition={{
                 type: "spring",
                 stiffness: 300,
-                damping: 25
+                damping: 25,
               }}
               className="text-center"
             >
               <motion.div
                 className="text-white mb-6"
-                animate={{ 
-                  filter: ['brightness(1)', 'brightness(1.5)', 'brightness(1)']
+                animate={{
+                  filter: ["brightness(1)", "brightness(1.5)", "brightness(1)"],
                 }}
                 transition={{ duration: 1, repeat: Infinity }}
               >
@@ -262,8 +294,8 @@ const Preloader = ({ onComplete }) => {
               </motion.div>
               <motion.h2
                 className="text-6xl md:text-8xl font-bold text-white tracking-wider mb-4"
-                initial={{ letterSpacing: '0.5em', opacity: 0 }}
-                animate={{ letterSpacing: '0.2em', opacity: 1 }}
+                initial={{ letterSpacing: "0.5em", opacity: 0 }}
+                animate={{ letterSpacing: "0.2em", opacity: 1 }}
                 transition={{ duration: 0.6 }}
               >
                 {steps[currentStep - 1].word}
@@ -288,30 +320,30 @@ const Preloader = ({ onComplete }) => {
               animate={{ opacity: 1 }}
             >
               <div className="relative w-full h-32">
-                {['CAPTURE', 'ASSESS', 'SERVE', 'EVOLVE'].map((word, idx) => (
+                {["CAPTURE", "ASSESS", "SERVE", "EVOLVE"].map((word, idx) => (
                   <motion.div
                     key={word}
                     className="absolute left-1/2 top-1/2 text-4xl font-bold text-white"
                     initial={{
-                      x: ['-200%', '200%', '200%', '-200%'][idx],
-                      y: ['-200%', '-200%', '200%', '200%'][idx],
-                      opacity: 0.7
+                      x: ["-200%", "200%", "200%", "-200%"][idx],
+                      y: ["-200%", "-200%", "200%", "200%"][idx],
+                      opacity: 0.7,
                     }}
                     animate={{
-                      x: '-50%',
-                      y: '-50%',
+                      x: "-50%",
+                      y: "-50%",
                       opacity: 0,
-                      scale: 0.5
+                      scale: 0.5,
                     }}
                     transition={{ duration: 0.8 }}
                   >
                     {word}
                   </motion.div>
                 ))}
-                
+
                 <motion.h1
                   className="absolute left-1/2 top-1/2 text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-blue-300 to-indigo-500"
-                  initial={{ scale: 0, opacity: 0, x: '-50%', y: '-50%' }}
+                  initial={{ scale: 0, opacity: 0, x: "-50%", y: "-50%" }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
                 >
@@ -335,17 +367,17 @@ const Preloader = ({ onComplete }) => {
               <motion.div
                 initial={{ rotate: -180, scale: 0 }}
                 animate={{ rotate: 0, scale: 1 }}
-                transition={{ 
+                transition={{
                   type: "spring",
                   stiffness: 200,
-                  damping: 20
+                  damping: 20,
                 }}
                 className="mb-8"
               >
-                <Image 
-                  src="/logo.svg" 
-                  alt="CASE Logo" 
-                  width={120} 
+                <Image
+                  src="/logo.svg"
+                  alt="CASE Logo"
+                  width={120}
                   height={120}
                   className="mx-auto drop-shadow-2xl"
                 />
@@ -378,12 +410,22 @@ const Preloader = ({ onComplete }) => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.7 }}
               >
-                <svg className="w-6 h-6 text-orange-400" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                <svg
+                  className="w-6 h-6 text-orange-400"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                 </svg>
-                <span className="text-white font-semibold">Government of India Initiative</span>
-                <svg className="w-6 h-6 text-green-400" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                <span className="text-white font-semibold">
+                  Government of India Initiative
+                </span>
+                <svg
+                  className="w-6 h-6 text-green-400"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                 </svg>
               </motion.div>
             </motion.div>
@@ -401,24 +443,26 @@ const Preloader = ({ onComplete }) => {
               <motion.div
                 className="mb-6"
                 animate={{
-                  scale: [1, 1.05, 1]
+                  scale: [1, 1.05, 1],
                 }}
                 transition={{
                   duration: 2,
-                  repeat: Infinity
+                  repeat: Infinity,
                 }}
               >
                 <div className="text-4xl mb-2">🇮🇳</div>
-                <p className="text-3xl font-bold text-white mb-2">Built in Bharat</p>
+                <p className="text-3xl font-bold text-white mb-2">
+                  Built in Bharat
+                </p>
               </motion.div>
-              
+
               <motion.p
                 className="text-xl text-slate-300"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
               >
-                Designed & Developed by{' '}
+                Designed & Developed by{" "}
                 <span className="font-bold bg-gradient-to-r from-indigo-400 to-blue-500 bg-clip-text text-transparent">
                   Coding Gurus
                 </span>

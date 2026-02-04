@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { cn } from '@/lib/utils';
+import * as React from "react";
+import { cn } from "@/lib/utils";
 
 const DropdownMenuContext = React.createContext({
   open: false,
@@ -27,7 +27,7 @@ export function DropdownMenuTrigger({ children, asChild }) {
   React.useEffect(() => {
     const handleClickOutside = (event) => {
       if (triggerRef.current && !triggerRef.current.contains(event.target)) {
-        const content = document.querySelector('[data-dropdown-content]');
+        const content = document.querySelector("[data-dropdown-content]");
         if (content && !content.contains(event.target)) {
           setOpen(false);
         }
@@ -35,8 +35,9 @@ export function DropdownMenuTrigger({ children, asChild }) {
     };
 
     if (open) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [open, setOpen]);
 
@@ -47,8 +48,8 @@ export function DropdownMenuTrigger({ children, asChild }) {
         children.props.onClick?.(e);
         setOpen(!open);
       },
-      'aria-expanded': open,
-      'aria-haspopup': 'true',
+      "aria-expanded": open,
+      "aria-haspopup": "true",
     });
   }
 
@@ -68,7 +69,7 @@ export function DropdownMenuTrigger({ children, asChild }) {
 export function DropdownMenuContent({
   children,
   className,
-  align = 'center',
+  align = "center",
   sideOffset = 4,
   ...props
 }) {
@@ -78,9 +79,9 @@ export function DropdownMenuContent({
   if (!open) return null;
 
   const alignmentClasses = {
-    start: 'left-0',
-    center: 'left-1/2 -translate-x-1/2',
-    end: 'right-0',
+    start: "left-0",
+    center: "left-1/2 -translate-x-1/2",
+    end: "right-0",
   };
 
   return (
@@ -88,10 +89,10 @@ export function DropdownMenuContent({
       ref={contentRef}
       data-dropdown-content
       className={cn(
-        'absolute z-50 min-w-[8rem] overflow-hidden rounded-xl border bg-white shadow-lg',
-        'animate-in fade-in-0 zoom-in-95',
+        "absolute z-50 min-w-[8rem] overflow-hidden rounded-xl border bg-white shadow-lg",
+        "animate-in fade-in-0 zoom-in-95",
         alignmentClasses[align],
-        className
+        className,
       )}
       style={{ top: `calc(100% + ${sideOffset}px)` }}
       {...props}
@@ -130,11 +131,11 @@ export function DropdownMenuItem({
       role="menuitem"
       onClick={handleClick}
       className={cn(
-        'relative flex cursor-pointer select-none items-center rounded-lg px-2 py-1.5 text-sm outline-none',
-        'transition-colors',
-        'hover:bg-slate-100 focus:bg-slate-100',
-        'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
-        className
+        "relative flex cursor-pointer select-none items-center rounded-lg px-2 py-1.5 text-sm outline-none",
+        "transition-colors",
+        "hover:bg-slate-100 focus:bg-slate-100",
+        "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        className,
       )}
       {...props}
     >
@@ -146,7 +147,10 @@ export function DropdownMenuItem({
 export function DropdownMenuLabel({ children, className, ...props }) {
   return (
     <div
-      className={cn('px-2 py-1.5 text-sm font-semibold text-slate-900', className)}
+      className={cn(
+        "px-2 py-1.5 text-sm font-semibold text-slate-900",
+        className,
+      )}
       {...props}
     >
       {children}
@@ -156,9 +160,6 @@ export function DropdownMenuLabel({ children, className, ...props }) {
 
 export function DropdownMenuSeparator({ className, ...props }) {
   return (
-    <div
-      className={cn('-mx-1 my-1 h-px bg-slate-200', className)}
-      {...props}
-    />
+    <div className={cn("-mx-1 my-1 h-px bg-slate-200", className)} {...props} />
   );
 }
