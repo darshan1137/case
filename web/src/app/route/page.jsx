@@ -58,9 +58,123 @@ const OptimizedRouteContent = () => {
   const [routeLoaded, setRouteLoaded] = useState(false);
   const [routeInfo, setRouteInfo] = useState(null);
   const [error, setError] = useState('');
+  const [simulationMode, setSimulationMode] = useState(false);
+  const [selectedScenario, setSelectedScenario] = useState('normal');
   const routingControlRef = useRef(null);
 
   const GRAPHHOPPER_API_KEY = '8547d773-acee-4b26-86bb-ba4f1101fc62';
+
+  // Mumbai simulation scenarios
+  const scenarios = {
+    normal: {
+      name: 'Normal Traffic',
+      description: 'Regular traffic conditions with optimal route selection',
+      reason: 'Fastest route with minimal congestion',
+      routes: [
+        {
+          coordinates: [
+            [72.8777, 19.0760], [72.8800, 19.0780], [72.8850, 19.0820],
+            [72.8900, 19.0870], [72.8950, 19.0920], [72.9000, 19.0980],
+            [72.9050, 19.1050], [72.9100, 19.1120], [72.9150, 19.1180],
+            [72.9876, 19.1234]
+          ],
+          distance: 8.5,
+          time: 25,
+          color: '#1a73e8'
+        }
+      ]
+    },
+    festival: {
+      name: 'Festival/Event',
+      description: 'Ganesh Chaturthi procession blocking main roads',
+      reason: 'Avoiding Dadar and Parel due to festival processions. Rerouting via Eastern Express Highway.',
+      routes: [
+        {
+          coordinates: [
+            [72.8777, 19.0760], [72.8820, 19.0740], [72.8900, 19.0720],
+            [72.8980, 19.0710], [72.9100, 19.0720], [72.9250, 19.0780],
+            [72.9400, 19.0860], [72.9550, 19.0950], [72.9700, 19.1070],
+            [72.9800, 19.1150], [72.9876, 19.1234]
+          ],
+          distance: 12.3,
+          time: 38,
+          color: '#ff6f00'
+        }
+      ]
+    },
+    roadwork: {
+      name: 'Road Construction',
+      description: 'BMC road repair work on Western Express Highway',
+      reason: 'Western Express Highway closed for metro construction. Using Andheri-Ghatkopar Link Road instead.',
+      routes: [
+        {
+          coordinates: [
+            [72.8777, 19.0760], [72.8750, 19.0800], [72.8720, 19.0860],
+            [72.8700, 19.0920], [72.8720, 19.1000], [72.8780, 19.1080],
+            [72.8900, 19.1130], [72.9100, 19.1170], [72.9350, 19.1200],
+            [72.9600, 19.1220], [72.9876, 19.1234]
+          ],
+          distance: 10.8,
+          time: 42,
+          color: '#ff9800'
+        }
+      ]
+    },
+    flooding: {
+      name: 'Monsoon Flooding',
+      description: 'Heavy rainfall causing waterlogging in low-lying areas',
+      reason: 'Avoiding Hindmata, Sion and Kings Circle due to severe waterlogging. Taking elevated routes.',
+      routes: [
+        {
+          coordinates: [
+            [72.8777, 19.0760], [72.8850, 19.0750], [72.8950, 19.0760],
+            [72.9050, 19.0800], [72.9150, 19.0880], [72.9250, 19.0970],
+            [72.9350, 19.1050], [72.9500, 19.1100], [72.9650, 19.1150],
+            [72.9750, 19.1190], [72.9876, 19.1234]
+          ],
+          distance: 11.5,
+          time: 48,
+          color: '#2196f3'
+        }
+      ]
+    },
+    accident: {
+      name: 'Traffic Accident',
+      description: 'Multi-vehicle collision on Santacruz-Chembur Link Road',
+      reason: 'Major accident at Kurla junction causing 2+ hour delays. Rerouting via Jogeshwari-Vikhroli Link Road.',
+      routes: [
+        {
+          coordinates: [
+            [72.8777, 19.0760], [72.8800, 19.0820], [72.8850, 19.0900],
+            [72.8950, 19.0980], [72.9100, 19.1020], [72.9300, 19.1050],
+            [72.9500, 19.1100], [72.9650, 19.1160], [72.9750, 19.1200],
+            [72.9876, 19.1234]
+          ],
+          distance: 9.8,
+          time: 35,
+          color: '#d32f2f'
+        }
+      ]
+    },
+    vip_movement: {
+      name: 'VIP Movement',
+      description: 'High-security convoy route closure',
+      reason: 'Mumbai-Pune Expressway entry restricted due to VIP movement. Using local arterial roads.',
+      routes: [
+        {
+          coordinates: [
+            [72.8777, 19.0760], [72.8820, 19.0790], [72.8880, 19.0840],
+            [72.8920, 19.0900], [72.8980, 19.0970], [72.9080, 19.1040],
+            [72.9200, 19.1090], [72.9400, 19.1140], [72.9600, 19.1180],
+            [72.9750, 19.1210], [72.9876, 19.1234]
+          ],
+          distance: 10.2,
+          time: 40,
+          color: '#9c27b0'
+        }
+      ]
+    }
+  };
 
   useEffect(() => {
     const initMap = async () => {
@@ -135,6 +249,81 @@ const OptimizedRouteContent = () => {
         throw new Error('Routing library not loaded');
       }
 
+      // Simulation mode
+      if (simulationMode) {
+        const scenario = scenarios[selectedScenario];
+        
+        // Clear existing routes
+        mapInstanceRef.current.eachLayer((layer) => {
+          if (layer instanceof L.Polyline && !(layer instanceof L.TileLayer)) {
+            mapInstanceRef.current.removeLayer(layer);
+          }
+        });
+
+        // Add markers for start and end
+        L.marker([pointA.lat, pointA.lng], {
+          icon: L.divIcon({
+            className: 'custom-marker',
+            html: '<div style="background: #4CAF50; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; border: 3px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">A</div>',
+            iconSize: [30, 30],
+            iconAnchor: [15, 15]
+          })
+        }).addTo(mapInstanceRef.current).bindPopup('Start Point');
+
+        L.marker([pointB.lat, pointB.lng], {
+          icon: L.divIcon({
+            className: 'custom-marker',
+            html: '<div style="background: #f44336; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; border: 3px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">B</div>',
+            iconSize: [30, 30],
+            iconAnchor: [15, 15]
+          })
+        }).addTo(mapInstanceRef.current).bindPopup('End Point');
+
+        // Draw simulated routes
+        scenario.routes.forEach((route, idx) => {
+          const polyline = L.polyline(
+            route.coordinates.map(coord => [coord[1], coord[0]]),
+            {
+              color: route.color,
+              weight: 5,
+              opacity: 0.7,
+              smoothFactor: 1
+            }
+          ).addTo(mapInstanceRef.current);
+
+          // Add popup to route
+          polyline.bindPopup(`
+            <div style="font-size: 13px;">
+              <strong>${scenario.name}</strong><br/>
+              <strong>Distance:</strong> ${route.distance} km<br/>
+              <strong>Time:</strong> ${route.time} min<br/>
+              <strong>Reason:</strong> ${scenario.reason}
+            </div>
+          `);
+        });
+
+        // Set route info
+        setRouteInfo({
+          distance: scenario.routes[0].distance.toFixed(2),
+          time: scenario.routes[0].time,
+          scenario: scenario.name,
+          reason: scenario.reason
+        });
+
+        setRouteLoaded(true);
+        setLoading(false);
+
+        // Fit bounds
+        const bounds = L.latLngBounds([
+          [pointA.lat, pointA.lng],
+          [pointB.lat, pointB.lng]
+        ]);
+        mapInstanceRef.current.fitBounds(bounds, { padding: [100, 100] });
+
+        return;
+      }
+
+      // Real mode with GraphHopper
       routingControlRef.current = L.Routing.control({
         waypoints: [
           L.latLng(pointA.lat, pointA.lng),
@@ -234,6 +423,56 @@ const OptimizedRouteContent = () => {
           <p>Fastest path between two points</p>
         </div>
 
+        <div className={styles.modeToggle}>
+          <button
+            className={`${styles.modeButton} ${!simulationMode ? styles.active : ''}`}
+            onClick={() => {
+              setSimulationMode(false);
+              setRouteLoaded(false);
+              setRouteInfo(null);
+            }}
+          >
+            🌐 Real Mode
+          </button>
+          <button
+            className={`${styles.modeButton} ${simulationMode ? styles.active : ''}`}
+            onClick={() => {
+              setSimulationMode(true);
+              setRouteLoaded(false);
+              setRouteInfo(null);
+            }}
+          >
+            🎮 Simulation
+          </button>
+        </div>
+
+        {simulationMode && (
+          <div className={styles.scenarioSelect}>
+            <label>Select Scenario</label>
+            <select
+              value={selectedScenario}
+              onChange={(e) => {
+                setSelectedScenario(e.target.value);
+                setRouteLoaded(false);
+                setRouteInfo(null);
+              }}
+            >
+              <option value="normal">Normal Traffic</option>
+              <option value="festival">Festival/Event</option>
+              <option value="roadwork">Road Construction</option>
+              <option value="flooding">Monsoon Flooding</option>
+              <option value="accident">Traffic Accident</option>
+              <option value="vip_movement">VIP Movement</option>
+            </select>
+            {scenarios[selectedScenario] && (
+              <div className={styles.scenarioInfo}>
+                <h4>📋 {scenarios[selectedScenario].name}</h4>
+                <p>{scenarios[selectedScenario].description}</p>
+              </div>
+            )}
+          </div>
+        )}
+
         <div className={styles.section}>
           <h3>Point A (Start)</h3>
           <div className={styles.inputGroup}>
@@ -289,7 +528,7 @@ const OptimizedRouteContent = () => {
               placeholder="72.9876"
             />
           </div>
-          <p className={styles.hint}>💡 Click map to set Point B</p>
+          {!simulationMode && <p className={styles.hint}>💡 Click map to set Point B</p>}
         </div>
 
         <button
@@ -297,7 +536,7 @@ const OptimizedRouteContent = () => {
           onClick={loadRoute}
           disabled={loading}
         >
-          {loading ? '🔄 Loading' : '🚀 Find Route'}
+          {loading ? '🔄 Loading' : simulationMode ? '🎮 Run Simulation' : '🚀 Find Route'}
         </button>
 
         {error && <div className={styles.error}>{error}</div>}
@@ -313,15 +552,28 @@ const OptimizedRouteContent = () => {
               <span>⏱️ Duration:</span>
               <strong>{routeInfo.time} min</strong>
             </div>
+            {simulationMode && routeInfo.scenario && (
+              <>
+                <div className={styles.stat}>
+                  <span>📊 Scenario:</span>
+                  <strong>{routeInfo.scenario}</strong>
+                </div>
+                <div className={styles.scenarioInfo} style={{ marginTop: '10px' }}>
+                  <h4>🎯 Route Selection Reason</h4>
+                  <p>{routeInfo.reason}</p>
+                </div>
+              </>
+            )}
           </div>
         )}
 
         <div className={styles.info}>
           <h4>How to use:</h4>
           <ul>
-            <li>Enter coordinates</li>
-            <li>Click map to set end point</li>
-            <li>Click "Find Route"</li>
+            <li>Toggle between Real and Simulation mode</li>
+            <li>Enter coordinates or click map</li>
+            <li>In Simulation: Select traffic scenario</li>
+            <li>Click "Find Route" or "Run Simulation"</li>
           </ul>
         </div>
       </div>
