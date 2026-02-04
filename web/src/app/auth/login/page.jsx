@@ -6,9 +6,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Eye, EyeOff, AlertCircle, X, Mail, Lock, Loader2 } from 'lucide-react';
 import { Button, Input } from '@/components/ui';
+import { useAuth } from '@/context/AuthContext';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { updateUserData } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -90,6 +92,8 @@ export default function LoginPage() {
 
       if (data.user) {
         localStorage.setItem('userData', JSON.stringify(data.user));
+        // Update AuthContext immediately
+        updateUserData(data.user);
       }
 
       const role = data.user?.role;

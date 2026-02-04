@@ -20,7 +20,7 @@ const TICKET_STATUS = {
  */
 export async function PATCH(request, { params }) {
   try {
-    const { id: ticketId } = params;
+    const { id: ticketId } = await params;
     const body = await request.json();
     const { assigned_to, assigned_by, user_role } = body;
 
@@ -52,7 +52,7 @@ export async function PATCH(request, { params }) {
     }
 
     const assigningOfficer = assigningOfficerSnap.data();
-    if (assigningOfficer.officer_class !== 'class_b') {
+    if (assigningOfficer.class !== 'class_b') {
       return NextResponse.json(
         { error: 'Unauthorized: Only class_b officers can assign tickets' },
         { status: 403 }
@@ -95,7 +95,7 @@ export async function PATCH(request, { params }) {
     
     // Verify assigned user is either class_c officer or contractor
     const isValidAssignee = 
-      (assignedUser.role === 'officer' && assignedUser.officer_class === 'class_c') ||
+      (assignedUser.role === 'officer' && assignedUser.class === 'class_c') ||
       assignedUser.role === 'contractor';
 
     if (!isValidAssignee) {

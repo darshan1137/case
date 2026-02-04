@@ -20,7 +20,7 @@ const TICKET_STATUS = {
  */
 export async function PATCH(request, { params }) {
   try {
-    const { id: ticketId } = params;
+    const { id: ticketId } = await params;
     const body = await request.json();
     const { user_id, user_role, officer_class } = body;
 

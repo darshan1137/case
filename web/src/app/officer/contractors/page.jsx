@@ -34,10 +34,6 @@ export default function OfficerContractorsPage() {
   const isClassA = userData?.role === 'officer' && userData?.class === 'class_a';
   const isClassB = userData?.role === 'officer' && userData?.class === 'class_b';
   const isClassC = userData?.role === 'officer' && userData?.class === 'class_c';
-  console.log(userData)
-  console.log(isClassA)
-  console.log(isClassB)
-  console.log(isClassC)
 
    const navigation = [
     { name: 'Dashboard', href: '/officer/dashboard', icon: '📊' },

@@ -23,16 +23,26 @@ export default function AddContractorPage() {
   });
   const [validationErrors, setValidationErrors] = useState({});
 
-  const isClassA = userData?.officer_class === 'class_a';
+  const isClassA = userData?.class === 'class_a';
+  const isClassB = userData?.class === 'class_b';
+  const isClassC = userData?.class === 'class_c';
 
-  const navigation = [
+ const navigation = [
     { name: 'Dashboard', href: '/officer/dashboard', icon: '📊' },
-    { name: 'Reports', href: '/officer/reports', icon: '📋' },
     { name: 'Tickets', href: '/officer/tickets', icon: '🎫' },
+    { name: 'Reports', href: '/officer/reports', icon: '📋' },
     { name: 'Work Orders', href: '/officer/work-orders', icon: '🔧' },
     { name: 'Contractors', href: '/officer/contractors', icon: '👷' },
     ...(isClassA ? [
       { name: '➕ Add Contractor', href: '/officer/contractors/add', icon: '➕' },
+    ] : []),
+    { name: 'Infrastructure Map', href: '/map', icon: '🗺️' },
+    { name: 'Route Optimizer', href: '/route', icon: '🛣️' },
+    { name: 'Assets', href: '/officer/assets', icon: '🏗️' },
+    { name: 'Analytics', href: '/officer/analytics', icon: '📈' },
+    ...(isClassB || isClassA ? [
+      { name: 'Team', href: '/officer/team', icon: '👥' },
+      { name: 'Budgets', href: '/officer/budgets', icon: '💰' },
     ] : []),
     { name: 'Profile', href: '/officer/profile', icon: '👤' },
   ];
@@ -41,7 +51,7 @@ export default function AddContractorPage() {
     if (authLoading) return;
 
     // CRITICAL: Block access for non-class_a officers
-    if (userData?.role !== 'officer' || userData?.officer_class !== 'class_a') {
+    if (userData?.role !== 'officer' || userData?.class !== 'class_a') {
       router.push('/officer/dashboard');
       return;
     }

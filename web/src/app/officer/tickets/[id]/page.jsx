@@ -18,14 +18,16 @@ export default function OfficerTicketDetailPage() {
   const [actionLoading, setActionLoading] = useState(false);
   const [showAssignModal, setShowAssignModal] = useState(false);
   const [assignToId, setAssignToId] = useState('');
+  const [assignableUsers, setAssignableUsers] = useState([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
   const [resolutionNotes, setResolutionNotes] = useState('');
   const [showResolveModal, setShowResolveModal] = useState(false);
 
   const ticketId = params.id;
 
-  const isClassA = userData?.officer_class === 'class_a';
-  const isClassB = userData?.officer_class === 'class_b';
-  const isClassC = userData?.officer_class === 'class_c';
+  const isClassA = userData?.class === 'class_a';
+  const isClassB = userData?.class === 'class_b';
+  const isClassC = userData?.class === 'class_c';
 
   const navigation = [
     { name: 'Dashboard', href: '/officer/dashboard', icon: '📊' },
@@ -60,12 +62,20 @@ export default function OfficerTicketDetailPage() {
     try {
       // Fetch the ticket from the API
       const userId = userData.id || userData.uid;
-      const response = await fetch(
-        `/api/tickets?userId=${userId}&role=${userData.officer_class || 'class_a'}&search=${encodeURIComponent(ticketId)}`
-      );
+      const officerClass = userData.class || 'class_a';
+      const ward = userData.ward_id || userData.ward || '';
+      
+      // Build query string with ward for class_b and class_c officers
+      let queryParams = `userId=${userId}&class=${officerClass}&search=${encodeURIComponent(ticketId)}`;
+      if ((officerClass === 'class_b' || officerClass === 'class_c') && ward) {
+        queryParams += `&ward=${encodeURIComponent(ward)}`;
+      }
+      
+      const response = await fetch(`/api/tickets?${queryParams}`);
 
       if (!response.ok) {
-        throw new Error('Failed to load ticket');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to load ticket');
       }
 
       const data = await response.json();
@@ -128,7 +138,7 @@ export default function OfficerTicketDetailPage() {
     
     const userId = userData.id || userData.uid;
     const userRole = userData.role;
-    const officerClass = userData.officer_class;
+    const officerClass = userData.class;
     
     // Only officers with class_b or class_c can update tickets
     if (userRole !== 'officer') return false;
@@ -148,7 +158,7 @@ export default function OfficerTicketDetailPage() {
     
     const actions = [];
     const status = ticket?.status || 'pending';
-    const isClassB = userData?.officer_class === 'class_b';
+    const isClassB = userData?.class === 'class_b';
     
     // Assign action: only class_b and only when status is pending
     if (isClassB && status === 'pending') {
@@ -166,6 +176,35 @@ export default function OfficerTicketDetailPage() {
     }
     
     return actions;
+  };
+
+  const loadAssignableUsers = async () => {
+    setLoadingUsers(true);
+    try {
+      // Fetch all users from the API
+      const response = await fetch('/api/users');
+      if (!response.ok) throw new Error('Failed to load users');
+      
+      const data = await response.json();
+      
+      // Filter for class_c officers and contractors
+      const filteredUsers = data.users?.filter(user => 
+        (user.role === 'officer' && user.class === 'class_c') ||
+        user.role === 'contractor'
+      ) || [];
+      
+      setAssignableUsers(filteredUsers);
+    } catch (err) {
+      console.error('Error loading users:', err);
+      alert('Failed to load assignable users');
+    } finally {
+      setLoadingUsers(false);
+    }
+  };
+
+  const handleOpenAssignModal = () => {
+    setShowAssignModal(true);
+    loadAssignableUsers();
   };
 
   const handleAssignTicket = async () => {
@@ -216,7 +255,7 @@ export default function OfficerTicketDetailPage() {
         body: JSON.stringify({
           user_id: userId,
           user_role: userData.role,
-          officer_class: userData.officer_class
+          class: userData.class
         })
       });
       
@@ -244,7 +283,7 @@ export default function OfficerTicketDetailPage() {
         body: JSON.stringify({
           user_id: userId,
           user_role: userData.role,
-          officer_class: userData.officer_class,
+          class: userData.class,
           resolution_notes: resolutionNotes || undefined
         })
       });
@@ -323,7 +362,7 @@ export default function OfficerTicketDetailPage() {
             <div className="flex gap-3 flex-wrap">
               {getAvailableActions().includes('assign') && (
                 <Button 
-                  onClick={() => setShowAssignModal(true)}
+                  onClick={handleOpenAssignModal}
                   disabled={actionLoading}
                   className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white transition-all duration-200 shadow-md hover:shadow-lg"
                 >
@@ -367,20 +406,49 @@ export default function OfficerTicketDetailPage() {
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">Assign Ticket</h2>
-              <p className="text-gray-600 mb-6">Enter the User ID of the officer or contractor to assign this ticket to:</p>
+              <p className="text-gray-600 mb-6">Select a Class C officer or contractor to assign this ticket to:</p>
               
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    User ID (Class C Officer or Contractor)
+                    Assign To
                   </label>
-                  <input
-                    type="text"
-                    value={assignToId}
-                    onChange={(e) => setAssignToId(e.target.value)}
-                    placeholder="Enter user ID"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
+                  {loadingUsers ? (
+                    <div className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-500">
+                      Loading users...
+                    </div>
+                  ) : (
+                    <select
+                      value={assignToId}
+                      onChange={(e) => setAssignToId(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                    >
+                      <option value="">Select user...</option>
+                      <optgroup label="Class C Officers">
+                        {assignableUsers
+                          .filter(user => user.role === 'officer')
+                          .map(user => (
+                            <option key={user.uid || user.id} value={user.uid || user.id}>
+                              {user.name} {user.ward_id ? `(Ward: ${user.ward_id})` : ''}
+                            </option>
+                          ))}
+                      </optgroup>
+                      <optgroup label="Contractors">
+                        {assignableUsers
+                          .filter(user => user.role === 'contractor')
+                          .map(user => (
+                            <option key={user.uid || user.id} value={user.uid || user.id}>
+                              {user.name} {user.company_name ? `(${user.company_name})` : ''}
+                            </option>
+                          ))}
+                      </optgroup>
+                    </select>
+                  )}
+                  {assignableUsers.length === 0 && !loadingUsers && (
+                    <p className="text-sm text-amber-600 mt-2">
+                      ⚠️ No class_c officers or contractors found
+                    </p>
+                  )}
                 </div>
                 
                 <div className="flex gap-3 pt-4">

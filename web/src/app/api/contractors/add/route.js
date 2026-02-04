@@ -25,18 +25,6 @@ export async function POST(request) {
       active = true
     } = body;
 
-    // ============================================
-    // AUTHORIZATION CHECK - CLASS A ONLY
-    // ============================================
-    if (created_by_role !== 'officer' || created_by_class !== 'class_a') {
-      return NextResponse.json(
-        { 
-          error: 'Unauthorized: Only Class-A officers can add contractors',
-          code: 'UNAUTHORIZED_ROLE' 
-        },
-        { status: 403 }
-      );
-    }
 
     // Verify the creating officer exists and is class_a
     const officerRef = doc(db, 'users', created_by_uid);
@@ -50,7 +38,7 @@ export async function POST(request) {
     }
 
     const officer = officerSnap.data();
-    if (officer.role !== 'officer' || officer.officer_class !== 'class_a') {
+    if (officer.role !== 'officer' || officer.class !== 'class_a') {
       return NextResponse.json(
         { 
           error: 'Unauthorized: Only Class-A officers can add contractors',
