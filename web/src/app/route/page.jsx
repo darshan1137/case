@@ -594,7 +594,7 @@ const RoutePage = () => {
     if (!authLoading && !userData) {
       router.push('/auth/login');
     }
-  }, [userData, authLoading, router]);
+  }, [userData, authLoading]);
 
   if (authLoading) {
     return (

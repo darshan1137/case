@@ -11,7 +11,11 @@ class AIValidationService:
     """Service to handle AI-based image validation"""
     
     def __init__(self):
-        self.client = Groq(api_key=GROQ_API_KEY)
+        if not GROQ_API_KEY:
+            print("WARNING: GROQ_API_KEY not found in environment variables")
+            self.client = None
+        else:
+            self.client = Groq(api_key=GROQ_API_KEY)
         self.model = "meta-llama/llama-4-scout-17b-16e-instruct"
         self.confidence_threshold = CONFIDENCE_THRESHOLD
         self.issue_types = ISSUE_TYPES
@@ -29,6 +33,16 @@ class AIValidationService:
         try:
             # Convert image to base64
             base64_image = base64.standard_b64encode(image_data).decode("utf-8")
+            
+            # Check if client is initialized
+            if self.client is None:
+                return {
+                    "detected": False,
+                    "issue_type": None,
+                    "confidence_score": 0.0,
+                    "reasoning": "GROQ_API_KEY not configured",
+                    "error": "API key missing. Set GROQ_API_KEY environment variable"
+                }
             
             # Verify image format
             try:
@@ -71,12 +85,20 @@ class AIValidationService:
             return self._parse_ai_response(response_text)
         
         except Exception as e:
+            error_msg = str(e)
+            # Provide more specific error messages
+            if "Connection" in error_msg or "connection" in error_msg:
+                error_msg = f"API connection failed: {error_msg}. Check GROQ_API_KEY and network connectivity."
+            elif "API key" in error_msg or "authentication" in error_msg.lower():
+                error_msg = f"Authentication failed: {error_msg}. Verify GROQ_API_KEY is correct."
+            
+            print(f"AI Service Error: {error_msg}")
             return {
                 "detected": False,
                 "issue_type": None,
                 "confidence_score": 0.0,
-                "reasoning": f"Error processing image: {str(e)}",
-                "error": str(e)
+                "reasoning": f"Error processing image: {error_msg}",
+                "error": error_msg
             }
     
     def _build_validation_prompt(self) -> str:

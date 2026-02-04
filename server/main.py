@@ -248,6 +248,13 @@ async def validate_image_only(
         
         print(f"Validation result: {validation_result}")
         
+        # Get ward if coordinates are provided
+        ward_code = None
+        ward_info = None
+        if latitude is not None and longitude is not None:
+            if (-90 <= latitude <= 90) and (-180 <= longitude <= 180):
+                ward_code, ward_info = ward_service.get_ward_by_coordinates(latitude, longitude)
+        
         # Return validation result ONLY - do not save to Firebase
         return {
             "detected": validation_result.get("detected"),
@@ -259,6 +266,8 @@ async def validate_image_only(
             "department": validation_result.get("department"),
             "sub_department": validation_result.get("sub_department"),
             "reasoning": validation_result.get("reasoning"),
+            "ward": ward_code if ward_code else None,
+            
             "error": validation_result.get("error"),
             "ticket_saved": False,
             "message": "Validation complete. No ticket created. Use /api/tickets/create-manual to save this as a ticket."

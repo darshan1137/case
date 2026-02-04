@@ -1,4 +1,5 @@
 import os
+import json
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -6,7 +7,11 @@ load_dotenv()
 # Groq Configuration
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-# Firebase Configuration
+# Firebase Admin Service Account Configuration
+# For production, set FIREBASE_SERVICE_ACCOUNT env var with the entire JSON content
+FIREBASE_SERVICE_ACCOUNT_JSON = os.getenv("FIREBASE_SERVICE_ACCOUNT")
+
+# Firebase Client Configuration (for reference, not used in Admin SDK)
 FIREBASE_CONFIG = {
     "apiKey": os.getenv("FIREBASE_API_KEY"),
     "authDomain": os.getenv("FIREBASE_AUTH_DOMAIN"),
