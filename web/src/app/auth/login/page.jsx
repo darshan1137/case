@@ -20,7 +20,7 @@ export default function LoginPage() {
   const [mounted, setMounted] = useState(false);
 
   const devUsers = [
-    { email: 'citizen@demo.com', password: 'demo123', role: 'Citizen' },
+    { email: 'alfiyasiddique1708@gmail.com', password: '123456', role: 'Citizen' },
     { email: 'contractor@demo.com', password: 'demo123', role: 'Contractor' },
     { email: 'officer.c@demo.com', password: 'demo123', role: 'Class C Officer' },
     { email: 'officer.b@demo.com', password: 'demo123', role: 'Class B Officer' },
@@ -99,9 +99,6 @@ export default function LoginPage() {
         case 'contractor':
           router.push('/contractor/dashboard');
           break;
-        case 'class_c':
-        case 'class_b':
-        case 'class_a':
         case 'officer':
           router.push('/officer/dashboard');
           break;

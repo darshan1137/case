@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { DashboardLayout } from '@/components/layout';
 import { Button, Alert } from '@/components/ui';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 const navigation = [
   { name: 'Dashboard', href: '/citizen/dashboard', icon: '📊' },
@@ -26,6 +28,18 @@ export default function NewReportPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [dragActive, setDragActive] = useState(false);
+  const [apiResponse, setApiResponse] = useState(null);
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    issue_type: '',
+    department: '',
+    sub_department: '',
+    severity_level: '',
+    confidence_score: 0,
+    reasoning: '',
+    message: ''
+  });
 
   useEffect(() => {
     if (!authLoading && userData?.role !== 'citizen') {
@@ -138,7 +152,12 @@ export default function NewReportPage() {
     return hashHex;
   };
 
-  const handleSubmit = async (e) => {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleValidateImages = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -148,66 +167,135 @@ export default function NewReportPage() {
         throw new Error('Please upload at least one image of the issue');
       }
 
-      // Prepare data for backend
+      // Upload all images to Cloudinary first
+      setError('Uploading images to cloud...');
+      const imageUrls = await Promise.all(
+        imageFiles.map(file => uploadToCloudinary(file))
+      );
+      console.log('Cloudinary URLs:', imageUrls);
+
+      // Prepare FormData for backend validation
+      // The backend validates the image content, we'll include the first image file
       const ticketData = new FormData();
+      ticketData.append('file', imageFiles[0]);
       
-      // Add the file directly for validation
-      if (imageFiles.length > 0) {
-        ticketData.append('file', imageFiles[0]);
-      }
+      console.log('Sending to backend for validation...');
       
-      // Add metadata if available (assuming these fields exist on your form, otherwise omit)
-      // ticketData.append('description', 'Validation request'); 
-
-      console.log('Sending file for validation...');
-
-      // Send to backend API
+      // Send to backend API for validation (validates the image for issues)
       const response = await fetch('http://127.0.0.1:8005/api/tickets/validate-image-only', {
         method: 'POST',
-        body: ticketData,
-        headers: {
-          'X-User-ID': userData.uid,
-          'X-User-Name': userData.name || 'Anonymous'
-        }
+        body: ticketData
       });
 
       if (!response.ok) {
-        throw new Error('Failed to submit report to server');
+        const errorText = await response.text();
+        console.error('Backend error response:', errorText);
+        throw new Error(`Failed to validate report with server (${response.status})`);
       }
 
       const result = await response.json();
-      console.log('✅ Backend Response:', result);
-      console.log('📋 Validation Result:', {
-        detected: result.detected,
-        issue_type: result.issue_type,
-        confidence_score: result.confidence_score,
-        severity_level: result.severity_level
+      console.log('API Response:', result);
+      
+      // Store the Cloudinary image URLs and API response
+      setApiResponse({
+        ...result,
+        imageUrls: imageUrls
       });
 
-      // Now upload image to Cloudinary for permanent storage
-      console.log('📤 Uploading image to Cloudinary...');
-      const cloudinaryUrls = [];
-      for (const file of imageFiles) {
-        try {
-          const cloudUrl = await uploadToCloudinary(file);
-          cloudinaryUrls.push(cloudUrl);
-          console.log('☁️ Image uploaded to Cloudinary:', cloudUrl);
-        } catch (cloudErr) {
-          console.warn('⚠️ Cloudinary upload failed:', cloudErr);
-        }
+      // Pre-fill form with API response data
+      setFormData({
+        title: result.title || '',
+        description: result.description || '',
+        issue_type: result.issue_type || '',
+        department: result.department || '',
+        sub_department: result.sub_department || '',
+        severity_level: result.severity_level || '',
+        confidence_score: result.confidence_score || 0,
+        reasoning: result.reasoning || '',
+        message: result.message || ''
+      });
+
+      setError('');
+    } catch (err) {
+      setError(err.message || 'Failed to validate report');
+      console.error('Validation error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      if (!apiResponse || !apiResponse.imageUrls) {
+        throw new Error('Please validate images first');
       }
 
-      if (cloudinaryUrls.length > 0) {
-        console.log('✅ All images successfully uploaded to Cloudinary:', cloudinaryUrls);
-      } else {
-        console.warn('⚠️ No images were uploaded to Cloudinary');
+      // Validate user data
+      if (!userData) {
+        throw new Error('User data not loaded. Please refresh and try again.');
       }
 
-      setSuccess(`Report validated successfully! Issue detected: ${result.detected ? result.issue_type : 'None'}`);
+      // Get user ID - from userService response, it's stored as 'id' or 'uid'
+      const userId = userData.id || userData.uid;
+      if (!userId) {
+        console.error('userData:', userData);
+        throw new Error('User ID not found. Please log in again.');
+      }
+
+      // Generate ticket ID
+      const ticketId = `TICKET-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+
+      // Prepare ticket data for Firestore - ensure no undefined values
+      const ticketData = {
+        ticket_id: ticketId,
+        citizen_id: userId,
+        citizen_name: userData.name || 'Anonymous',
+        citizen_phone: userData.phone || '',
+        title: formData.title || '',
+        description: formData.description || '',
+        issue_type: formData.issue_type || '',
+        department: formData.department || '',
+        sub_department: formData.sub_department || '',
+        severity_level: formData.severity_level || 'medium',
+        confidence_score: Number(formData.confidence_score) || 0,
+        images: apiResponse.imageUrls || [],
+        detected: apiResponse.detected || false,
+        reasoning: formData.reasoning || '',
+        message: formData.message || '',
+        status: 'submitted',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        is_active: true
+      };
+
+      console.log('Saving ticket data:', ticketData);
+
+      // Save directly to Firestore using client SDK
+      const ticketsRef = collection(db, 'tickets');
+      const docRef = await addDoc(ticketsRef, ticketData);
+
+      console.log('Ticket created:', ticketId, 'Doc ID:', docRef.id);
+      setSuccess(`Ticket created successfully! ID: ${ticketId}`);
       
       // Clear form
       setImages([]);
       setImageFiles([]);
+      setApiResponse(null);
+      setFormData({
+        title: '',
+        description: '',
+        issue_type: '',
+        department: '',
+        sub_department: '',
+        severity_level: '',
+        confidence_score: 0,
+        reasoning: '',
+        message: ''
+      });
       
       setTimeout(() => {
         router.push('/citizen/dashboard');
@@ -258,93 +346,230 @@ export default function NewReportPage() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="p-8">
+            <form onSubmit={apiResponse ? handleSubmit : handleValidateImages} className="p-8">
               {/* Image Upload Area */}
-              <div className="mb-8">
-                <label className="block text-sm font-semibold text-gray-900 mb-4">
-                  Upload Photos <span className="text-red-500">*</span>
-                </label>
-                
-                <div
-                  onDragEnter={handleDrag}
-                  onDragLeave={handleDrag}
-                  onDragOver={handleDrag}
-                  onDrop={handleDrop}
-                  className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all ${
-                    dragActive
-                      ? 'border-indigo-500 bg-indigo-50'
-                      : 'border-gray-300 bg-gray-50 hover:border-indigo-400'
-                  }`}
-                >
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleImageChange}
-                    className="hidden"
-                    id="image-upload"
-                  />
-                  <label
-                    htmlFor="image-upload"
-                    className="cursor-pointer block"
-                  >
-                    <div className="flex flex-col items-center justify-center">
-                      <span className="text-6xl mb-3">📷</span>
-                      <p className="text-lg font-semibold text-gray-900 mb-1">
-                        Click to upload or drag and drop
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        JPG, PNG, WebP up to 20MB each
-                      </p>
-                      <p className="text-xs text-gray-500 mt-2">
-                        Maximum 10 images
-                      </p>
-                    </div>
-                  </label>
-                </div>
-              </div>
-
-              {/* Image Previews */}
-              {images.length > 0 && (
-                <div className="mb-8">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-semibold text-gray-900">
-                      Photos ({images.length}/10)
-                    </h3>
-                    {images.length > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setImages([]);
-                          setImageFiles([]);
-                        }}
-                        className="text-sm text-red-600 hover:text-red-700 font-medium"
+              {!apiResponse && (
+                <>
+                  <div className="mb-8">
+                    <label className="block text-sm font-semibold text-gray-900 mb-4">
+                      Upload Photos <span className="text-red-500">*</span>
+                    </label>
+                    
+                    <div
+                      onDragEnter={handleDrag}
+                      onDragLeave={handleDrag}
+                      onDragOver={handleDrag}
+                      onDrop={handleDrop}
+                      className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all ${
+                        dragActive
+                          ? 'border-indigo-500 bg-indigo-50'
+                          : 'border-gray-300 bg-gray-50 hover:border-indigo-400'
+                      }`}
+                    >
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handleImageChange}
+                        className="hidden"
+                        id="image-upload"
+                      />
+                      <label
+                        htmlFor="image-upload"
+                        className="cursor-pointer block"
                       >
-                        Clear All
-                      </button>
-                    )}
+                        <div className="flex flex-col items-center justify-center">
+                          <span className="text-6xl mb-3">📷</span>
+                          <p className="text-lg font-semibold text-gray-900 mb-1">
+                            Click to upload or drag and drop
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            JPG, PNG, WebP up to 20MB each
+                          </p>
+                          <p className="text-xs text-gray-500 mt-2">
+                            Maximum 10 images
+                          </p>
+                        </div>
+                      </label>
+                    </div>
                   </div>
-                  
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    {images.map((img, index) => (
-                      <div key={index} className="relative group">
-                        <img
-                          src={img.preview}
-                          alt={`Preview ${index + 1}`}
-                          className="w-full h-32 object-cover rounded-lg shadow-md group-hover:shadow-lg transition-shadow"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => removeImage(index)}
-                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm hover:bg-red-600 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          ✕
-                        </button>
-                        <span className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
-                          {index + 1}
-                        </span>
+
+                  {/* Image Previews */}
+                  {images.length > 0 && (
+                    <div className="mb-8">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-semibold text-gray-900">
+                          Photos ({images.length}/10)
+                        </h3>
+                        {images.length > 0 && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setImages([]);
+                              setImageFiles([]);
+                            }}
+                            className="text-sm text-red-600 hover:text-red-700 font-medium"
+                          >
+                            Clear All
+                          </button>
+                        )}
                       </div>
-                    ))}
+                      
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                        {images.map((img, index) => (
+                          <div key={index} className="relative group">
+                            <img
+                              src={img.preview}
+                              alt={`Preview ${index + 1}`}
+                              className="w-full h-32 object-cover rounded-lg shadow-md group-hover:shadow-lg transition-shadow"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => removeImage(index)}
+                              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm hover:bg-red-600 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              ✕
+                            </button>
+                            <span className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
+                              {index + 1}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* API Response Form - Edit the detected data */}
+              {apiResponse && (
+                <div className="mb-8 space-y-6">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h3 className="font-semibold text-blue-900 mb-2">✅ Issue Detected</h3>
+                    <p className="text-sm text-blue-800">
+                      {apiResponse.reasoning}
+                    </p>
+                  </div>
+
+                  {/* Editable Form Fields */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Issue Type
+                      </label>
+                      <input
+                        type="text"
+                        name="issue_type"
+                        value={formData.issue_type}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Severity Level
+                      </label>
+                      <select
+                        name="severity_level"
+                        value={formData.severity_level}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      >
+                        <option value="">Select Severity</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="dangerous">Dangerous</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Department
+                      </label>
+                      <input
+                        type="text"
+                        name="department"
+                        value={formData.department}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Sub Department
+                      </label>
+                      <input
+                        type="text"
+                        name="sub_department"
+                        value={formData.sub_department}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Confidence Score
+                      </label>
+                      <div className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 flex items-center">
+                        {(formData.confidence_score * 100).toFixed(1)}%
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Title
+                    </label>
+                    <input
+                      type="text"
+                      name="title"
+                      value={formData.title}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Description
+                    </label>
+                    <textarea
+                      name="description"
+                      value={formData.description}
+                      onChange={handleInputChange}
+                      rows="4"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      AI Reasoning
+                    </label>
+                    <textarea
+                      name="reasoning"
+                      value={formData.reasoning}
+                      onChange={handleInputChange}
+                      rows="3"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Message
+                    </label>
+                    <textarea
+                      name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      rows="3"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
                   </div>
                 </div>
               )}
@@ -354,25 +579,42 @@ export default function NewReportPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => router.back()}
+                  onClick={() => {
+                    if (apiResponse) {
+                      setApiResponse(null);
+                      setFormData({
+                        title: '',
+                        description: '',
+                        issue_type: '',
+                        department: '',
+                        sub_department: '',
+                        severity_level: '',
+                        confidence_score: 0,
+                        reasoning: '',
+                        message: ''
+                      });
+                    } else {
+                      router.back();
+                    }
+                  }}
                   className="flex-1 py-3 font-semibold"
                 >
-                  Cancel
+                  {apiResponse ? 'Back to Upload' : 'Cancel'}
                 </Button>
                 <Button
                   type="submit"
-                  disabled={loading || imageFiles.length === 0}
+                  disabled={loading || (apiResponse ? false : imageFiles.length === 0)}
                   className="flex-1 py-3 font-semibold bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-50"
                 >
                   {loading ? (
                     <>
                       <span className="animate-spin mr-2">⏳</span>
-                      Submitting...
+                      {apiResponse ? 'Creating Ticket...' : 'Validating...'}
                     </>
                   ) : (
                     <>
-                      <span className="mr-2">✓</span>
-                      Submit Report
+                      <span className="mr-2">{apiResponse ? '✓' : '→'}</span>
+                      {apiResponse ? 'Create Ticket' : 'Validate & Continue'}
                     </>
                   )}
                 </Button>

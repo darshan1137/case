@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -111,9 +112,13 @@ export function DashboardLayout({ children, navigation, title }) {
                 </button>
 
                 <Link href="/" className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                    <span className="text-white text-lg font-bold">C</span>
-                  </div>
+                  <Image
+                    src="/logo.svg"
+                    alt="CASE Logo"
+                    width={40}
+                    height={40}
+                    className="w-10 h-10"
+                  />
                   <div className="hidden sm:block">
                     <span className="font-bold text-slate-900 text-lg">CASE</span>
                     <span className="text-xs text-slate-500 block -mt-0.5">Platform</span>
