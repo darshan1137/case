@@ -101,3 +101,9 @@ export const getZoneName = (zoneId) => {
   const zone = getZoneById(zoneId);
   return zone ? zone.name : 'Unknown Zone';
 };
+
+// Get zone for a ward
+export const getZoneForWard = (wardId) => {
+  const ward = getWardById(wardId);
+  return ward ? ward.zone : null;
+};

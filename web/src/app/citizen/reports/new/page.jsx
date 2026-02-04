@@ -1,15 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { DashboardLayout } from '@/components/layout';
-import { Card, CardHeader, CardTitle, CardContent, Button, Input, Textarea, Select, Alert } from '@/components/ui';
-import { reportService } from '@/lib/reportService';
-import { CATEGORIES_LIST, PRIORITY_LEVELS } from '@/lib/constants/sla';
-import { WARDS_LIST, getZoneForWard } from '@/lib/constants/wards';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from '@/lib/firebase';
+import { Button, Alert } from '@/components/ui';
 
 const navigation = [
   { name: 'Dashboard', href: '/citizen/dashboard', icon: '📊' },
@@ -21,65 +16,66 @@ const navigation = [
 
 export default function NewReportPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { userData, loading: authLoading } = useAuth();
   
-  const [formData, setFormData] = useState({
-    category: '',
-    subcategory: '',
-    description: '',
-    priority: 'medium',
-    ward_id: '',
-    address: '',
-    latitude: '',
-    longitude: ''
-  });
   const [images, setImages] = useState([]);
   const [imageFiles, setImageFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [locationLoading, setLocationLoading] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
 
   useEffect(() => {
     if (!authLoading && userData?.role !== 'citizen') {
       router.push('/auth/login');
-      return;
     }
-
-    // Get category from URL if provided
-    const categoryParam = searchParams.get('category');
-    if (categoryParam) {
-      setFormData(prev => ({ ...prev, category: categoryParam }));
-    }
-  }, [userData, authLoading, searchParams]);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSelectChange = (name, value) => {
-    setFormData(prev => ({ ...prev, [name]: value }));
-    if (name === 'category') {
-      setFormData(prev => ({ ...prev, subcategory: '' }));
-    }
-  };
+  }, [userData, authLoading, router]);
 
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length + images.length > 5) {
-      setError('Maximum 5 images allowed');
+    const files = Array.from(e.target.files || []);
+    addImages(files);
+  };
+
+  const addImages = (files) => {
+    const validFiles = files.filter(file => file.type.startsWith('image/'));
+    
+    if (validFiles.length === 0) {
+      setError('Please select valid image files');
       return;
     }
 
-    const newImages = files.map(file => ({
+    if (validFiles.length + images.length > 10) {
+      setError('Maximum 10 images allowed');
+      return;
+    }
+
+    const newImages = validFiles.map(file => ({
       file,
       preview: URL.createObjectURL(file)
     }));
 
     setImages(prev => [...prev, ...newImages]);
-    setImageFiles(prev => [...prev, ...files]);
+    setImageFiles(prev => [...prev, ...validFiles]);
+    setError('');
+  };
+
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === 'dragenter' || e.type === 'dragover') {
+      setDragActive(true);
+    } else if (e.type === 'dragleave') {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    
+    const files = Array.from(e.dataTransfer.files || []);
+    addImages(files);
   };
 
   const removeImage = (index) => {
@@ -87,59 +83,57 @@ export default function NewReportPage() {
     setImageFiles(prev => prev.filter((_, i) => i !== index));
   };
 
-  const getCurrentLocation = () => {
-    if (!navigator.geolocation) {
-      setError('Geolocation is not supported by your browser');
-      return;
+  const uploadToCloudinary = async (file) => {
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const apiKey = process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY;
+    const apiSecret = process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET;
+
+    if (!cloudName || !apiKey || !apiSecret) {
+      throw new Error('Cloudinary configuration is missing. Please check your .env.local file.');
     }
 
-    setLocationLoading(true);
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
-        setFormData(prev => ({
-          ...prev,
-          latitude: latitude.toString(),
-          longitude: longitude.toString()
-        }));
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('api_key', apiKey);
+    formData.append('timestamp', Math.floor(Date.now() / 1000).toString());
 
-        // Try to get address from coordinates (reverse geocoding)
-        try {
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-          );
-          const data = await response.json();
-          if (data.display_name) {
-            setFormData(prev => ({
-              ...prev,
-              address: data.display_name
-            }));
-          }
-        } catch (err) {
-          console.error('Error getting address:', err);
-        }
-
-        setLocationLoading(false);
-      },
-      (err) => {
-        setError('Unable to retrieve your location');
-        setLocationLoading(false);
-      },
-      { enableHighAccuracy: true }
+    // Generate signature
+    const signature = await generateCloudinarySignature(
+      formData.get('timestamp'),
+      apiSecret
     );
+    formData.append('signature', signature);
+    console.log('Uploading to Cloudinary with formData:', formData);
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        {
+          method: 'POST',
+          body: formData
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || 'Failed to upload image to Cloudinary');
+      }
+
+      const data = await response.json();
+      return data.secure_url;
+    } catch (err) {
+      console.error('Cloudinary upload error:', err);
+      throw err;
+    }
   };
 
-  const uploadImages = async (reportId) => {
-    const uploadedUrls = [];
-    
-    for (const file of imageFiles) {
-      const fileRef = ref(storage, `reports/${reportId}/${Date.now()}_${file.name}`);
-      await uploadBytes(fileRef, file);
-      const url = await getDownloadURL(fileRef);
-      uploadedUrls.push(url);
-    }
-
-    return uploadedUrls;
+  const generateCloudinarySignature = async (timestamp, apiSecret) => {
+    const signatureString = `timestamp=${timestamp}${apiSecret}`;
+    const encoder = new TextEncoder();
+    const data = encoder.encode(signatureString);
+    const hashBuffer = await crypto.subtle.digest('SHA-1', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashHex;
   };
 
   const handleSubmit = async (e) => {
@@ -148,232 +142,118 @@ export default function NewReportPage() {
     setLoading(true);
 
     try {
-      // Validation
-      if (!formData.category) {
-        throw new Error('Please select a category');
-      }
-      if (!formData.description || formData.description.length < 20) {
-        throw new Error('Description must be at least 20 characters');
-      }
-      if (!formData.ward_id) {
-        throw new Error('Please select a ward');
-      }
       if (imageFiles.length === 0) {
-        throw new Error('Please upload at least one image');
+        throw new Error('Please upload at least one image of the issue');
       }
 
-      // Get category details
-      const categoryData = CATEGORIES_LIST.find(c => c.id === formData.category);
-
-      // Create report first to get ID
-      const reportData = {
-        reporter_id: userData.uid,
-        reporter_name: userData.name,
-        reporter_phone: userData.phone,
-        category: formData.category,
-        subcategory: formData.subcategory,
-        department: categoryData?.department || 'general_admin',
-        description: formData.description,
-        priority: formData.priority,
-        ward_id: formData.ward_id,
-        zone_id: getZoneForWard(formData.ward_id),
-        location: {
-          coordinates: {
-            lat: parseFloat(formData.latitude) || 0,
-            lng: parseFloat(formData.longitude) || 0
-          },
-          address: formData.address,
-          ward_id: formData.ward_id
-        },
-        images: []
-      };
-
-      // Create report
-      const result = await reportService.createReport(reportData, userData.uid);
-      
-      if (!result.success) {
-        throw new Error(result.error || 'Failed to create report');
+      // Upload all images to Cloudinary
+      const imageUrls = [];
+      for (const file of imageFiles) {
+        const url = await uploadToCloudinary(file);
+        imageUrls.push(url);
       }
 
-      // Upload images
-      const imageUrls = await uploadImages(result.report_id);
-      
-      // Update report with image URLs
-      await reportService.updateReport(result.report_id, { images: imageUrls });
+      console.log('Cloudinary image URLs:', imageUrls);
 
-      setSuccess(`Report submitted successfully! ID: ${result.report_id}`);
+      // Prepare data for backend with Cloudinary URLs
+      const ticketData = new FormData();
       
-      // Redirect to report details after 2 seconds
+      // Add the Cloudinary URLs
+      imageUrls.forEach((url, index) => {
+        ticketData.append(`image_url_${index}`, url);
+      });
+      
+      // Also send the count of images
+      ticketData.append('image_count', imageUrls.length);
+      console.log('Final ticket data to send:', ticketData);
+      // Send to backend API
+      const response = await fetch('http://0.0.0.0:8005/api/tickets/validate-image-only', {
+        method: 'POST',
+        body: ticketData,
+        headers: {
+          'X-User-ID': userData.uid,
+          'X-User-Name': userData.name || 'Anonymous'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit report to server');
+      }
+
+      const result = await response.json();
+      setSuccess(`Report submitted successfully! ID: ${result.ticket_id || 'processing'}`);
+      
+      // Clear form
+      setImages([]);
+      setImageFiles([]);
+      
       setTimeout(() => {
-        router.push(`/citizen/reports/${result.report_id}`);
+        router.push('/citizen/dashboard');
       }, 2000);
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Failed to submit report');
+      console.error('Submit error:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  const selectedCategory = CATEGORIES_LIST.find(c => c.id === formData.category);
-
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-indigo-200 border-t-indigo-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
       </div>
     );
   }
 
   return (
     <DashboardLayout navigation={navigation} title="Citizen Portal">
-      <div className="max-w-3xl mx-auto">
-        <Card>
-          <CardHeader>
-            <CardTitle>Report New Issue</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {error && <Alert variant="danger">{error}</Alert>}
-              {success && <Alert variant="success">{success}</Alert>}
+      <div className="min-h-screen from-blue-50 to-indigo-50 py-8 px-4">
+        <div className="max-w-2xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <div className="inline-block p-4 bg-white rounded-full shadow-lg mb-4">
+              <span className="text-5xl">📸</span>
+            </div>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">Report an Issue</h1>
+            <p className="text-gray-600 text-lg">Share photos of problems in your city</p>
+          </div>
 
-              {/* Category Selection */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Category *
-                </label>
-                <div className="grid grid-cols-3 md:grid-cols-4 gap-3">
-                  {CATEGORIES_LIST.map((category) => (
-                    <button
-                      key={category.id}
-                      type="button"
-                      onClick={() => handleSelectChange('category', category.id)}
-                      className={`p-3 border rounded-lg text-center transition-colors ${
-                        formData.category === category.id
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'hover:bg-gray-50'
-                      }`}
-                    >
-                      <span className="text-2xl">{category.icon}</span>
-                      <p className="text-xs text-gray-700 mt-1">{category.name}</p>
-                    </button>
-                  ))}
-                </div>
+          {/* Main Card */}
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+            {/* Alert Messages */}
+            {error && (
+              <div className="bg-red-50 border-l-4 border-red-500 p-4">
+                <Alert variant="danger">{error}</Alert>
               </div>
-
-              {/* Subcategory */}
-              {selectedCategory?.subcategories && (
-                <Select
-                  label="Subcategory"
-                  value={formData.subcategory}
-                  onChange={(e) => handleSelectChange('subcategory', e.target.value)}
-                  options={[
-                    { value: '', label: 'Select subcategory' },
-                    ...selectedCategory.subcategories.map(sub => ({
-                      value: sub.id,
-                      label: sub.name
-                    }))
-                  ]}
-                />
-              )}
-
-              {/* Description */}
-              <Textarea
-                label="Description *"
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                placeholder="Describe the issue in detail (minimum 20 characters)"
-                rows={4}
-                required
-              />
-
-              {/* Priority */}
-              <Select
-                label="Priority"
-                value={formData.priority}
-                onChange={(e) => handleSelectChange('priority', e.target.value)}
-                options={Object.entries(PRIORITY_LEVELS).map(([key, level]) => ({
-                  value: key,
-                  label: `${level.name} - ${level.description}`
-                }))}
-              />
-
-              {/* Location Section */}
-              <div className="border rounded-lg p-4 bg-gray-50">
-                <h3 className="font-medium text-gray-900 mb-4">📍 Location Details</h3>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Select
-                    label="Ward *"
-                    value={formData.ward_id}
-                    onChange={(e) => handleSelectChange('ward_id', e.target.value)}
-                    options={[
-                      { value: '', label: 'Select ward' },
-                      ...WARDS_LIST.map(ward => ({
-                        value: ward.id,
-                        label: ward.name
-                      }))
-                    ]}
-                    required
-                  />
-
-                  <div className="flex items-end">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={getCurrentLocation}
-                      disabled={locationLoading}
-                      className="w-full"
-                    >
-                      {locationLoading ? (
-                        <>
-                          <span className="animate-spin mr-2">⏳</span>
-                          Getting Location...
-                        </>
-                      ) : (
-                        <>
-                          <span className="mr-2">📍</span>
-                          Get Current Location
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                  <Input
-                    label="Latitude"
-                    name="latitude"
-                    value={formData.latitude}
-                    onChange={handleInputChange}
-                    placeholder="e.g., 18.5204"
-                  />
-                  <Input
-                    label="Longitude"
-                    name="longitude"
-                    value={formData.longitude}
-                    onChange={handleInputChange}
-                    placeholder="e.g., 73.8567"
-                  />
-                </div>
-
-                <Input
-                  label="Address"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  placeholder="Full address or landmark"
-                  className="mt-4"
-                />
+            )}
+            {success && (
+              <div className="bg-green-50 border-l-4 border-green-500 p-4">
+                <Alert variant="success">{success}</Alert>
               </div>
+            )}
 
-              {/* Image Upload */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Images * (Max 5)
+            <form onSubmit={handleSubmit} className="p-8">
+              {/* Image Upload Area */}
+              <div className="mb-8">
+                <label className="block text-sm font-semibold text-gray-900 mb-4">
+                  Upload Photos <span className="text-red-500">*</span>
                 </label>
                 
-                <div className="border-2 border-dashed rounded-lg p-6 text-center">
+                <div
+                  onDragEnter={handleDrag}
+                  onDragLeave={handleDrag}
+                  onDragOver={handleDrag}
+                  onDrop={handleDrop}
+                  className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all ${
+                    dragActive
+                      ? 'border-indigo-500 bg-indigo-50'
+                      : 'border-gray-300 bg-gray-50 hover:border-indigo-400'
+                  }`}
+                >
                   <input
                     type="file"
                     accept="image/*"
@@ -384,47 +264,84 @@ export default function NewReportPage() {
                   />
                   <label
                     htmlFor="image-upload"
-                    className="cursor-pointer text-blue-600 hover:text-blue-700"
+                    className="cursor-pointer block"
                   >
-                    <span className="text-4xl">📷</span>
-                    <p className="mt-2">Click to upload images</p>
-                    <p className="text-sm text-gray-500">PNG, JPG up to 10MB each</p>
+                    <div className="flex flex-col items-center justify-center">
+                      <span className="text-6xl mb-3">📷</span>
+                      <p className="text-lg font-semibold text-gray-900 mb-1">
+                        Click to upload or drag and drop
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        JPG, PNG, WebP up to 20MB each
+                      </p>
+                      <p className="text-xs text-gray-500 mt-2">
+                        Maximum 10 images
+                      </p>
+                    </div>
                   </label>
                 </div>
+              </div>
 
-                {/* Image Previews */}
-                {images.length > 0 && (
-                  <div className="grid grid-cols-5 gap-3 mt-4">
+              {/* Image Previews */}
+              {images.length > 0 && (
+                <div className="mb-8">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-semibold text-gray-900">
+                      Photos ({images.length}/10)
+                    </h3>
+                    {images.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setImages([]);
+                          setImageFiles([]);
+                        }}
+                        className="text-sm text-red-600 hover:text-red-700 font-medium"
+                      >
+                        Clear All
+                      </button>
+                    )}
+                  </div>
+                  
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                     {images.map((img, index) => (
-                      <div key={index} className="relative">
+                      <div key={index} className="relative group">
                         <img
                           src={img.preview}
                           alt={`Preview ${index + 1}`}
-                          className="w-full h-20 object-cover rounded-lg"
+                          className="w-full h-32 object-cover rounded-lg shadow-md group-hover:shadow-lg transition-shadow"
                         />
                         <button
                           type="button"
                           onClick={() => removeImage(index)}
-                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 text-xs hover:bg-red-600"
+                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm hover:bg-red-600 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
                         >
                           ✕
                         </button>
+                        <span className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
+                          {index + 1}
+                        </span>
                       </div>
                     ))}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
 
-              {/* Submit Button */}
-              <div className="flex justify-end space-x-4">
+              {/* Action Buttons */}
+              <div className="flex gap-4 pt-6 border-t border-gray-200">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => router.back()}
+                  className="flex-1 py-3 font-semibold"
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={loading}>
+                <Button
+                  type="submit"
+                  disabled={loading || imageFiles.length === 0}
+                  className="flex-1 py-3 font-semibold bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-50"
+                >
                   {loading ? (
                     <>
                       <span className="animate-spin mr-2">⏳</span>
@@ -432,29 +349,40 @@ export default function NewReportPage() {
                     </>
                   ) : (
                     <>
-                      <span className="mr-2">📤</span>
+                      <span className="mr-2">✓</span>
                       Submit Report
                     </>
                   )}
                 </Button>
               </div>
             </form>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Tips */}
-        <Card className="mt-4 bg-blue-50 border-blue-200">
-          <CardContent className="pt-6">
-            <h3 className="font-semibold text-blue-900 mb-2">💡 Tips for a Good Report</h3>
-            <ul className="text-sm text-blue-800 space-y-1">
-              <li>• Take clear photos showing the full extent of the issue</li>
-              <li>• Enable location services for accurate positioning</li>
-              <li>• Provide as much detail as possible in the description</li>
-              <li>• Select the correct category for faster resolution</li>
-              <li>• Include nearby landmarks in the address</li>
+          {/* Tips Section */}
+          <div className="mt-8 bg-white rounded-xl shadow-lg p-6 border-l-4 border-indigo-500">
+            <h3 className="font-bold text-gray-900 mb-4 flex items-center text-lg">
+              <span className="mr-2">💡</span> Tips for Better Reports
+            </h3>
+            <ul className="space-y-3 text-gray-700">
+              <li className="flex items-start">
+                <span className="text-indigo-500 font-bold mr-3">•</span>
+                <span>Take clear, well-lit photos showing the full issue</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-indigo-500 font-bold mr-3">•</span>
+                <span>Include multiple angles for better context</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-indigo-500 font-bold mr-3">•</span>
+                <span>Capture nearby landmarks or street signs when possible</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-indigo-500 font-bold mr-3">•</span>
+                <span>High-resolution photos help faster resolution</span>
+              </li>
             </ul>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </DashboardLayout>
   );
