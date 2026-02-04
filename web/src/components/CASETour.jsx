@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Joyride, { ACTIONS, EVENTS, STATUS } from 'react-joyride';
+import Joyride, { ACTIONS, EVENTS, STATUS } from '@/components/Tour';
 
 export default function CASETour({ run = false, onComplete }) {
   const [runTour, setRunTour] = useState(false);

@@ -184,7 +184,7 @@ export default function Chatbot() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 w-14 h-14 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-lg flex items-center justify-center text-2xl transition-all hover:scale-110 z-50"
+          className="fixed bottom-6 right-24 w-14 h-14 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-lg flex items-center justify-center text-2xl transition-all hover:scale-110 z-50 animate-in fade-in slide-in-from-right-10 duration-500"
           aria-label="Open CASE Assistant chat. Click to start conversation"
           role="button"
           tabIndex={0}

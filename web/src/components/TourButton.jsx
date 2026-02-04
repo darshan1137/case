@@ -11,7 +11,7 @@ export default function TourButton({ onClick, color = '#4f46e5' }) {
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="fixed bottom-24 right-6 z-50 transition-all duration-300 ease-in-out group"
+      className="fixed bottom-6 right-6 z-50 transition-all duration-500 ease-in-out group"
       style={{
         transform: isHovered ? 'scale(1.1)' : 'scale(1)',
       }}

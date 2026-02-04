@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Joyride, { ACTIONS, EVENTS, STATUS } from 'react-joyride';
+import Joyride, { ACTIONS, EVENTS, STATUS } from '@/components/Tour';
 
 export default function CitizenTour({ run, onComplete }) {
   const [mounted, setMounted] = useState(false);
