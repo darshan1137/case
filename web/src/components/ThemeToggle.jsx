@@ -81,8 +81,9 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={cycleTheme}
-      className="flex items-center gap-2 px-3 py-2 text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 bg-white dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-slate-700 rounded-lg transition-all border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-500"
-      title={`Theme: ${getLabel()}`}
+      className="flex items-center gap-2 px-3 py-2 text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 bg-white dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-slate-700 rounded-lg transition-all duration-200 border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-500 shadow-sm hover:shadow-md"
+      title={`Theme: ${getLabel()} - Click to cycle`}
+      aria-label={`Current theme: ${getLabel()}. Click to change theme.`}
     >
       {getIcon()}
       <span className="text-sm font-medium hidden sm:inline">{getLabel()}</span>
