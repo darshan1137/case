@@ -34,8 +34,8 @@ export const mockBuildings = [
     ],
     
     // Financial data
-    marketRate: 12000, // INR per sqm
-    propertyTaxPaid: 54000, // Annual tax based on official area
+    marketRate: 3000, // INR per sqm (realistic commercial rate)
+    propertyTaxPaid: 13500, // Annual tax based on official area
     
     // Metadata
     ownerName: "Regency Builders Ltd",
@@ -75,8 +75,8 @@ export const mockBuildings = [
       [19.1076, 72.8268]
     ],
     
-    marketRate: 15000,
-    propertyTaxPaid: 102000,
+    marketRate: 5000,
+    propertyTaxPaid: 39000,
     
     ownerName: "Ocean Developers Pvt Ltd",
     ward: "H/East",
@@ -114,8 +114,8 @@ export const mockBuildings = [
       [19.1137, 72.8702]
     ],
     
-    marketRate: 18000,
-    propertyTaxPaid: 165600,
+    marketRate: 4500,
+    propertyTaxPaid: 41400,
     
     ownerName: "Skyline Constructions",
     ward: "K/East",
@@ -138,11 +138,11 @@ export function calculateViolation(building) {
   // Horizontal encroachment percentage
   const encroachmentPercent = ((extraArea / building.officialArea) * 100).toFixed(1);
   
-  // Calculate fine: Extra area * market rate * penalty multiplier (2x)
-  const horizontalFine = extraArea * building.marketRate * 2;
+  // Calculate fine: Extra area * market rate * 1.5x (realistic penalty)
+  const horizontalFine = extraArea * building.marketRate * 1.5;
   
-  // Floor violation fine: Each unauthorized floor = (official area * market rate * 3)
-  const verticalFine = extraFloors * building.officialArea * building.marketRate * 3;
+  // Floor violation fine: Each unauthorized floor = (official area * market rate * 1.5)
+  const verticalFine = extraFloors * building.officialArea * building.marketRate * 1.5;
   
   // Total fine
   const totalFine = horizontalFine + verticalFine;

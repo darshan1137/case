@@ -136,3 +136,21 @@
     border-width: 0;
   }
 }
+
+/* Dark mode - ensure proper color scheme and transitions */
+html.dark,
+.dark {
+  color-scheme: dark;
+}
+
+html.dark body,
+.dark {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Ensure dark mode applies to all elements consistently */
+.dark {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+

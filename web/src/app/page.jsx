@@ -42,7 +42,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-900">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     );
@@ -51,16 +51,16 @@ export default function Home() {
   // If logged in, show loading until redirect
   if (user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-900">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-100">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       {/* Header */}
-      <header className="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-40 border-b border-purple-200/50">
+      <header className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md shadow-sm sticky top-0 z-40 border-b border-purple-200/50 dark:border-slate-700/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
             <motion.div
@@ -77,10 +77,10 @@ export default function Home() {
                 className="drop-shadow-md"
               />
               <div>
-                <h1 className="text-xl font-bold text-slate-800">
+                <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100">
                   CASE Platform
                 </h1>
-                <p className="text-sm text-slate-600">
+                <p className="text-sm text-slate-600 dark:text-slate-400">
                   Civic Action & Service Excellence
                 </p>
               </div>
@@ -153,7 +153,7 @@ export default function Home() {
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto mb-10 leading-relaxed">
+            <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed">
               Real-time civic issue reporting and resolution platform. Join
               thousands making cities smarter and more responsive.
             </p>
@@ -190,11 +190,11 @@ export default function Home() {
         </div>
 
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white dark:to-slate-900 pointer-events-none" />
       </section>
 
       {/* Features Section */}
-      <section className="features-section py-20 bg-white">
+      <section className="features-section py-20 bg-white dark:bg-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -203,14 +203,14 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-slate-100 mb-4">
               What is{" "}
               <span className="bg-gradient-to-r from-orange-500 via-blue-900 to-green-600 bg-clip-text text-transparent">
                 CASE
               </span>
               ?
             </h2>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+            <p className="text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
               A comprehensive civic engagement platform built for modern
               municipalities
             </p>
@@ -295,16 +295,16 @@ export default function Home() {
                 whileHover={{ scale: 1.05, y: -5 }}
                 className="relative group"
               >
-                <div className="bg-white border-2 border-slate-200 rounded-2xl p-6 h-full hover:border-orange-200 hover:shadow-2xl transition-all duration-300">
+                <div className="bg-white dark:bg-slate-700 border-2 border-slate-200 dark:border-slate-600 rounded-2xl p-6 h-full hover:border-orange-200 dark:hover:border-orange-400 hover:shadow-2xl transition-all duration-300">
                   <div
                     className={`w-16 h-16 bg-gradient-to-br ${item.color} rounded-xl flex items-center justify-center mb-4 shadow-lg text-white`}
                   >
                     {item.svg}
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">
                     {item.title}
                   </h3>
-                  <p className="text-slate-600 leading-relaxed">{item.desc}</p>
+                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed">{item.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -316,7 +316,7 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h3 className="text-3xl font-bold text-slate-900 mb-8">
+            <h3 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-8">
               Report Across All Departments
             </h3>
           </motion.div>
@@ -331,10 +331,10 @@ export default function Home() {
                 transition={{ delay: idx * 0.05 }}
                 whileHover={{ scale: 1.1 }}
               >
-                <Card className="hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-orange-400">
+                <Card className="hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-orange-400 dark:hover:border-orange-400">
                   <CardContent className="pt-6 text-center">
                     <span className="text-4xl mb-2 block">{category.icon}</span>
-                    <p className="text-sm font-medium text-slate-700">
+                    <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
                       {category.name}
                     </p>
                   </CardContent>
@@ -346,10 +346,10 @@ export default function Home() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 bg-gradient-to-b from-slate-50 to-white">
+      <section className="py-20 bg-gradient-to-b from-slate-50 dark:from-slate-800 to-white dark:to-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h2
-            className="text-4xl font-bold text-center text-slate-900 mb-16"
+            className="text-4xl font-bold text-center text-slate-900 dark:text-slate-100 mb-16"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -402,14 +402,14 @@ export default function Home() {
                   >
                     <span className="text-4xl">{step.icon}</span>
                   </div>
-                  <div className="absolute -top-2 -right-2 w-10 h-10 bg-slate-900 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                  <div className="absolute -top-2 -right-2 w-10 h-10 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-full flex items-center justify-center font-bold text-sm">
                     {step.num}
                   </div>
                 </div>
-                <h3 className="font-bold text-xl mb-3 text-slate-900">
+                <h3 className="font-bold text-xl mb-3 text-slate-900 dark:text-slate-100">
                   {step.title}
                 </h3>
-                <p className="text-slate-600 leading-relaxed">{step.desc}</p>
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">{step.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -417,7 +417,7 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-20 bg-gradient-to-r from-orange-500 via-white to-green-600 text-slate-900 relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-r from-orange-500 via-white dark:via-slate-800 to-green-600 text-slate-900 dark:text-slate-100 relative overflow-hidden">
         <div className="absolute inset-0 opacity-5">
           <div
             className="absolute inset-0"
@@ -474,13 +474,13 @@ export default function Home() {
                 <div className="text-5xl mb-3 group-hover:scale-125 transition-transform">
                   {stat.icon}
                 </div>
-                <p className="text-5xl font-black mb-2 text-blue-900">
+                <p className="text-5xl font-black mb-2 text-blue-900 dark:text-blue-300">
                   {stat.value}
                 </p>
-                <p className="text-slate-700 text-lg font-semibold">
+                <p className="text-slate-700 dark:text-slate-300 text-lg font-semibold">
                   {stat.label}
                 </p>
-                <p className="text-slate-500 text-sm mt-1">{stat.desc}</p>
+                <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">{stat.desc}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -488,17 +488,17 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-white dark:bg-slate-800">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-slate-100 mb-6">
               Ready to Make a Difference?
             </h2>
-            <p className="text-xl text-slate-600 mb-10 leading-relaxed">
+            <p className="text-xl text-slate-600 dark:text-slate-300 mb-10 leading-relaxed">
               Join the movement to build smarter, more responsive cities.
               Register now and start reporting civic issues in your area.
             </p>
@@ -526,7 +526,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-white py-16">
+      <footer className="bg-slate-900 dark:bg-slate-950 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-12 mb-12">
             <div>
@@ -534,7 +534,7 @@ export default function Home() {
                 <Image src="/logo.svg" alt="CASE Logo" width={40} height={40} />
                 <h3 className="font-bold text-xl">CASE</h3>
               </div>
-              <p className="text-slate-400 leading-relaxed mb-4">
+              <p className="text-slate-400 dark:text-slate-500 leading-relaxed mb-4">
                 Civic Action & Service Excellence platform for modern
                 municipalities.
               </p>
@@ -560,7 +560,7 @@ export default function Home() {
             </div>
             <div>
               <h3 className="font-semibold text-lg mb-4">Quick Links</h3>
-              <ul className="space-y-3 text-slate-400">
+              <ul className="space-y-3 text-slate-400 dark:text-slate-500">
                 <li>
                   <Link
                     href="/auth/login"
@@ -589,7 +589,7 @@ export default function Home() {
             </div>
             <div>
               <h3 className="font-semibold text-lg mb-4">For Officials</h3>
-              <ul className="space-y-3 text-slate-400">
+              <ul className="space-y-3 text-slate-400 dark:text-slate-500">
                 <li>
                   <Link
                     href="/auth/register/officer"
@@ -610,7 +610,7 @@ export default function Home() {
             </div>
             <div>
               <h3 className="font-semibold text-lg mb-4">Contact</h3>
-              <ul className="space-y-3 text-slate-400">
+              <ul className="space-y-3 text-slate-400 dark:text-slate-500">
                 <li>24/7 Support Helpline</li>
                 <li>support@case.gov.in</li>
                 <li>Municipal Corporation Office</li>
@@ -618,12 +618,12 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="border-t border-slate-800 pt-8">
+          <div className="border-t border-slate-800 dark:border-slate-700 pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-slate-400 text-sm">
+              <p className="text-slate-400 dark:text-slate-500 text-sm">
                 © 2026 CASE Platform. All rights reserved.
               </p>
-              <p className="text-slate-400 text-sm">
+              <p className="text-slate-400 dark:text-slate-500 text-sm">
                 Designed & Developed by{" "}
                 <span className="text-white font-semibold">Coding Gurus</span>
               </p>

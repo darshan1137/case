@@ -11,6 +11,7 @@ import { workOrderService } from '@/lib/workOrderService';
 import { REPORT_STATUS, WORKORDER_STATUS, CATEGORIES_LIST } from '@/lib/constants/sla';
 import { getDepartmentName } from '@/lib/constants/departments';
 import { getWardName } from '@/lib/constants/wards';
+import { getTotalRevenueLeak, mockBuildings } from '@/lib/constants/mockBuildings';
 import OfficerTour from '@/components/OfficerTour';
 import TourButton from '@/components/TourButton';
 
@@ -40,11 +41,13 @@ export default function OfficerDashboard() {
     ] : []),
     { name: 'Infrastructure Map', href: '/map', icon: '🗺️' },
     { name: 'Route Optimizer', href: '/route', icon: '🛣️' },
+    { name: 'Revenue Guard AI', href: '/revenue-audit', icon: '🏛️' },
     { name: 'Assets', href: '/officer/assets', icon: '🏗️' },
     { name: 'Analytics', href: '/officer/analytics', icon: '📈' },
     ...(isClassB || isClassA ? [
       { name: 'Team', href: '/officer/team', icon: '👥' },
       { name: 'Budgets', href: '/officer/budgets', icon: '💰' },
+      
     ] : []),
     { name: 'Profile', href: '/officer/profile', icon: '👤' },
   ];
@@ -388,6 +391,46 @@ export default function OfficerDashboard() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Revenue Guard AI Widget */}
+        {(isClassA || isClassB) && (
+          <Card className="border-2 border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <span className="text-2xl">🏛️</span>
+                Revenue Guard AI
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-3 gap-4">
+                <div className="bg-white rounded-lg p-3 border border-amber-200">
+                  <p className="text-xs text-gray-600 mb-1">Buildings Under Watch</p>
+                  <p className="text-2xl font-bold text-amber-700">{mockBuildings.length}</p>
+                </div>
+                <div className="bg-white rounded-lg p-3 border border-red-200">
+                  <p className="text-xs text-gray-600 mb-1">Violations Detected</p>
+                  <p className="text-2xl font-bold text-red-600">
+                    {mockBuildings.filter(b => b.detectedArea > b.officialArea || b.detectedFloors > b.officialFloors).length}
+                  </p>
+                </div>
+                <div className="bg-white rounded-lg p-3 border border-orange-200">
+                  <p className="text-xs text-gray-600 mb-1">Revenue Leak</p>
+                  <p className="text-lg font-bold text-orange-600">
+                    ₹{(getTotalRevenueLeak() / 100000).toFixed(1)}L
+                  </p>
+                </div>
+              </div>
+              <p className="text-sm text-gray-600 mb-3">
+                💡 AI-powered satellite imagery analysis detects illegal construction and calculates property tax violations automatically.
+              </p>
+              <Link href="/revenue-audit" className="block">
+                <Button className="w-full bg-amber-600 hover:bg-amber-700 text-white">
+                  🛰️ Open Revenue Guard AI
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Quick Actions */}
         <Card>

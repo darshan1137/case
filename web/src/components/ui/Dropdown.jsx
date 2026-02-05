@@ -89,7 +89,7 @@ export function DropdownMenuContent({
       ref={contentRef}
       data-dropdown-content
       className={cn(
-        "absolute z-50 min-w-[8rem] overflow-hidden rounded-xl border bg-white shadow-lg",
+        "absolute z-50 min-w-[8rem] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-lg",
         "animate-in fade-in-0 zoom-in-95",
         alignmentClasses[align],
         className,
@@ -132,8 +132,8 @@ export function DropdownMenuItem({
       onClick={handleClick}
       className={cn(
         "relative flex cursor-pointer select-none items-center rounded-lg px-2 py-1.5 text-sm outline-none",
-        "transition-colors",
-        "hover:bg-slate-100 focus:bg-slate-100",
+        "transition-colors text-slate-700 dark:text-slate-200",
+        "hover:bg-slate-100 dark:hover:bg-slate-700 focus:bg-slate-100 dark:focus:bg-slate-700",
         "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className,
       )}
@@ -148,7 +148,7 @@ export function DropdownMenuLabel({ children, className, ...props }) {
   return (
     <div
       className={cn(
-        "px-2 py-1.5 text-sm font-semibold text-slate-900",
+        "px-2 py-1.5 text-sm font-semibold text-slate-900 dark:text-white",
         className,
       )}
       {...props}
@@ -160,6 +160,6 @@ export function DropdownMenuLabel({ children, className, ...props }) {
 
 export function DropdownMenuSeparator({ className, ...props }) {
   return (
-    <div className={cn("-mx-1 my-1 h-px bg-slate-200", className)} {...props} />
+    <div className={cn("-mx-1 my-1 h-px bg-slate-200 dark:bg-slate-700", className)} {...props} />
   );
 }
