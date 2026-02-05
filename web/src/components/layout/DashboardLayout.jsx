@@ -38,12 +38,12 @@ export function DashboardLayout({ children, navigation, title }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-white to-purple-100">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-white to-purple-100 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
         <div className="text-center">
           <div className="w-16 h-16 bg-gradient-to-br from-indigo-600 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg animate-pulse">
             <span className="text-white text-2xl font-bold">C</span>
           </div>
-          <div className="flex items-center gap-2 text-slate-600">
+          <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
             <div
               className="w-2 h-2 bg-indigo-600 rounded-full animate-bounce"
               style={{ animationDelay: "0ms" }}
@@ -57,7 +57,7 @@ export function DashboardLayout({ children, navigation, title }) {
               style={{ animationDelay: "300ms" }}
             ></div>
           </div>
-          <p className="text-slate-600 text-sm font-medium mt-3">
+          <p className="text-slate-600 dark:text-slate-400 text-sm font-medium mt-3">
             Loading dashboard...
           </p>
         </div>
@@ -72,6 +72,28 @@ export function DashboardLayout({ children, navigation, title }) {
     Jobs: Briefcase,
     Profile: User,
     Settings: Settings,
+  };
+
+  // Function to render icon - either use iconMap or emoji
+  const renderIcon = (item, isActive) => {
+    const IconComponent = iconMap[item.name];
+    if (IconComponent) {
+      return (
+        <IconComponent
+          className={cn(
+            "w-5 h-5",
+            isActive
+              ? "text-white"
+              : "text-slate-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400",
+          )}
+        />
+      );
+    }
+    // Render emoji icon if provided
+    if (item.icon && typeof item.icon === 'string' && item.icon.match(/\p{Emoji}/gu)) {
+      return <span className="w-5 h-5 flex items-center justify-center text-lg">{item.icon}</span>;
+    }
+    return null;
   };
 
   return (
@@ -91,17 +113,17 @@ export function DashboardLayout({ children, navigation, title }) {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-2xl shadow-2xl p-6 max-w-md w-full mx-4 border border-slate-200"
+              className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 max-w-md w-full mx-4 border border-slate-200 dark:border-slate-700"
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                  <AlertTriangle className="w-6 h-6 text-red-600" />
+                <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                  <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">
                     Confirm Logout
                   </h3>
-                  <p className="text-sm text-slate-600">
+                  <p className="text-sm text-slate-600 dark:text-slate-300">
                     Are you sure you want to sign out?
                   </p>
                 </div>
@@ -109,7 +131,7 @@ export function DashboardLayout({ children, navigation, title }) {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={() => setShowLogoutDialog(false)}
-                  className="flex-1 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition-colors"
+                  className="flex-1 px-4 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium rounded-lg transition-colors"
                 >
                   Cancel
                 </button>
@@ -125,16 +147,16 @@ export function DashboardLayout({ children, navigation, title }) {
         )}
       </AnimatePresence>
 
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-100">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-100 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
         {/* Top Navigation Bar */}
-        <nav className="bg-white/95 backdrop-blur-xl shadow-sm border-b border-purple-200/50 sticky top-0 z-40">
+        <nav className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl shadow-sm border-b border-purple-200/50 dark:border-slate-700 sticky top-0 z-40">
           <div className="max-w-full px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-16">
               <div className="flex items-center gap-4">
                 {/* Mobile menu button */}
                 <button
                   onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-                  className="lg:hidden p-2 rounded-lg text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
+                  className="lg:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-slate-800 transition-colors"
                 >
                   {mobileSidebarOpen ? (
                     <X className="w-6 h-6" />
@@ -152,10 +174,10 @@ export function DashboardLayout({ children, navigation, title }) {
                     className="w-10 h-10"
                   />
                   <div className="hidden sm:block">
-                    <span className="font-bold text-slate-900 text-lg">
+                    <span className="font-bold text-slate-900 dark:text-white text-lg">
                       CASE
                     </span>
-                    <span className="text-xs text-slate-500 block -mt-0.5">
+                    <span className="text-xs text-slate-500 dark:text-slate-400 block -mt-0.5">
                       Platform
                     </span>
                   </div>
@@ -174,29 +196,29 @@ export function DashboardLayout({ children, navigation, title }) {
                 <GoogleTranslate />
 
                 {/* Notifications */}
-                <button className="relative p-2.5 text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/80 rounded-xl transition-all">
+                <button className="relative p-2.5 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50/80 dark:hover:bg-slate-800 rounded-xl transition-all">
                   <Bell className="w-5 h-5" />
-                  <span className="absolute top-2 right-2 h-2 w-2 bg-red-500 rounded-full ring-2 ring-white"></span>
+                  <span className="absolute top-2 right-2 h-2 w-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-slate-900"></span>
                 </button>
 
                 {/* User Menu */}
-                <div className="flex items-center gap-3 border-l border-slate-200 pl-3 ml-1">
+                <div className="flex items-center gap-3 border-l border-slate-200 dark:border-slate-700 pl-3 ml-1">
                   <div className="text-right hidden sm:block">
-                    <p className="text-sm font-semibold text-slate-900">
+                    <p className="text-sm font-semibold text-slate-900 dark:text-white">
                       {userData?.name}
                     </p>
-                    <p className="text-xs text-slate-500 capitalize">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 capitalize">
                       {userData?.role?.replace("_", " ")}
                     </p>
                   </div>
-                  <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-blue-500 rounded-xl flex items-center justify-center shadow-md ring-2 ring-indigo-100">
+                  <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-blue-500 rounded-xl flex items-center justify-center shadow-md ring-2 ring-indigo-100 dark:ring-indigo-900">
                     <span className="text-white font-bold text-sm">
                       {userData?.name?.charAt(0).toUpperCase()}
                     </span>
                   </div>
                   <button
                     onClick={() => setShowLogoutDialog(true)}
-                    className="p-2.5 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
+                    className="p-2.5 text-slate-600 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all"
                     title="Logout"
                   >
                     <LogOut className="w-5 h-5" />
@@ -209,13 +231,12 @@ export function DashboardLayout({ children, navigation, title }) {
 
         <div className="flex max-w-full">
           {/* Sidebar - Desktop */}
-          <aside className="hidden lg:block w-64 bg-white/80 backdrop-blur-sm min-h-[calc(100vh-4rem)] border-r border-slate-200/60 shadow-sm">
+          <aside className="hidden lg:block w-64 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm min-h-[calc(100vh-4rem)] border-r border-slate-200/60 dark:border-slate-700/60 shadow-sm">
             <nav className="p-3 space-y-1">
               {navigation.map((item) => {
                 const isActive =
                   pathname === item.href ||
                   pathname.startsWith(item.href + "/");
-                const IconComponent = iconMap[item.name];
                 return (
                   <Link
                     key={item.name}
@@ -223,8 +244,8 @@ export function DashboardLayout({ children, navigation, title }) {
                     className={cn(
                       "flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-sm font-medium group relative overflow-hidden",
                       isActive
-                        ? "bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-lg shadow-indigo-200/50"
-                        : "text-slate-700 hover:bg-slate-50 hover:text-indigo-700",
+                        ? "bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-lg shadow-indigo-200/50 dark:shadow-indigo-900/50"
+                        : "text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-indigo-700 dark:hover:text-indigo-400",
                     )}
                   >
                     {isActive && (
@@ -239,16 +260,7 @@ export function DashboardLayout({ children, navigation, title }) {
                       />
                     )}
                     <div className="relative z-10 flex items-center gap-3 flex-1">
-                      {IconComponent && (
-                        <IconComponent
-                          className={cn(
-                            "w-5 h-5",
-                            isActive
-                              ? "text-white"
-                              : "text-slate-500 group-hover:text-indigo-600",
-                          )}
-                        />
-                      )}
+                      {renderIcon(item, isActive)}
                       <span>{item.name}</span>
                     </div>
                     {isActive && (
@@ -261,12 +273,12 @@ export function DashboardLayout({ children, navigation, title }) {
 
             {/* Footer Badge */}
             <div className="absolute bottom-4 left-3 right-3">
-              <div className="bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 rounded-xl p-4 shadow-sm">
-                <div className="flex items-center gap-2 text-slate-700 text-xs mb-1">
+              <div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-4 shadow-sm">
+                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-200 text-xs mb-1">
                   <div className="w-2 h-2 bg-indigo-600 rounded-full"></div>
                   <span className="font-semibold">Made in India</span>
                 </div>
-                <p className="text-xs text-slate-500 ml-4">by Coding Gurus</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 ml-4">by Coding Gurus</p>
               </div>
             </div>
           </aside>
@@ -287,13 +299,13 @@ export function DashboardLayout({ children, navigation, title }) {
                   animate={{ x: 0 }}
                   exit={{ x: -320 }}
                   transition={{ type: "spring", damping: 30, stiffness: 300 }}
-                  className="lg:hidden fixed left-0 top-0 bottom-0 z-50 w-64 bg-white shadow-2xl"
+                  className="lg:hidden fixed left-0 top-0 bottom-0 z-50 w-64 bg-white dark:bg-slate-900 shadow-2xl"
                 >
-                  <div className="p-4 border-b border-slate-200 flex items-center justify-between">
-                    <span className="font-bold text-slate-900">Menu</span>
+                  <div className="p-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                    <span className="font-bold text-slate-900 dark:text-white">Menu</span>
                     <button
                       onClick={() => setMobileSidebarOpen(false)}
-                      className="p-2 hover:bg-slate-100 rounded-lg"
+                      className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-700 dark:text-slate-200"
                     >
                       <X className="w-5 h-5" />
                     </button>
@@ -313,7 +325,7 @@ export function DashboardLayout({ children, navigation, title }) {
                             "flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-sm font-medium",
                             isActive
                               ? "bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-lg"
-                              : "text-slate-700 hover:bg-slate-50",
+                              : "text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800",
                           )}
                         >
                           {IconComponent && (
@@ -330,7 +342,7 @@ export function DashboardLayout({ children, navigation, title }) {
           </AnimatePresence>
 
           {/* Main Content */}
-          <main className="flex-1 p-4 sm:p-6 lg:p-8 min-h-[calc(100vh-4rem)] bg-gradient-to-br from-transparent via-purple-50/30 to-white">
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 min-h-[calc(100vh-4rem)] bg-gradient-to-br from-transparent via-purple-50/30 to-white dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
             <div className="max-w-7xl mx-auto">{children}</div>
           </main>
         </div>

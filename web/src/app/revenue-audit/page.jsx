@@ -1,6 +1,8 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, Fragment } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { DashboardLayout } from '@/components/layout';
 import dynamic from 'next/dynamic';
 import { mockBuildings, calculateViolation, getTotalRevenueLeak } from '@/lib/constants/mockBuildings';
 import { Button, Badge, Card, CardHeader, CardTitle, CardContent } from '@/components/ui';
@@ -25,6 +27,7 @@ const Popup = dynamic(
 );
 
 export default function RevenueAuditPage() {
+  const { userData } = useAuth();
   const [mounted, setMounted] = useState(false);
   const [selectedBuilding, setSelectedBuilding] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -91,10 +94,62 @@ export default function RevenueAuditPage() {
 
   const totalLeak = getTotalRevenueLeak();
 
-  return (
-    <div className="fixed inset-0 flex bg-gray-900 text-white overflow-hidden">
+  // Get navigation based on role
+  const getNavigation = (role) => {
+    const baseNav = {
+      class_a: [
+        { name: 'Dashboard', href: '/officer/dashboard', icon: '📊' },
+        { name: 'Tickets', href: '/officer/tickets', icon: '🎫' },
+        { name: 'Reports', href: '/officer/reports', icon: '📋' },
+        { name: 'Work Orders', href: '/officer/work-orders', icon: '🔧' },
+        { name: 'Contractors', href: '/officer/contractors', icon: '👷' },
+        { name: '➕ Add Contractor', href: '/officer/contractors/add', icon: '➕' },
+        { name: 'Infrastructure Map', href: '/map', icon: '🗺️' },
+        { name: 'Route Optimizer', href: '/route', icon: '🛣️' },
+        { name: 'Revenue Guard AI', href: '/revenue-audit', icon: '🏛️' },
+        { name: 'Assets', href: '/officer/assets', icon: '🏗️' },
+        { name: 'Analytics', href: '/officer/analytics', icon: '📈' },
+        { name: 'Team', href: '/officer/team', icon: '👥' },
+        { name: 'Budgets', href: '/officer/budgets', icon: '💰' },
+        { name: 'Profile', href: '/officer/profile', icon: '👤' },
+      ],
+      class_b: [
+        { name: 'Dashboard', href: '/officer/dashboard', icon: '📊' },
+        { name: 'Tickets', href: '/officer/tickets', icon: '🎫' },
+        { name: 'Reports', href: '/officer/reports', icon: '📋' },
+        { name: 'Work Orders', href: '/officer/work-orders', icon: '🔧' },
+        { name: 'Contractors', href: '/officer/contractors', icon: '👷' },
+        { name: 'Infrastructure Map', href: '/map', icon: '🗺️' },
+        { name: 'Route Optimizer', href: '/route', icon: '🛣️' },
+        { name: 'Revenue Guard AI', href: '/revenue-audit', icon: '🏛️' },
+        { name: 'Assets', href: '/officer/assets', icon: '🏗️' },
+        { name: 'Analytics', href: '/officer/analytics', icon: '📈' },
+        { name: 'Team', href: '/officer/team', icon: '👥' },
+        { name: 'Budgets', href: '/officer/budgets', icon: '💰' },
+        { name: 'Profile', href: '/officer/profile', icon: '👤' },
+      ],
+      class_c: [
+        { name: 'Dashboard', href: '/officer/dashboard', icon: '📊' },
+        { name: 'Tickets', href: '/officer/tickets', icon: '🎫' },
+        { name: 'Reports', href: '/officer/reports', icon: '📋' },
+        { name: 'Work Orders', href: '/officer/work-orders', icon: '🔧' },
+        { name: 'Contractors', href: '/officer/contractors', icon: '👷' },
+        { name: 'Infrastructure Map', href: '/map', icon: '🗺️' },
+        { name: 'Route Optimizer', href: '/route', icon: '🛣️' },
+        { name: 'Assets', href: '/officer/assets', icon: '🏗️' },
+        { name: 'Analytics', href: '/officer/analytics', icon: '📈' },
+        { name: 'Profile', href: '/officer/profile', icon: '👤' },
+      ]
+    };
+    return baseNav[role] || baseNav.class_c;
+  };
+
+  const navigation = getNavigation(userData?.role);
+
+  const contentUI = (
+    <div className="flex bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-slate-100 overflow-hidden h-full">
       {/* Sidebar */}
-      <div className="w-96 flex-shrink-0 bg-gray-800 border-r border-gray-700 overflow-y-auto">
+      <div className="w-96 flex-shrink-0 bg-gray-100 dark:bg-gray-800 border-r border-gray-300 dark:border-gray-700 overflow-y-auto">
         <div className="p-6">
           {/* Header */}
           <div className="mb-6">
@@ -110,41 +165,41 @@ export default function RevenueAuditPage() {
             </Badge>
           </div>
 
-          <div className="bg-gray-700 rounded-lg p-4 mb-6">
-            <div className="text-sm text-gray-400 mb-1">Total Revenue Leak Detected</div>
-            <div className="text-3xl font-bold text-red-400">
+          <div className="bg-gray-200 dark:bg-gray-700 rounded-lg p-4 mb-6">
+            <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Revenue Leak Detected</div>
+            <div className="text-3xl font-bold text-red-600 dark:text-red-400">
               ₹{(totalLeak / 10000000).toFixed(2)}Cr
             </div>
-            <div className="text-xs text-gray-500 mt-1">
+            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
               Across {mockBuildings.length} properties
             </div>
           </div>
 
-          <hr className="border-gray-700 mb-6" />
+          <hr className="border-gray-300 dark:border-gray-700 mb-6" />
 
           {/* Building Info */}
           {selectedBuilding ? (
             <div className="space-y-4">
-              <Card className="bg-gray-700 border-gray-600">
+              <Card className="bg-gray-200 dark:bg-gray-700 border-gray-300 dark:border-gray-600">
                 <CardHeader>
-                  <CardTitle className="text-lg text-white">
+                  <CardTitle className="text-lg text-gray-900 dark:text-white">
                     {selectedBuilding.name}
                   </CardTitle>
-                  <p className="text-sm text-gray-400">{selectedBuilding.address}</p>
-                  <p className="text-xs text-gray-500">ID: {selectedBuilding.id}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{selectedBuilding.address}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">ID: {selectedBuilding.id}</p>
                 </CardHeader>
                 <CardContent className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Owner:</span>
-                    <span className="text-white">{selectedBuilding.ownerName}</span>
+                    <span className="text-gray-600 dark:text-gray-400">Owner:</span>
+                    <span className="text-gray-900 dark:text-white">{selectedBuilding.ownerName}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Ward:</span>
-                    <span className="text-white">{selectedBuilding.ward}</span>
+                    <span className="text-gray-600 dark:text-gray-400">Ward:</span>
+                    <span className="text-gray-900 dark:text-white">{selectedBuilding.ward}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Last Inspection:</span>
-                    <span className="text-white">{selectedBuilding.lastInspection}</span>
+                    <span className="text-gray-600 dark:text-gray-400">Last Inspection:</span>
+                    <span className="text-gray-900 dark:text-white">{selectedBuilding.lastInspection}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -170,14 +225,14 @@ export default function RevenueAuditPage() {
 
               {/* Progress Bar */}
               {isAnalyzing && (
-                <div className="bg-gray-700 rounded-lg p-4">
-                  <div className="w-full bg-gray-600 rounded-full h-2 mb-2">
+                <div className="bg-gray-300 dark:bg-gray-700 rounded-lg p-4">
+                  <div className="w-full bg-gray-400 dark:bg-gray-600 rounded-full h-2 mb-2">
                     <div
-                      className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                      className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-300"
                       style={{ width: `${analysisProgress}%` }}
                     ></div>
                   </div>
-                  <p className="text-xs text-gray-400 text-center">
+                  <p className="text-xs text-gray-600 dark:text-gray-400 text-center">
                     {analysisProgress}% Complete
                   </p>
                 </div>
@@ -185,67 +240,67 @@ export default function RevenueAuditPage() {
 
               {/* Violation Report */}
               {showViolation && violation && (
-                <Card className="bg-red-900 border-red-700 animate-pulse-slow">
+                <Card className="bg-red-100 dark:bg-red-900 border-red-300 dark:border-red-700 animate-pulse-slow">
                   <CardHeader>
-                    <CardTitle className="text-xl text-red-300 flex items-center gap-2">
+                    <CardTitle className="text-xl text-red-700 dark:text-red-300 flex items-center gap-2">
                       <span>⚠️</span>
                       VIOLATION DETECTED
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {/* Violation Type */}
-                    <div className="bg-red-800 rounded p-3">
-                      <div className="text-xs text-red-300 mb-1">Violation Type</div>
-                      <div className="text-sm font-semibold text-white">
+                    <div className="bg-red-200 dark:bg-red-800 rounded p-3">
+                      <div className="text-xs text-red-700 dark:text-red-300 mb-1">Violation Type</div>
+                      <div className="text-sm font-semibold text-gray-900 dark:text-white">
                         {violation.violationType}
                       </div>
                     </div>
 
                     {/* Metrics Grid */}
                     <div className="grid grid-cols-2 gap-3">
-                      <div className="bg-gray-800 rounded p-3">
-                        <div className="text-xs text-gray-400">Extra Area</div>
-                        <div className="text-lg font-bold text-red-400">
+                      <div className="bg-gray-200 dark:bg-gray-800 rounded p-3">
+                        <div className="text-xs text-gray-600 dark:text-gray-400">Extra Area</div>
+                        <div className="text-lg font-bold text-red-600 dark:text-red-400">
                           {violation.extraArea} m²
                         </div>
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
                           +{violation.encroachmentPercent}%
                         </div>
                       </div>
 
-                      <div className="bg-gray-800 rounded p-3">
-                        <div className="text-xs text-gray-400">Extra Floors</div>
-                        <div className="text-lg font-bold text-red-400">
+                      <div className="bg-gray-200 dark:bg-gray-800 rounded p-3">
+                        <div className="text-xs text-gray-600 dark:text-gray-400">Extra Floors</div>
+                        <div className="text-lg font-bold text-red-600 dark:text-red-400">
                           {violation.extraFloors}
                         </div>
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
                           Unauthorized
                         </div>
                       </div>
                     </div>
 
                     {/* Height Analysis */}
-                    <div className="bg-gray-800 rounded p-3">
-                      <div className="text-xs text-gray-400 mb-2">Shadow-Height Analysis</div>
+                    <div className="bg-gray-200 dark:bg-gray-800 rounded p-3">
+                      <div className="text-xs text-gray-600 dark:text-gray-400 mb-2">Shadow-Height Analysis</div>
                       <div className="space-y-1 text-sm">
                         <div className="flex justify-between">
-                          <span className="text-gray-400">Expected:</span>
-                          <span className="text-white">{violation.expectedHeight}m</span>
+                          <span className="text-gray-600 dark:text-gray-400">Expected:</span>
+                          <span className="text-gray-900 dark:text-white">{violation.expectedHeight}m</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-400">Detected:</span>
-                          <span className="text-red-400 font-semibold">
+                          <span className="text-gray-600 dark:text-gray-400">Detected:</span>
+                          <span className="text-red-600 dark:text-red-400 font-semibold">
                             {violation.actualHeight}m
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-400">Shadow Length:</span>
-                          <span className="text-white">{selectedBuilding.shadowLength}m</span>
+                          <span className="text-gray-600 dark:text-gray-400">Shadow Length:</span>
+                          <span className="text-gray-900 dark:text-white">{selectedBuilding.shadowLength}m</span>
                         </div>
                       </div>
                     </div>
 
-                    <hr className="border-red-700" />
+                    <hr className="border-red-300 dark:border-red-700" />
 
                     {/* Fine Breakdown */}
                     <div className="space-y-2">
@@ -420,5 +475,13 @@ export default function RevenueAuditPage() {
         </div>
       </div>
     </div>
+  );
+
+  return (
+    <DashboardLayout navigation={navigation} title="Revenue Guard AI">
+      <div className="h-full">
+        {contentUI}
+      </div>
+    </DashboardLayout>
   );
 }
