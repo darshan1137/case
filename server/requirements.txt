@@ -8,4 +8,6 @@ firebase-admin
 Pillow
 shapely
 python-multipart
+python-telegram-bot
+requests
 

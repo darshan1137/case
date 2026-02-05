@@ -65,8 +65,7 @@ const MumbaiMapContent = () => {
     schools: true,
     police: true,
     water: true,
-    bmc: true,
-    highways: true
+    bmc: true
   });
 
   // Define data sources and their styling
@@ -100,12 +99,7 @@ const MumbaiMapContent = () => {
       color: '#C7CEEA',
       endpoint: '/api/data/bmc',
       icon: 'bmc'
-    },
-    highways: {
-      label: '�️ Highways & Bridges',
-      color: '#FFA07A',
-      endpoint: '/api/data/highway',
-      icon: 'highway'
+
     }
   };
 
@@ -196,13 +190,12 @@ const MumbaiMapContent = () => {
       });
 
       // Store the layer
-      if (!markersRef.current[layerKey]) {
-        markersRef.current[layerKey] = markers;
-      }
-
-      // Add to map only if layer is visible
-      if (mapInstanceRef.current && visibleLayers[layerKey]) {
+      markersRef.current[layerKey] = markers;
+      
+      // ALWAYS add to map initially, then sync effect will handle visibility
+      if (mapInstanceRef.current) {
         markers.addTo(mapInstanceRef.current);
+        console.log(`Loaded layer ${layerKey} with ${markers.getLayers().length} markers`);
       }
 
       setLoadingLayers(prev => ({ ...prev, [layerKey]: false }));
@@ -246,6 +239,31 @@ const MumbaiMapContent = () => {
       className: 'emoji-marker'
     });
   };
+
+  // Sync layer visibility with map when visibleLayers state changes
+  useEffect(() => {
+    if (!mapInstanceRef.current) return;
+
+    console.log('Sync effect triggered with visibleLayers:', visibleLayers);
+
+    Object.entries(visibleLayers).forEach(([layerKey, isVisible]) => {
+      const markers = markersRef.current[layerKey];
+      if (!markers) {
+        console.log(`Markers not ready for ${layerKey}`);
+        return;
+      }
+
+      const isCurrentlyOnMap = mapInstanceRef.current.hasLayer(markers);
+      
+      if (isVisible && !isCurrentlyOnMap) {
+        mapInstanceRef.current.addLayer(markers);
+        console.log(`✓ Sync: Added layer ${layerKey} to map`);
+      } else if (!isVisible && isCurrentlyOnMap) {
+        mapInstanceRef.current.removeLayer(markers);
+        console.log(`✗ Sync: Removed layer ${layerKey} from map`);
+      }
+    });
+  }, [visibleLayers]);
 
   // Update marker sizes on zoom
   useEffect(() => {
@@ -338,8 +356,6 @@ const MumbaiMapContent = () => {
         return tags.amenity === 'toilets' || tags.amenity === 'drinking_water' || tags.amenity === 'waste';
       case 'bmc':
         return tags.operator?.includes('BMC') || tags.operator?.includes('Municipal');
-      case 'highways':
-        return tags.highway || tags.bridge;
       default:
         return true;
     }
@@ -364,22 +380,14 @@ const MumbaiMapContent = () => {
 
   // Handle layer visibility toggle
   const toggleLayer = (layerKey) => {
-    const newVisibleState = !visibleLayers[layerKey];
-    setVisibleLayers(prev => ({ ...prev, [layerKey]: newVisibleState }));
-
-    const markers = markersRef.current[layerKey];
-    if (!markers || !mapInstanceRef.current) {
-      console.warn(`Cannot toggle layer ${layerKey}: markers or map not ready`);
-      return;
-    }
-
-    if (newVisibleState) {
-      mapInstanceRef.current.addLayer(markers);
-      console.log(`✓ Shown layer: ${layerKey}`);
-    } else {
-      mapInstanceRef.current.removeLayer(markers);
-      console.log(`✗ Hidden layer: ${layerKey}`);
-    }
+    console.log(`Toggle requested for ${layerKey}, current state: ${visibleLayers[layerKey]}`);
+    
+    // Just update the state - the useEffect will handle the map updates
+    setVisibleLayers(prev => {
+      const updated = { ...prev, [layerKey]: !prev[layerKey] };
+      console.log(`State updated:`, updated);
+      return updated;
+    });
   };
 
   // Toggle all layers
