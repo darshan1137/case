@@ -22,23 +22,11 @@ export default function LoginPage() {
   const [mounted, setMounted] = useState(false);
 
   const devUsers = [
-    {
-      email: "alfiyasiddique1708@gmail.com",
-      password: "123456",
-      role: "Citizen",
-    },
-    { email: "contractor@demo.com", password: "demo123", role: "Contractor" },
-    {
-      email: "officer.c@demo.com",
-      password: "demo123",
-      role: "Class C Officer",
-    },
-    {
-      email: "darshankhapekar8520@gmail.com",
-      password: "123456",
-      role: "Class B Officer",
-    },
-    { email: "admin@demo.com", password: "demo123", role: "Admin" },
+    { email: 'alfiyasiddique1708@gmail.com', password: '123456', role: 'Citizen' },
+    { email: 'manaspatil281@gmail.com', password: 'abcd@1234', role: 'Contractor' },
+    { email: 'officer.c@demo.com', password: 'demo123', role: 'Class C Officer' },
+    { email: 'darshankhapekar8520@gmail.com', password: '123456', role: 'Class B Officer' },
+    { email: 'admin@demo.com', password: 'demo123', role: 'Admin' }
   ];
 
   useEffect(() => {

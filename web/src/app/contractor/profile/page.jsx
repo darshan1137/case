@@ -13,7 +13,7 @@ import { auth } from '@/lib/firebase';
 
 const navigation = [
   { name: 'Dashboard', href: '/contractor/dashboard', icon: '📊' },
-  { name: 'Assigned Jobs', href: '/contractor/jobs', icon: '📋' },
+    { name: 'Assigned Tickets', href: '/contractor/tickets', icon: '📋' },
   { name: 'Active Jobs', href: '/contractor/jobs/active', icon: '🔨' },
   { name: 'Completed', href: '/contractor/jobs/completed', icon: '✅' },
   { name: 'Route Map', href: '/contractor/map', icon: '🗺️' },

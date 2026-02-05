@@ -40,6 +40,15 @@ export async function GET(request) {
     if (effectiveRole === 'citizen') {
       // Citizens can only see their own tickets
       constraints.push(where('citizen_id', '==', userId));
+    } else if (effectiveRole === 'contractor') {
+      // Contractors can only see tickets assigned to them
+      if (!userId) {
+        return NextResponse.json(
+          { error: 'userId required for contractor filter' },
+          { status: 400 }
+        );
+      }
+      constraints.push(where('assigned_to', '==', userId));
     } else if (effectiveRole === 'class_a') {
       // Class A officers can see all tickets
       // No additional constraint

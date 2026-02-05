@@ -22,12 +22,20 @@ export async function PATCH(request, { params }) {
   try {
     const { id: ticketId } = await params;
     const body = await request.json();
-    const { user_id, user_role, officer_class, resolution_notes } = body;
+    const { user_id, user_role, officer_class, resolution_notes, proof_of_work } = body;
 
     // Validate required fields
     if (!user_id) {
       return NextResponse.json(
         { error: 'Missing required field: user_id' },
+        { status: 400 }
+      );
+    }
+
+    // Validate proof of work is provided
+    if (!proof_of_work) {
+      return NextResponse.json(
+        { error: 'Proof of work image is required to resolve a ticket' },
         { status: 400 }
       );
     }
@@ -81,7 +89,8 @@ export async function PATCH(request, { params }) {
       status: TICKET_STATUS.RESOLVED,
       resolved_by: user_id,
       resolved_at: Timestamp.now(),
-      updated_at: Timestamp.now()
+      updated_at: Timestamp.now(),
+      proof_of_work: proof_of_work
     };
 
     // Add resolution notes if provided
@@ -130,7 +139,8 @@ export async function PATCH(request, { params }) {
       status: TICKET_STATUS.RESOLVED,
       resolved_by: user_id,
       resolved_at: new Date(),
-      resolution_notes: resolution_notes || null
+      resolution_notes: resolution_notes || null,
+      proof_of_work: proof_of_work
     });
 
   } catch (error) {
