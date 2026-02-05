@@ -765,3 +765,226 @@ export const sendPasswordChangeNotification = async ({ email, name, timestamp })
   }
 };
 
+/**
+ * Generate HTML email template for officer onboarding
+ */
+const generateOfficerOnboardingTemplate = (officerData, tempPassword, createdByName) => {
+  const { name, email, class: officerClass, department, zone, ward_id } = officerData;
+  
+  const classLabels = {
+    class_b: 'Class B - Department Level Officer',
+    class_c: 'Class C - Ward Level Officer'
+  };
+
+  return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Welcome to CASE Officer Portal</title>
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; background-color: #F3F4F6; }
+        .email-container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
+        .header { background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%); padding: 30px 20px; text-align: center; }
+        .logo { width: 80px; height: 80px; margin-bottom: 15px; background-color: #ffffff; border-radius: 50%; padding: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .header h1 { color: #ffffff; font-size: 28px; font-weight: 700; margin-bottom: 5px; }
+        .tagline { color: #E0E7FF; font-size: 14px; letter-spacing: 2px; font-weight: 500; }
+        .content { padding: 30px 20px; }
+        .welcome-badge { background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: #ffffff; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 25px; }
+        .welcome-icon { font-size: 48px; margin-bottom: 10px; }
+        .welcome-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+        .welcome-message { font-size: 14px; opacity: 0.95; }
+        .card { background-color: #F9FAFB; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #E5E7EB; }
+        .card-title { color: #374151; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .card-value { color: #111827; font-size: 16px; font-weight: 500; }
+        .credentials-box { background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%); border: 2px solid #3B82F6; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .credentials-title { color: #1E40AF; font-size: 16px; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; }
+        .credential-item { background-color: #ffffff; padding: 15px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #BFDBFE; }
+        .credential-label { color: #6B7280; font-size: 12px; font-weight: 600; margin-bottom: 5px; }
+        .credential-value { color: #111827; font-size: 15px; font-weight: 600; font-family: monospace; background-color: #F3F4F6; padding: 10px; border-radius: 6px; word-break: break-all; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .info-item { background-color: #F9FAFB; padding: 15px; border-radius: 8px; border: 1px solid #E5E7EB; }
+        .info-label { color: #6B7280; font-size: 12px; font-weight: 600; margin-bottom: 5px; }
+        .info-value { color: #111827; font-size: 14px; font-weight: 500; }
+        .cta-button { display: block; width: 100%; background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%); color: #ffffff; text-align: center; padding: 16px 24px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 16px; margin-top: 25px; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3); }
+        .tips-box { background-color: #FEF3C7; border: 1px solid #FCD34D; border-radius: 8px; padding: 15px; margin: 20px 0; }
+        .tips-box h3 { color: #92400E; font-size: 16px; font-weight: 600; margin-bottom: 10px; }
+        .tips-box ul { list-style: none; padding-left: 0; }
+        .tips-box li { color: #92400E; font-size: 14px; padding: 5px 0; padding-left: 20px; position: relative; }
+        .tips-box li:before { content: "⚠️"; position: absolute; left: 0; }
+        .footer { background-color: #F9FAFB; padding: 25px 20px; text-align: center; border-top: 1px solid #E5E7EB; }
+        .footer p { color: #6B7280; font-size: 12px; margin-bottom: 8px; }
+        .footer .brand { color: #2563EB; font-weight: 700; }
+        @media only screen and (max-width: 600px) {
+          .info-grid { grid-template-columns: 1fr; }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+          <img src="https://res.cloudinary.com/dtgjbojuh/image/upload/v1738758663/logo_rqgv34.png" alt="CASE Logo" class="logo">
+          <h1>CASE</h1>
+          <p class="tagline">Capture • Assess • Serve • Evolve</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+          <!-- Welcome Badge -->
+          <div class="welcome-badge">
+            <div class="welcome-icon">👮🎉</div>
+            <div class="welcome-title">Welcome to CASE!</div>
+            <div class="welcome-message">Your Officer Account is Ready</div>
+          </div>
+
+          <!-- Greeting -->
+          <p style="font-size: 16px; color: #374151; margin-bottom: 20px;">
+            Hello <strong>${name}</strong>,
+          </p>
+
+          <p style="font-size: 15px; color: #4B5563; margin-bottom: 25px;">
+            Welcome to the <strong>CASE (Civic Action & Service Excellence)</strong> platform! Your officer account has been created by <strong>${createdByName}</strong>. 
+            You can now access the officer portal to manage civic infrastructure, validate citizen reports, create work orders, and oversee municipal operations.
+          </p>
+
+          <!-- Officer Details -->
+          <div class="card">
+            <div class="card-title">Your Officer Profile</div>
+            <div class="info-grid" style="margin-top: 15px;">
+              <div class="info-item">
+                <div class="info-label">Officer Class</div>
+                <div class="info-value">${classLabels[officerClass] || officerClass}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Department</div>
+                <div class="info-value">${department}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Zone</div>
+                <div class="info-value">${zone}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Ward</div>
+                <div class="info-value">${ward_id}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Login Credentials -->
+          <div class="credentials-box">
+            <div class="credentials-title">
+              <span style="margin-right: 10px;">🔑</span>
+              Your Login Credentials
+            </div>
+            
+            <div class="credential-item">
+              <div class="credential-label">Email / Username</div>
+              <div class="credential-value">${email}</div>
+            </div>
+            
+            <div class="credential-item">
+              <div class="credential-label">Temporary Password</div>
+              <div class="credential-value">${tempPassword}</div>
+            </div>
+
+            <p style="color: #1E40AF; font-size: 13px; margin-top: 15px; text-align: center;">
+              <strong>⚠️ Important:</strong> You must change this password on your first login
+            </p>
+          </div>
+
+          <!-- CTA Button -->
+          <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/auth/login" class="cta-button">
+            🔐 Login to Officer Portal
+          </a>
+
+          <!-- Security Tips -->
+          <div class="tips-box">
+            <h3>🛡️ Security Guidelines</h3>
+            <ul>
+              <li>Change your password immediately after first login</li>
+              <li>Use a strong, unique password (min 8 characters)</li>
+              <li>Never share your credentials with anyone</li>
+              <li>Log out when using shared computers</li>
+              <li>Report suspicious activity to IT department</li>
+            </ul>
+          </div>
+
+          <!-- Platform Features -->
+          <div class="card">
+            <div class="card-title">What You Can Do on CASE</div>
+            <ul style="color: #4B5563; font-size: 14px; line-height: 1.8; margin-top: 10px; padding-left: 20px;">
+              <li>📋 Review and validate citizen-submitted reports</li>
+              <li>🔧 Create and assign work orders to contractors</li>
+              <li>👷 Manage contractor assignments and performance</li>
+              <li>📊 Monitor infrastructure and civic operations</li>
+              <li>📈 View analytics and performance dashboards</li>
+              <li>🗺️ Access infrastructure mapping and route optimization</li>
+              <li>💰 Track budgets and resource allocation</li>
+            </ul>
+          </div>
+
+          <p style="font-size: 14px; color: #6B7280; margin-top: 25px;">
+            If you have any questions or need assistance, please contact the IT Helpdesk or your supervising officer.
+          </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+          <p>This is an automated message from CASE</p>
+          <p>Civic Action & Service Excellence Platform</p>
+          <p style="margin-top: 15px;">Powered by <span class="brand">CodingGurus</span></p>
+          <p style="margin-top: 10px; font-size: 11px; color: #9CA3AF;">
+            For technical support, contact your system administrator.
+          </p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+};
+
+/**
+ * Send officer onboarding email with login credentials
+ * @param {Object} officerData - Officer information
+ * @param {string} tempPassword - Temporary password for first login
+ * @param {string} createdByName - Name of the officer who created the account
+ * @returns {Promise<Object>} - Result of email send operation
+ */
+export const sendOfficerOnboardingEmail = async (officerData, tempPassword, createdByName) => {
+  try {
+    if (!officerData.email) {
+      console.warn('[Email Service] No officer email provided');
+      return { success: false, error: 'No officer email provided' };
+    }
+
+    if (!process.env.RESEND_API_KEY) {
+      console.error('[Email Service] RESEND_API_KEY not configured');
+      return { success: false, error: 'Email service not configured' };
+    }
+
+    const emailHtml = generateOfficerOnboardingTemplate(officerData, tempPassword, createdByName);
+
+    const classLabels = {
+      class_b: 'Class B Officer',
+      class_c: 'Class C Officer'
+    };
+
+    const result = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || 'CASE <noreply@codinggurus.in>',
+      to: officerData.email,
+      subject: `🎉 Welcome to CASE - Your ${classLabels[officerData.class] || 'Officer'} Account is Ready`,
+      html: emailHtml,
+    });
+
+    console.log(`[Email Service] Onboarding email sent to officer ${officerData.email}`);
+    return { success: true, messageId: result.id };
+
+  } catch (error) {
+    console.error('[Email Service] Failed to send officer onboarding email:', error);
+    return { success: false, error: error.message };
+  }
+};
+

@@ -35,22 +35,24 @@ export default function OfficerContractorsPage() {
   const isClassB = userData?.role === 'officer' && userData?.class === 'class_b';
   const isClassC = userData?.role === 'officer' && userData?.class === 'class_c';
 
-   const navigation = [
+ const navigation = [
     { name: 'Dashboard', href: '/officer/dashboard', icon: '📊' },
+    { name: 'Tickets', href: '/officer/tickets', icon: '🎫' },
     { name: 'Reports', href: '/officer/reports', icon: '📋' },
-    { name: 'Tickets', href: '/officer/tickets', icon: '📋' },
     { name: 'Work Orders', href: '/officer/work-orders', icon: '🔧' },
-    { name: 'Contractors', href: '/officer/contractors', icon: '👷' },
     ...(isClassA ? [
-      { name: '➕ Add Contractor', href: '/officer/contractors/add', icon: '➕' },
+      { name: 'Add Contractor', href: '/officer/contractors/add', icon: '➕' },
+      { name: 'Add Officer', href: '/officer/officers/add', icon: '👮' },
     ] : []),
     { name: 'Infrastructure Map', href: '/map', icon: '🗺️' },
     { name: 'Route Optimizer', href: '/route', icon: '🛣️' },
+    { name: 'Revenue Guard AI', href: '/revenue-audit', icon: '🏛️' },
     { name: 'Assets', href: '/officer/assets', icon: '🏗️' },
     { name: 'Analytics', href: '/officer/analytics', icon: '📈' },
     ...(isClassB || isClassA ? [
       { name: 'Team', href: '/officer/team', icon: '👥' },
       { name: 'Budgets', href: '/officer/budgets', icon: '💰' },
+      
     ] : []),
     { name: 'Profile', href: '/officer/profile', icon: '👤' },
   ];

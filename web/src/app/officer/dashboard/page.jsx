@@ -26,18 +26,18 @@ export default function OfficerDashboard() {
   const [loading, setLoading] = useState(true);
   const [runTour, setRunTour] = useState(false);
 
-  const isClassA = userData?.role === 'class_a';
-  const isClassB = userData?.role === 'class_b';
-  const isClassC = userData?.role === 'class_c';
+  const isClassA = userData?.class === 'class_a';
+  const isClassB = userData?.class === 'class_b';
+  const isClassC = userData?.class === 'class_c';
 
   const navigation = [
     { name: 'Dashboard', href: '/officer/dashboard', icon: '📊' },
     { name: 'Tickets', href: '/officer/tickets', icon: '🎫' },
     { name: 'Reports', href: '/officer/reports', icon: '📋' },
     { name: 'Work Orders', href: '/officer/work-orders', icon: '🔧' },
-    { name: 'Contractors', href: '/officer/contractors', icon: '👷' },
     ...(isClassA ? [
-      { name: '➕ Add Contractor', href: '/officer/contractors/add', icon: '➕' },
+      { name: 'Add Contractor', href: '/officer/contractors/add', icon: '➕' },
+      { name: 'Add Officer', href: '/officer/officers/add', icon: '👮' },
     ] : []),
     { name: 'Infrastructure Map', href: '/map', icon: '🗺️' },
     { name: 'Route Optimizer', href: '/route', icon: '🛣️' },

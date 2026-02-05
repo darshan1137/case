@@ -350,27 +350,6 @@ export default function CitizenRegisterPage() {
                   Sign in
                 </Link>
               </div>
-
-              <div className="text-center pt-2 border-t border-gray-200 mt-4">
-                <p className="text-xs text-gray-500 mb-2">
-                  For Officer/Contractor accounts:
-                </p>
-                <div className="flex justify-center gap-4 text-xs">
-                  <Link
-                    href="/auth/register/officer"
-                    className="text-indigo-600 hover:text-indigo-700 font-medium"
-                  >
-                    Officer Registration
-                  </Link>
-                  <span className="text-gray-300">|</span>
-                  <Link
-                    href="/auth/register/contractor"
-                    className="text-indigo-600 hover:text-indigo-700 font-medium"
-                  >
-                    Contractor Registration
-                  </Link>
-                </div>
-              </div>
             </form>
           </div>
 
